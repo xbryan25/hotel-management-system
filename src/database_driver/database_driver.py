@@ -9,8 +9,8 @@ class DatabaseDriver:
 
         db_initial_user_values = ["root", "root"]
 
-        input_user = input("Input user (default: localhost): ")
-        input_password = input("Input password (default: localhost): ")
+        input_user = input("Input user (default: root): ")
+        input_password = input("Input password (default: root): ")
 
         if input_user.strip() != "":
             db_initial_user_values[0] = input_user
