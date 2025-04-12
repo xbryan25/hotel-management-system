@@ -1,5 +1,6 @@
 QFrame{
     background-color: rgb(25, 79, 204);
+    color: white;
 }
 
 QListWidget {

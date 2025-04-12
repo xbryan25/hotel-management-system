@@ -22,6 +22,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.expanded_buttons_list_widget.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
         self.set_external_stylesheet()
+        self.add_signals_to_sidebar_items()
 
     def show_collapsed_sidebar_frame(self):
         self.collapsed_sidebar_frame.setVisible(True)
@@ -30,6 +31,15 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
     def show_expanded_sidebar_frame(self):
         self.collapsed_sidebar_frame.setVisible(False)
         self.expanded_sidebar_frame.setVisible(True)
+
+    def add_signals_to_sidebar_items(self):
+        # Connects the index of the list widget to the index of the stacked widget
+        self.expanded_buttons_list_widget.currentRowChanged.connect(self.stacked_widget.setCurrentIndex)
+        self.collapsed_buttons_list_widget.currentRowChanged.connect(self.stacked_widget.setCurrentIndex)
+
+        # Connects the expanded buttons list widget to the collapsed buttons list widget and vice versa
+        self.expanded_buttons_list_widget.currentRowChanged.connect(self.collapsed_buttons_list_widget.setCurrentRow)
+        self.collapsed_buttons_list_widget.currentRowChanged.connect(self.expanded_buttons_list_widget.setCurrentRow)
 
     def set_external_stylesheet(self):
         with open("../resources/styles/sidebar.qss", "r") as file:
