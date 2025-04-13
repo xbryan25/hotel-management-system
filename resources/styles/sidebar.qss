@@ -6,6 +6,8 @@ QFrame{
 QListWidget {
     background-color: rgb(25, 79, 204);
     color: white;
+    border: none;
+    outline: none;
 }
 
 QListWidget::item {
@@ -27,6 +29,12 @@ QListWidget::item:focus {
 }
 
 QListWidget::item:selected:focus {
+    outline: none;
+    border: none;
+}
+
+QPushButton::pressed{
+    background-color: rgb(25, 79, 204);
     outline: none;
     border: none;
 }

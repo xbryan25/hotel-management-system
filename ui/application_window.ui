@@ -38,6 +38,9 @@
         <height>0</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -94,62 +97,20 @@
            <widget class="QListWidget" name="collapsed_buttons_list_widget">
             <property name="maximumSize">
              <size>
-              <width>75</width>
+              <width>60</width>
               <height>16777215</height>
              </size>
             </property>
-            <item>
-             <property name="text">
-              <string>D</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>R</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>C</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>R</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>B</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>G</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>B</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>S</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>S</string>
-             </property>
-            </item>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
            </widget>
           </item>
           <item row="0" column="0">
            <widget class="QFrame" name="collapsed_sidebar_button_frame">
             <property name="minimumSize">
              <size>
-              <width>0</width>
+              <width>60</width>
               <height>60</height>
              </size>
             </property>
@@ -162,6 +123,12 @@
             <layout class="QGridLayout" name="gridLayout_8">
              <item row="0" column="0">
               <widget class="QPushButton" name="show_icons_and_text_button">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>40</height>
+                </size>
+               </property>
                <property name="maximumSize">
                 <size>
                  <width>50</width>
@@ -172,7 +139,10 @@
                 <cursorShape>PointingHandCursor</cursorShape>
                </property>
                <property name="text">
-                <string>Click</string>
+                <string/>
+               </property>
+               <property name="flat">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -271,7 +241,7 @@
                <property name="minimumSize">
                 <size>
                  <width>50</width>
-                 <height>0</height>
+                 <height>40</height>
                 </size>
                </property>
                <property name="maximumSize">
@@ -284,7 +254,10 @@
                 <cursorShape>PointingHandCursor</cursorShape>
                </property>
                <property name="text">
-                <string>Click</string>
+                <string/>
+               </property>
+               <property name="flat">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -299,51 +272,9 @@
               <height>16777215</height>
              </size>
             </property>
-            <item>
-             <property name="text">
-              <string>Dashboard</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Rooms</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Calendar</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Reservation</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Booking</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Guests</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Billing</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Services</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Settings</string>
-             </property>
-            </item>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
            </widget>
           </item>
          </layout>
