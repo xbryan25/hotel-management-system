@@ -1,0 +1,40 @@
+QFrame{
+    background-color: rgb(25, 79, 204);
+    color: white;
+}
+
+QListWidget {
+    background-color: rgb(25, 79, 204);
+    color: white;
+    border: none;
+    outline: none;
+}
+
+QListWidget::item {
+    padding: 10px;
+    margin: 0px;
+    border: none;
+}
+
+QListWidget::item:selected {
+    background-color: rgb(114, 147, 224);
+    color: white;
+    padding: 10px;
+    margin: 0px;
+    border: none;
+}
+
+QListWidget::item:focus {
+    outline: none;
+}
+
+QListWidget::item:selected:focus {
+    outline: none;
+    border: none;
+}
+
+QPushButton::pressed{
+    background-color: rgb(25, 79, 204);
+    outline: none;
+    border: none;
+}
