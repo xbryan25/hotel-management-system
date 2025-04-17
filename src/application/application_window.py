@@ -2,7 +2,7 @@ from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QMainWindow, QListWidgetItem
 from PyQt6.QtCore import Qt, QSize
 
-from application.application_window_design import Ui_MainWindow as ApplicationWindowDesign
+from application.application_window_ui import Ui_MainWindow as ApplicationWindowDesign
 from database_driver.database_driver import DatabaseDriver
 from utils.sidebar_cursor_changer import SidebarCursorChanger
 
@@ -106,6 +106,9 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
     def set_external_stylesheet(self):
         with open("../resources/styles/sidebar.qss", "r") as file:
             self.sidebar_frame.setStyleSheet(file.read())
+
+        with open("../resources/styles/dashboard_page.qss", "r") as file:
+            self.dashboard_page_widget.setStyleSheet(file.read())
 
     def load_external_fonts(self):
         pass
