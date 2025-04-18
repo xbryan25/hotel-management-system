@@ -51,7 +51,7 @@ class InitializeDatabase:
         )""")
 
         self.cursor.execute(f"""CREATE TABLE IF NOT EXISTS bookedRooms(
-        booking_id VARCHAR(10) NOT NULL,
+        booking_id VARCHAR(11) NOT NULL,
         check_in_status ENUM('checked in', 'checked out') NOT NULL, 
         check_in_date DATETIME NOT NULL, 
         check_out_date DATETIME NOT NULL, 

@@ -354,12 +354,69 @@ class DatabaseDriver:
         self.db.commit()
 
     def delete_reserved_room(self, identifier):
-
         sql = "DELETE FROM reservedrooms WHERE reservation_id=%s"
         values = (identifier.strip(),)
 
         self.cursor.execute(sql, values)
         self.db.commit()
+
+    def get_latest_booking_id(self):
+
+        self.cursor.execute("""SELECT booking_id FROM bookedrooms
+            ORDER BY CAST(SUBSTRING(booking_id, 6) AS UNSIGNED) DESC LIMIT 1;
+        """)
+
+        result = self.cursor.fetchone()
+
+        if not result:
+            return "book-000000"
+        else:
+            return result[0]
+
+    def add_booked_room(self, booked_room_information):
+        sql = """INSERT INTO bookedrooms
+                (booking_id, check_in_status, check_in_date, check_out_date, guest_id, room_number) VALUES
+                (%s, %s, %s, %s, %s, %s)"""
+
+        latest_booking_id = self.get_latest_booking_id()
+
+        new_booking_id = f"book-{int(latest_booking_id[6:]) + 1:06}"
+
+        values = (new_booking_id,
+                  booked_room_information[0],
+                  booked_room_information[1],
+                  booked_room_information[2],
+                  booked_room_information[3],
+                  booked_room_information[4])
+
+        self.cursor.execute(sql, values)
+        self.db.commit()
+
+    def update_booked_room(self, old_booking_id, booked_room_information):
+        sql = """UPDATE bookedrooms SET booking_id=%s, check_in_status=%s, check_in_date=%s, check_out_date=%s, 
+        guest_id=%s, room_number=%s
+        WHERE booking_id=%s;"""
+
+        values = (booked_room_information[0],
+                  booked_room_information[1],
+                  booked_room_information[2],
+                  booked_room_information[3],
+                  booked_room_information[4],
+                  booked_room_information[5],
+                  old_booking_id)
+
+        self.cursor.execute(sql, values)
+        self.db.commit()
+
+    def delete_booked_room(self, identifier):
+        sql = "DELETE FROM bookedrooms WHERE booking_id=%s"
+        values = (identifier.strip(),)
+
+        self.cursor.execute(sql, values)
+        self.db.commit()
+
+    def close_connection(self):
+        self.db.close()
 
     @staticmethod
     def check_environment_variables():
