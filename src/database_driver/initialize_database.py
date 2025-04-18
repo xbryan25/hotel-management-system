@@ -93,5 +93,3 @@ class InitializeDatabase:
         PRIMARY KEY (avail_id)
         )
         """)
-
-        print("DB initialized")
