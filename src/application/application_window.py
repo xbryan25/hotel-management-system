@@ -1,8 +1,11 @@
-from PyQt6.QtGui import QIcon
+from PyQt6.QtGui import QIcon, QFont, QFontDatabase
 from PyQt6.QtWidgets import QMainWindow, QListWidgetItem
 from PyQt6.QtCore import Qt, QSize
 
-from application.application_window_design import Ui_MainWindow as ApplicationWindowDesign
+from application.application_window_ui import Ui_MainWindow as ApplicationWindowDesign
+
+from application.load_application_window_fonts import LoadApplicationWindowFonts
+
 from database_driver.database_driver import DatabaseDriver
 from utils.sidebar_cursor_changer import SidebarCursorChanger
 
@@ -25,6 +28,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.expanded_buttons_list_widget.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
         self.set_external_stylesheet()
+        self.load_fonts()
+
         self.add_signals_to_sidebar_items()
 
     def show_collapsed_sidebar_frame(self):
@@ -107,5 +112,24 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         with open("../resources/styles/sidebar.qss", "r") as file:
             self.sidebar_frame.setStyleSheet(file.read())
 
-    def load_external_fonts(self):
-        pass
+        with open("../resources/styles/dashboard_page.qss", "r") as file:
+            self.dashboard_page_widget.setStyleSheet(file.read())
+
+    def load_fonts(self):
+        # Load fonts, they can be used in any part of the application
+        QFontDatabase.addApplicationFont("../resources/fonts/Inter-Light.otf")
+        QFontDatabase.addApplicationFont("../resources/fonts/Inter-Medium.otf")
+        QFontDatabase.addApplicationFont("../resources/fonts/Inter-SemiBold.otf")
+
+        # Get font id
+        inter_font_id = QFontDatabase.addApplicationFont("../resources/fonts/Inter-Regular.otf")
+        abz_font_id = QFontDatabase.addApplicationFont("../resources/fonts/ABeeZee-Regular.ttf")
+
+        # Get font family
+        self.inter_font_family = QFontDatabase.applicationFontFamilies(inter_font_id)[0]
+        self.abz_font_family = QFontDatabase.applicationFontFamilies(abz_font_id)[0]
+
+        self.load_application_window_fonts = LoadApplicationWindowFonts(self)
+
+        self.load_application_window_fonts.load_fonts()
+
