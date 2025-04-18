@@ -6,12 +6,14 @@ class LoadApplicationWindowFonts:
         self.aw = application_window
 
         self.inter_font_family = self.aw.inter_font_family
+        self.abz_font_family = self.aw.abz_font_family
 
     def load_fonts(self):
         self.load_sidebar_fonts()
         self.load_dashboard_page_fonts()
 
     def load_sidebar_fonts(self):
+        self.aw.title_label.setFont(QFont(self.abz_font_family, 28, QFont.Weight.Light))
         self.aw.expanded_buttons_list_widget.setFont(QFont(self.inter_font_family, 14, QFont.Weight.Medium))
 
     def load_dashboard_page_fonts(self):

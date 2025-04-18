@@ -120,11 +120,14 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         QFontDatabase.addApplicationFont("../resources/fonts/Inter-Light.otf")
         QFontDatabase.addApplicationFont("../resources/fonts/Inter-Medium.otf")
         QFontDatabase.addApplicationFont("../resources/fonts/Inter-SemiBold.otf")
+
         # Get font id
         inter_font_id = QFontDatabase.addApplicationFont("../resources/fonts/Inter-Regular.otf")
+        abz_font_id = QFontDatabase.addApplicationFont("../resources/fonts/ABeeZee-Regular.ttf")
 
         # Get font family
         self.inter_font_family = QFontDatabase.applicationFontFamilies(inter_font_id)[0]
+        self.abz_font_family = QFontDatabase.applicationFontFamilies(abz_font_id)[0]
 
         self.load_application_window_fonts = LoadApplicationWindowFonts(self)
 
