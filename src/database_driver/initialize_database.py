@@ -67,7 +67,7 @@ class InitializeDatabase:
         payment_type VARCHAR(20) NOT NULL, 
         amount INT NOT NULL, 
         transaction_date DATE NOT NULL, 
-        guest_id VARCHAR(10) NOT NULL, 
+        guest_id VARCHAR(12) NOT NULL, 
         room_number VARCHAR(9) NOT NULL, 
         FOREIGN KEY(guest_id) REFERENCES guests(guest_id),
         FOREIGN KEY(room_number) REFERENCES rooms(room_number),
