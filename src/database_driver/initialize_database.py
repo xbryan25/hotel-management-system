@@ -18,7 +18,8 @@ class InitializeDatabase:
         phone_number VARCHAR(13) NOT NULL, 
         birth_date DATE NOT NULL, 
         government_id VARCHAR(255) NOT NULL, 
-        last_visit_date DATE NOT NULL, 
+        last_visit_date DATE, 
+        visit_count SMALLINT NOT NULL,
         PRIMARY KEY (guest_id),         
         CONSTRAINT UC_email_address UNIQUE (email_address),
         CONSTRAINT UC_phone_number UNIQUE (phone_number),
@@ -36,7 +37,7 @@ class InitializeDatabase:
         )""")
 
         self.cursor.execute("""CREATE TABLE IF NOT EXISTS reservedRooms(
-        reservation_id VARCHAR(13) NOT NULL,
+        reservation_id VARCHAR(14) NOT NULL,
         reservation_date DATETIME NOT NULL, 
         check_in_date DATETIME NOT NULL, 
         check_out_date DATETIME NOT NULL, 
@@ -50,7 +51,7 @@ class InitializeDatabase:
         )""")
 
         self.cursor.execute(f"""CREATE TABLE IF NOT EXISTS bookedRooms(
-        booking_id VARCHAR(10) NOT NULL,
+        booking_id VARCHAR(11) NOT NULL,
         check_in_status ENUM('checked in', 'checked out') NOT NULL, 
         check_in_date DATETIME NOT NULL, 
         check_out_date DATETIME NOT NULL, 
@@ -66,7 +67,7 @@ class InitializeDatabase:
         payment_type VARCHAR(20) NOT NULL, 
         amount INT NOT NULL, 
         transaction_date DATE NOT NULL, 
-        guest_id VARCHAR(10) NOT NULL, 
+        guest_id VARCHAR(12) NOT NULL, 
         room_number VARCHAR(9) NOT NULL, 
         FOREIGN KEY(guest_id) REFERENCES guests(guest_id),
         FOREIGN KEY(room_number) REFERENCES rooms(room_number),
@@ -84,9 +85,9 @@ class InitializeDatabase:
         """)
 
         self.cursor.execute(f"""CREATE TABLE IF NOT EXISTS availedServices(
-        avail_id VARCHAR(11) NOT NULL,
+        avail_id VARCHAR(12) NOT NULL,
         avail_date DATE NOT NULL, 
-        guest_id VARCHAR(10) NOT NULL, 
+        guest_id VARCHAR(12) NOT NULL, 
         service_id VARCHAR(11) NOT NULL, 
         FOREIGN KEY(guest_id) REFERENCES guests(guest_id),
         FOREIGN KEY(service_id) REFERENCES services(service_id),

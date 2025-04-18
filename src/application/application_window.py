@@ -133,3 +133,5 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.load_application_window_fonts.load_fonts()
 
+    def closeEvent(self, event):
+        self.db_driver.close_connection()
