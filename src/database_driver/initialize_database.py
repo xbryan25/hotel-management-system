@@ -85,9 +85,9 @@ class InitializeDatabase:
         """)
 
         self.cursor.execute(f"""CREATE TABLE IF NOT EXISTS availedServices(
-        avail_id VARCHAR(11) NOT NULL,
+        avail_id VARCHAR(12) NOT NULL,
         avail_date DATE NOT NULL, 
-        guest_id VARCHAR(10) NOT NULL, 
+        guest_id VARCHAR(12) NOT NULL, 
         service_id VARCHAR(11) NOT NULL, 
         FOREIGN KEY(guest_id) REFERENCES guests(guest_id),
         FOREIGN KEY(service_id) REFERENCES services(service_id),
