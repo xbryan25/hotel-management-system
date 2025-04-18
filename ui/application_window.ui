@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1382</width>
-    <height>670</height>
+    <width>1303</width>
+    <height>743</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -296,18 +296,24 @@
       </property>
       <widget class="QWidget" name="dashboard_page_widget">
        <layout class="QGridLayout" name="gridLayout_6">
+        <property name="leftMargin">
+         <number>18</number>
+        </property>
+        <property name="verticalSpacing">
+         <number>6</number>
+        </property>
         <item row="0" column="3" rowspan="2">
          <widget class="QFrame" name="calendar_frame">
           <property name="minimumSize">
            <size>
-            <width>350</width>
-            <height>240</height>
+            <width>280</width>
+            <height>210</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>350</width>
-            <height>240</height>
+            <width>280</width>
+            <height>228</height>
            </size>
           </property>
           <property name="frameShape">
@@ -317,6 +323,21 @@
            <enum>QFrame::Raised</enum>
           </property>
           <layout class="QGridLayout" name="gridLayout_10">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <property name="spacing">
+            <number>0</number>
+           </property>
            <item row="0" column="0">
             <widget class="QCalendarWidget" name="calendar_widget">
              <property name="styleSheet">
@@ -347,7 +368,7 @@
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>200</height>
+            <height>250</height>
            </size>
           </property>
           <property name="frameShape">
@@ -358,13 +379,16 @@
           </property>
           <layout class="QGridLayout" name="gridLayout_12">
            <property name="leftMargin">
-            <number>9</number>
+            <number>0</number>
            </property>
            <property name="topMargin">
             <number>0</number>
            </property>
            <property name="rightMargin">
-            <number>9</number>
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
            </property>
            <property name="spacing">
             <number>0</number>
@@ -391,10 +415,10 @@
                <number>9</number>
               </property>
               <property name="rightMargin">
-               <number>0</number>
+               <number>9</number>
               </property>
               <property name="bottomMargin">
-               <number>0</number>
+               <number>9</number>
               </property>
               <property name="horizontalSpacing">
                <number>0</number>
@@ -414,7 +438,49 @@
                </widget>
               </item>
               <item row="1" column="0">
-               <widget class="QTableWidget" name="recent_check_in_frame_table_widget"/>
+               <widget class="QTableWidget" name="recent_check_in_frame_table_widget">
+                <property name="autoScroll">
+                 <bool>true</bool>
+                </property>
+                <attribute name="horizontalHeaderCascadingSectionResizes">
+                 <bool>false</bool>
+                </attribute>
+                <attribute name="horizontalHeaderDefaultSectionSize">
+                 <number>85</number>
+                </attribute>
+                <attribute name="horizontalHeaderMinimumSectionSize">
+                 <number>85</number>
+                </attribute>
+                <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+                 <bool>false</bool>
+                </attribute>
+                <attribute name="horizontalHeaderStretchLastSection">
+                 <bool>true</bool>
+                </attribute>
+                <attribute name="verticalHeaderVisible">
+                 <bool>false</bool>
+                </attribute>
+                <column>
+                 <property name="text">
+                  <string>Booking ID</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Guest Name</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Room No.</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Time</string>
+                 </property>
+                </column>
+               </widget>
               </item>
              </layout>
             </widget>
@@ -435,10 +501,10 @@
                <number>9</number>
               </property>
               <property name="rightMargin">
-               <number>0</number>
+               <number>9</number>
               </property>
               <property name="bottomMargin">
-               <number>0</number>
+               <number>9</number>
               </property>
               <property name="horizontalSpacing">
                <number>0</number>
@@ -458,7 +524,40 @@
                </widget>
               </item>
               <item row="1" column="0">
-               <widget class="QTableWidget" name="recent_check_out_frame_table_widget"/>
+               <widget class="QTableWidget" name="recent_check_out_frame_table_widget">
+                <attribute name="horizontalHeaderDefaultSectionSize">
+                 <number>85</number>
+                </attribute>
+                <attribute name="horizontalHeaderMinimumSectionSize">
+                 <number>85</number>
+                </attribute>
+                <attribute name="horizontalHeaderStretchLastSection">
+                 <bool>true</bool>
+                </attribute>
+                <attribute name="verticalHeaderVisible">
+                 <bool>false</bool>
+                </attribute>
+                <column>
+                 <property name="text">
+                  <string>Booking ID</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Guest Name</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Room No.</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Time</string>
+                 </property>
+                </column>
+               </widget>
               </item>
              </layout>
             </widget>
@@ -468,13 +567,13 @@
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>40</height>
+               <height>35</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>40</height>
+               <height>35</height>
               </size>
              </property>
              <property name="font">
@@ -497,7 +596,7 @@
           <property name="minimumSize">
            <size>
             <width>100</width>
-            <height>200</height>
+            <height>250</height>
            </size>
           </property>
           <property name="frameShape">
@@ -527,7 +626,7 @@
              <property name="minimumSize">
               <size>
                <width>200</width>
-               <height>40</height>
+               <height>35</height>
               </size>
              </property>
              <property name="font">
@@ -578,6 +677,9 @@
                <height>16777215</height>
               </size>
              </property>
+             <property name="placeholderText">
+              <string>Search</string>
+             </property>
             </widget>
            </item>
            <item row="0" column="3">
@@ -596,6 +698,9 @@
              </property>
              <property name="cursor">
               <cursorShape>PointingHandCursor</cursorShape>
+             </property>
+             <property name="frame">
+              <bool>false</bool>
              </property>
              <item>
               <property name="text">
@@ -637,6 +742,42 @@
                <height>0</height>
               </size>
              </property>
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>115</number>
+             </attribute>
+             <attribute name="horizontalHeaderStretchLastSection">
+              <bool>true</bool>
+             </attribute>
+             <column>
+              <property name="text">
+               <string>Reservation ID</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Guest Name</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Room No.</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Room Type</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Check-In &amp; Check-Out</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Status</string>
+              </property>
+             </column>
             </widget>
            </item>
           </layout>
@@ -657,22 +798,22 @@
            <enum>QFrame::Raised</enum>
           </property>
           <layout class="QGridLayout" name="gridLayout_16">
-           <item row="2" column="0" colspan="2">
-            <widget class="QLabel" name="quick_action_frame_room_num_label">
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <item row="6" column="1">
+            <widget class="QPushButton" name="quick_action_frame_confirm_button">
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>20</height>
+               <height>25</height>
               </size>
              </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>30</height>
-              </size>
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
              </property>
              <property name="text">
-              <string>Room No.</string>
+              <string>Confirm</string>
              </property>
             </widget>
            </item>
@@ -692,6 +833,22 @@
              </property>
             </widget>
            </item>
+           <item row="6" column="0">
+            <widget class="QPushButton" name="quick_action_frame_cancel_button">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
+             <property name="text">
+              <string>Cancel</string>
+             </property>
+            </widget>
+           </item>
            <item row="1" column="0">
             <widget class="QPushButton" name="quick_action_frame_check_in_button">
              <property name="minimumSize">
@@ -708,35 +865,42 @@
              </property>
             </widget>
            </item>
-           <item row="6" column="1">
-            <widget class="QPushButton" name="quick_action_frame_confirm_button">
+           <item row="2" column="0" colspan="2">
+            <widget class="QLabel" name="quick_action_frame_room_num_label">
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>25</height>
+               <height>20</height>
               </size>
              </property>
-             <property name="cursor">
-              <cursorShape>PointingHandCursor</cursorShape>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
              </property>
              <property name="text">
-              <string>Confirm</string>
+              <string>Room No.</string>
              </property>
             </widget>
            </item>
-           <item row="6" column="0">
-            <widget class="QPushButton" name="quick_action_frame_cancel_button">
-             <property name="minimumSize">
+           <item row="0" column="0" colspan="2">
+            <widget class="QLabel" name="quick_action_frame_label">
+             <property name="maximumSize">
               <size>
-               <width>0</width>
-               <height>25</height>
+               <width>16777215</width>
+               <height>30</height>
               </size>
              </property>
-             <property name="cursor">
-              <cursorShape>PointingHandCursor</cursorShape>
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
              </property>
              <property name="text">
-              <string>Cancel</string>
+              <string>Quick Action</string>
              </property>
             </widget>
            </item>
@@ -765,26 +929,6 @@
            <item row="5" column="0" colspan="2">
             <widget class="QLineEdit" name="quick_action_frame_guest_name_lineedit"/>
            </item>
-           <item row="0" column="0" colspan="2">
-            <widget class="QLabel" name="quick_action_frame_label">
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>14</pointsize>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Quick Action</string>
-             </property>
-            </widget>
-           </item>
           </layout>
          </widget>
         </item>
@@ -793,13 +937,13 @@
           <property name="minimumSize">
            <size>
             <width>400</width>
-            <height>60</height>
+            <height>70</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
             <width>16777215</width>
-            <height>60</height>
+            <height>70</height>
            </size>
           </property>
           <property name="frameShape">
@@ -829,7 +973,7 @@
             <widget class="QLineEdit" name="search_bar_frame_search_lineedit">
              <property name="minimumSize">
               <size>
-               <width>475</width>
+               <width>425</width>
                <height>50</height>
               </size>
              </property>
@@ -850,7 +994,7 @@ border-radius: 20px;</string>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>20</width>
+               <width>40</width>
                <height>20</height>
               </size>
              </property>
@@ -864,13 +1008,13 @@ border-radius: 20px;</string>
           <property name="minimumSize">
            <size>
             <width>175</width>
-            <height>60</height>
+            <height>70</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
             <width>175</width>
-            <height>16777215</height>
+            <height>70</height>
            </size>
           </property>
           <property name="frameShape">
@@ -880,7 +1024,13 @@ border-radius: 20px;</string>
            <enum>QFrame::Raised</enum>
           </property>
           <layout class="QGridLayout" name="gridLayout_9">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
            <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
             <number>0</number>
            </property>
            <property name="verticalSpacing">
@@ -890,7 +1040,7 @@ border-radius: 20px;</string>
             <widget class="QLabel" name="current_day_label">
              <property name="font">
               <font>
-               <pointsize>12</pointsize>
+               <pointsize>16</pointsize>
               </font>
              </property>
              <property name="text">
@@ -902,7 +1052,7 @@ border-radius: 20px;</string>
             <widget class="QLabel" name="current_time_label">
              <property name="font">
               <font>
-               <pointsize>18</pointsize>
+               <pointsize>24</pointsize>
                <weight>75</weight>
                <bold>true</bold>
               </font>
@@ -936,7 +1086,16 @@ border-radius: 20px;</string>
            <enum>QFrame::Raised</enum>
           </property>
           <layout class="QGridLayout" name="gridLayout_4">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
            <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <property name="verticalSpacing">
@@ -947,13 +1106,13 @@ border-radius: 20px;</string>
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>40</height>
+               <height>35</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>40</height>
+               <height>35</height>
               </size>
              </property>
              <property name="font">
@@ -979,7 +1138,7 @@ border-radius: 20px;</string>
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>16777215</height>
+               <height>100</height>
               </size>
              </property>
              <property name="styleSheet">
@@ -1006,7 +1165,13 @@ border-radius: 20px;</string>
                 <property name="minimumSize">
                  <size>
                   <width>85</width>
-                  <height>25</height>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>20</height>
                  </size>
                 </property>
                 <property name="font">
@@ -1026,7 +1191,13 @@ border-radius: 20px;</string>
                 <property name="minimumSize">
                  <size>
                   <width>85</width>
-                  <height>25</height>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>20</height>
                  </size>
                 </property>
                 <property name="font">
@@ -1044,12 +1215,18 @@ border-radius: 20px;</string>
                 <property name="minimumSize">
                  <size>
                   <width>80</width>
-                  <height>50</height>
+                  <height>40</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>40</height>
                  </size>
                 </property>
                 <property name="font">
                  <font>
-                  <pointsize>28</pointsize>
+                  <pointsize>24</pointsize>
                   <weight>75</weight>
                   <bold>true</bold>
                  </font>
@@ -1076,7 +1253,7 @@ border-radius: 20px;</string>
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>16777215</height>
+               <height>100</height>
               </size>
              </property>
              <property name="styleSheet">
@@ -1097,7 +1274,13 @@ border-radius: 20px;</string>
                 <property name="minimumSize">
                  <size>
                   <width>85</width>
-                  <height>25</height>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>20</height>
                  </size>
                 </property>
                 <property name="font">
@@ -1117,7 +1300,13 @@ border-radius: 20px;</string>
                 <property name="minimumSize">
                  <size>
                   <width>85</width>
-                  <height>25</height>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>20</height>
                  </size>
                 </property>
                 <property name="font">
@@ -1135,7 +1324,13 @@ border-radius: 20px;</string>
                 <property name="minimumSize">
                  <size>
                   <width>80</width>
-                  <height>50</height>
+                  <height>40</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>40</height>
                  </size>
                 </property>
                 <property name="font">
@@ -1167,7 +1362,7 @@ border-radius: 20px;</string>
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>16777215</height>
+               <height>100</height>
               </size>
              </property>
              <property name="styleSheet">
@@ -1226,7 +1421,13 @@ border-radius: 20px;</string>
                 <property name="minimumSize">
                  <size>
                   <width>80</width>
-                  <height>50</height>
+                  <height>40</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>40</height>
                  </size>
                 </property>
                 <property name="font">
@@ -1258,7 +1459,7 @@ border-radius: 20px;</string>
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>16777215</height>
+               <height>100</height>
               </size>
              </property>
              <property name="styleSheet">
@@ -1323,7 +1524,13 @@ border-radius: 20px;</string>
                 <property name="minimumSize">
                  <size>
                   <width>80</width>
-                  <height>50</height>
+                  <height>40</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>40</height>
                  </size>
                 </property>
                 <property name="font">
@@ -1355,7 +1562,7 @@ border-radius: 20px;</string>
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>16777215</height>
+               <height>100</height>
               </size>
              </property>
              <property name="styleSheet">
@@ -1405,7 +1612,7 @@ border-radius: 20px;</string>
                  </font>
                 </property>
                 <property name="text">
-                 <string>Avaliable</string>
+                 <string>Available</string>
                 </property>
                </widget>
               </item>
@@ -1414,7 +1621,13 @@ border-radius: 20px;</string>
                 <property name="minimumSize">
                  <size>
                   <width>80</width>
-                  <height>50</height>
+                  <height>40</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>40</height>
                  </size>
                 </property>
                 <property name="font">
@@ -1464,7 +1677,7 @@ border-radius: 20px;</string>
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>40</height>
+               <height>35</height>
               </size>
              </property>
              <property name="font">
@@ -1480,7 +1693,21 @@ border-radius: 20px;</string>
             </widget>
            </item>
            <item row="1" column="0" colspan="2">
-            <widget class="QTableWidget" name="rooms_frame_table_widget"/>
+            <widget class="QTableWidget" name="rooms_frame_table_widget">
+             <attribute name="horizontalHeaderStretchLastSection">
+              <bool>true</bool>
+             </attribute>
+             <column>
+              <property name="text">
+               <string>Room No.</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Status</string>
+              </property>
+             </column>
+            </widget>
            </item>
            <item row="0" column="1">
             <widget class="QComboBox" name="rooms_frame_status_combobox">
@@ -1492,6 +1719,9 @@ border-radius: 20px;</string>
              </property>
              <property name="cursor">
               <cursorShape>PointingHandCursor</cursorShape>
+             </property>
+             <property name="frame">
+              <bool>false</bool>
              </property>
              <item>
               <property name="text">

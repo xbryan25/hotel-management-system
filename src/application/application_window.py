@@ -3,6 +3,7 @@ from PyQt6.QtWidgets import QMainWindow, QListWidgetItem
 from PyQt6.QtCore import Qt, QSize
 
 from application.application_window_ui import Ui_MainWindow as ApplicationWindowDesign
+
 from database_driver.database_driver import DatabaseDriver
 from utils.sidebar_cursor_changer import SidebarCursorChanger
 
@@ -25,6 +26,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.expanded_buttons_list_widget.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
         self.set_external_stylesheet()
+
         self.add_signals_to_sidebar_items()
 
     def show_collapsed_sidebar_frame(self):
@@ -109,6 +111,3 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         with open("../resources/styles/dashboard_page.qss", "r") as file:
             self.dashboard_page_widget.setStyleSheet(file.read())
-
-    def load_external_fonts(self):
-        pass

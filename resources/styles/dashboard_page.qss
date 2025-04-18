@@ -1,0 +1,233 @@
+
+QTableWidget {
+    border: none;
+}
+
+QPushButton, QLineEdit{
+    border-radius: 5px;
+}
+
+QCalendarWidget QWidget#qt_calendar_navigationbar{
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+}
+
+QCalendarWidget QToolButton{
+    background-color: transparent;
+    color: black;
+    font-weight: bold;
+    border: none;
+}
+
+QComboBox{
+    padding-left: 3px;
+    border-radius: 5px;
+}
+
+QComboBox::drop-down {
+    background: transparent;
+    border: none;
+    width: 20px;
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    margin: 2px 4px 2px 0;
+}
+
+QComboBox::down-arrow {
+    image: url(../resources/icons/dashboard_page/arrow_down_icon.svg);
+    width: 15px;
+    height: 15px;
+}
+
+
+#today_check_in_frame{
+    background-color: #A3E4D7;
+    border: none;
+    border-radius: 10px;
+
+    background-image: url(../resources/icons/dashboard_page/check_in_icon.svg);
+    background-repeat: no-repeat;
+    background-position: top left;
+    background-origin: content;
+
+    padding: 0;
+    margin: 0;
+}
+
+#today_check_out_frame{
+    background-color: #F8C471;
+    border: none;
+    border-radius: 10px;
+
+    background-image: url(../resources/icons/dashboard_page/check_out_icon.svg);
+    background-repeat: no-repeat;
+    background-position: top left;
+    background-origin: content;
+
+    padding: 0;
+    margin: 0;
+}
+
+#available_rooms_frame{
+    background-color: #ABEBC6;
+    border: none;
+    border-radius: 10px;
+
+    background-image: url(../resources/icons/dashboard_page/available_rooms_icon.svg);
+    background-repeat: no-repeat;
+    background-position: top left;
+    background-origin: content;
+
+    padding: 0;
+    margin: 0;
+}
+
+#reserved_rooms_frame{
+    background-color: #85C1E9;
+    border: none;
+    border-radius: 10px;
+
+    background-image: url(../resources/icons/dashboard_page/reserved_rooms_icon.svg);
+    background-repeat: no-repeat;
+    background-position: top left;
+    background-origin: content;
+
+    padding: 0;
+    margin: 0;
+}
+
+#booked_rooms_frame{
+    background-color: #F1948A;
+    border: none;
+    border-radius: 10px;
+
+    background-image: url(../resources/icons/dashboard_page/booked_rooms_icon.svg);
+    background-repeat: no-repeat;
+    background-position: top left;
+    background-origin: content;
+
+    padding: 0;
+    margin: 0;
+}
+
+#overview_label, #todays_activity_frame_label{
+    padding-left: 3px;
+}
+
+#todays_activity_frame_label{
+    padding-left: 3px;
+    color: #FFFFFF;
+    background-color: #194FCC;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+#recent_check_in_frame{
+    border-bottom-left-radius: 10px;
+}
+
+#recent_check_out_frame{
+    border-bottom-right-radius: 10px;
+}
+
+#recent_check_in_frame, #recent_check_in_frame_table_widget{
+    background-color: #E3F2FD;
+}
+
+#recent_check_out_frame, #recent_check_out_frame_table_widget{
+    background-color: #FFF3E0;
+}
+
+#reservation_list_frame, #rooms_frame, #quick_action_frame{
+    background-color: #FFFFFF;
+    border-radius: 10px;
+}
+
+#quick_action_frame_check_in_button,
+#quick_action_frame_confirm_button,
+#reservation_list_frame_add_reservation_button{
+
+    background-color: #194FCC;
+    color: #FFFFFF;
+
+}
+
+#reservation_list_frame_search_lineedit,
+#reservation_list_frame_status_combobox,
+#quick_action_frame_check_out_button,
+#rooms_frame_status_combobox{
+
+    background-color: #D9D9D9;
+
+}
+
+#reservation_list_frame_search_lineedit{
+    border: none;
+
+
+    background-image: url(../resources/icons/dashboard_page/search_icon_small.svg);
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-origin: border;
+
+    padding-left: 28px;
+
+}
+
+#search_bar_frame_search_lineedit{
+
+    background-image: url(../resources/icons/dashboard_page/search_icon_big.svg);
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-origin: border;
+
+    padding-left: 48px;
+
+}
+
+#reservation_list_frame_add_reservation_button{
+    background-image: url(../resources/icons/dashboard_page/add_icon.svg);
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-origin: border;
+}
+
+#quick_action_frame_cancel_button{
+
+    background-color: #FFFFFF;
+    border: 1px solid #000000;
+}
+
+#quick_action_frame_room_num_lineedit,
+#quick_action_frame_guest_name_lineedit{
+
+    border: 1px solid #000000;
+}
+
+#recent_check_in_frame_table_widget QTableWidget {
+    background-color: #E3F2FD;
+}
+
+#recent_check_in_frame_table_widget QHeaderView::section {
+    background-color: #E3F2FD;
+    color: black;
+    border: none;
+}
+
+#recent_check_out_frame_table_widget QTableWidget {
+    background-color: #E3F2FD;
+}
+
+#recent_check_out_frame_table_widget QHeaderView::section {
+    background-color: #FFF3E0;
+    color: black;
+    border: none;
+}
+
+#reservation_list_frame_table_widget QHeaderView::section,
+#rooms_frame_table_widget QHeaderView::section{
+
+    background-color: #FFFFFF;
+    color: black;
+    border: none;
+}
