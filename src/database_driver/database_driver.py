@@ -303,6 +303,64 @@ class DatabaseDriver:
         self.cursor.execute(sql, values)
         self.db.commit()
 
+    def get_latest_reservation_id(self):
+
+        self.cursor.execute("""SELECT reservation_id FROM reservedrooms
+            ORDER BY CAST(SUBSTRING(reservation_id, 9) AS UNSIGNED) DESC LIMIT 1;
+        """)
+
+        result = self.cursor.fetchone()
+
+        if not result:
+            return "reserve-000000"
+        else:
+            return result[0]
+
+    def add_reserved_room(self, reserved_room_information):
+        sql = """INSERT INTO reservedrooms
+                (reservation_id, reservation_date, check_in_date, check_out_date, payment_status, guest_id, room_number) VALUES
+                (%s, %s, %s, %s, %s, %s, %s)"""
+
+        latest_reservation_id = self.get_latest_reservation_id()
+
+        new_reservation_id = f"reserve-{int(latest_reservation_id[9:]) + 1:06}"
+
+        values = (new_reservation_id,
+                  reserved_room_information[0],
+                  reserved_room_information[1],
+                  reserved_room_information[2],
+                  reserved_room_information[3],
+                  reserved_room_information[4],
+                  reserved_room_information[5])
+
+        self.cursor.execute(sql, values)
+        self.db.commit()
+
+    def update_reserved_room(self, old_reservation_id, reserved_room_information):
+        sql = """UPDATE reservedrooms SET reservation_id=%s, reservation_date=%s, check_in_date=%s, check_out_date=%s, 
+        payment_status=%s, guest_id=%s, room_number=%s
+        WHERE reservation_id=%s;"""
+
+        values = (reserved_room_information[0],
+                  reserved_room_information[1],
+                  reserved_room_information[2],
+                  reserved_room_information[3],
+                  reserved_room_information[4],
+                  reserved_room_information[5],
+                  reserved_room_information[6],
+                  old_reservation_id)
+
+        self.cursor.execute(sql, values)
+        self.db.commit()
+
+    def delete_reserved_room(self, identifier):
+
+        sql = "DELETE FROM reservedrooms WHERE reservation_id=%s"
+        values = (identifier.strip(),)
+
+        self.cursor.execute(sql, values)
+        self.db.commit()
+
     @staticmethod
     def check_environment_variables():
         if not all([os.getenv("DB_HOST"), os.getenv("DB_USER"), os.getenv("DB_PASSWORD")]):

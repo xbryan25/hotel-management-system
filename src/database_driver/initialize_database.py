@@ -37,7 +37,7 @@ class InitializeDatabase:
         )""")
 
         self.cursor.execute("""CREATE TABLE IF NOT EXISTS reservedRooms(
-        reservation_id VARCHAR(13) NOT NULL,
+        reservation_id VARCHAR(14) NOT NULL,
         reservation_date DATETIME NOT NULL, 
         check_in_date DATETIME NOT NULL, 
         check_out_date DATETIME NOT NULL, 
