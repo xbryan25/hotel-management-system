@@ -95,7 +95,58 @@ class DatabaseDriver:
         self.cursor.execute(sql, values)
         self.db.commit()
 
+    def get_latest_room_number(self):
 
+        self.cursor.execute("""SELECT room_number FROM rooms
+            ORDER BY CAST(SUBSTRING(room_number, 6) AS UNSIGNED) DESC LIMIT 1;
+        """)
+
+        result = self.cursor.fetchone()
+
+        if not result:
+            return "room-0000"
+        else:
+            return result[0]
+
+    def add_room(self, room_information):
+        sql = """INSERT INTO rooms
+                (room_number, room_type, price, availability_status, capacity) VALUES
+                (%s, %s, %s, %s, %s)"""
+
+        latest_room_number = self.get_latest_room_number()
+
+        new_room_number = f"room-{int(latest_room_number[6:]) + 1:04}"
+
+        values = (new_room_number,
+                  room_information[0],
+                  room_information[1],
+                  room_information[2],
+                  room_information[3])
+
+        self.cursor.execute(sql, values)
+        self.db.commit()
+
+    def update_room(self, old_room_number, room_information):
+        sql = """UPDATE rooms SET room_number=%s, room_type=%s, price=%s, 
+        availability_status=%s, capacity=%s WHERE room_number=%s"""
+
+        values = (room_information[0],
+                  room_information[1],
+                  room_information[2],
+                  room_information[3],
+                  room_information[4],
+                  old_room_number)
+
+        self.cursor.execute(sql, values)
+        self.db.commit()
+
+    def delete_room(self, identifier):
+
+        sql = "DELETE FROM rooms WHERE room_number=%s"
+        values = (identifier.strip(),)
+
+        self.cursor.execute(sql, values)
+        self.db.commit()
 
     def check_environment_variables(self):
         if not all([os.getenv("DB_HOST"), os.getenv("DB_USER"), os.getenv("DB_PASSWORD")]):
