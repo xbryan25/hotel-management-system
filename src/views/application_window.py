@@ -2,17 +2,18 @@ from PyQt6.QtGui import QIcon, QFont, QFontDatabase
 from PyQt6.QtWidgets import QMainWindow, QListWidgetItem
 from PyQt6.QtCore import Qt, QSize
 
-from ui.application_window_ui import Ui_MainWindow as ApplicationWindowDesign
+from ui.application_window_ui import Ui_MainWindow as ApplicationWindowUI
 
-from utils.application_window_font_loader import ApplicationWindowFontLoader
 from utils.sidebar_cursor_changer import SidebarCursorChanger
 
 from db.database_driver import DatabaseDriver
 
 from controllers.dashboard_controller import DashboardController
 
+from views import *
 
-class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
+
+class ApplicationWindow(QMainWindow, ApplicationWindowUI):
     def __init__(self):
         super().__init__()
 
@@ -27,10 +28,12 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.set_external_stylesheet()
         self.load_fonts()
+        self.apply_fonts()
 
         self.setup_toggle_sidebar_button()
         self.add_signals_to_sidebar_items()
 
+        self.load_pages()
         self.setup_controllers()
 
     def show_collapsed_sidebar_frame(self):
@@ -114,12 +117,33 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.collapsed_buttons_list_widget.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.expanded_buttons_list_widget.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
+    def load_pages(self):
+        self.billing_page = BillingPage()
+        self.booking_page = BookingPage()
+        self.calendar_page = CalendarPage()
+        self.dashboard_page = DashboardPage()
+        self.guests_page = GuestsPage()
+        self.reservation_page = ReservationPage()
+        self.rooms_page = RoomsPage()
+        self.services_page = ServicesPage()
+        self.settings_page = SettingsPage()
+
+        # Loaded according to index of sidebar
+        self.stacked_widget.addWidget(self.dashboard_page)
+        self.stacked_widget.addWidget(self.rooms_page)
+        self.stacked_widget.addWidget(self.calendar_page)
+        self.stacked_widget.addWidget(self.reservation_page)
+        self.stacked_widget.addWidget(self.booking_page)
+        self.stacked_widget.addWidget(self.guests_page)
+        self.stacked_widget.addWidget(self.billing_page)
+        self.stacked_widget.addWidget(self.services_page)
+        self.stacked_widget.addWidget(self.settings_page)
+
+        self.stacked_widget.setCurrentWidget(self.dashboard_page)
+
     def set_external_stylesheet(self):
         with open("../resources/styles/sidebar.qss", "r") as file:
             self.sidebar_frame.setStyleSheet(file.read())
-
-        with open("../resources/styles/dashboard_page.qss", "r") as file:
-            self.dashboard_page_widget.setStyleSheet(file.read())
 
     def load_fonts(self):
         # Load fonts, they can be used in any part of the application
@@ -138,12 +162,12 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.inter_font_family = QFontDatabase.applicationFontFamilies(inter_font_id)[0]
         self.abz_font_family = QFontDatabase.applicationFontFamilies(abz_font_id)[0]
 
-        self.load_application_window_fonts = ApplicationWindowFontLoader(self)
-
-        self.load_application_window_fonts.load_fonts()
+    def apply_fonts(self):
+        self.title_label.setFont(QFont(self.abz_font_family, 28, QFont.Weight.Light))
+        self.expanded_buttons_list_widget.setFont(QFont(self.inter_font_family, 14, QFont.Weight.Medium))
 
     def setup_controllers(self):
-        self.dashboard_controller = DashboardController(self, self.db_driver)
+        self.dashboard_controller = DashboardController(self.dashboard_page, self.db_driver)
 
     def closeEvent(self, event):
         self.db_driver.close_connection()
