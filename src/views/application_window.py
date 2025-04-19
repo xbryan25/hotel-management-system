@@ -143,7 +143,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.load_application_window_fonts.load_fonts()
 
     def setup_controllers(self):
-        self.dashboard_controller = DashboardController(self.dashboard_page_widget, self.db_driver)
+        self.dashboard_controller = DashboardController(self, self.db_driver)
 
     def closeEvent(self, event):
         self.db_driver.close_connection()

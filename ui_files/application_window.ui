@@ -114,6 +114,12 @@
               <height>60</height>
              </size>
             </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>60</height>
+             </size>
+            </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -199,7 +205,7 @@
             <property name="maximumSize">
              <size>
               <width>200</width>
-              <height>16777215</height>
+              <height>60</height>
              </size>
             </property>
             <property name="frameShape">
@@ -367,7 +373,7 @@
          <widget class="QFrame" name="todays_activity_frame">
           <property name="minimumSize">
            <size>
-            <width>0</width>
+            <width>726</width>
             <height>250</height>
            </size>
           </property>
@@ -438,48 +444,28 @@
                </widget>
               </item>
               <item row="1" column="0">
-               <widget class="QTableWidget" name="recent_check_in_frame_table_widget">
-                <property name="autoScroll">
-                 <bool>true</bool>
+               <widget class="QTableView" name="recent_check_in_frame_table_view">
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
                 </property>
-                <attribute name="horizontalHeaderCascadingSectionResizes">
+                <property name="frameShadow">
+                 <enum>QFrame::Plain</enum>
+                </property>
+                <property name="showGrid">
                  <bool>false</bool>
-                </attribute>
+                </property>
+                <property name="cornerButtonEnabled">
+                 <bool>false</bool>
+                </property>
                 <attribute name="horizontalHeaderDefaultSectionSize">
-                 <number>85</number>
-                </attribute>
-                <attribute name="horizontalHeaderMinimumSectionSize">
-                 <number>85</number>
-                </attribute>
-                <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-                 <bool>false</bool>
-                </attribute>
-                <attribute name="horizontalHeaderStretchLastSection">
-                 <bool>true</bool>
+                 <number>90</number>
                 </attribute>
                 <attribute name="verticalHeaderVisible">
                  <bool>false</bool>
                 </attribute>
-                <column>
-                 <property name="text">
-                  <string>Booking ID</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>Guest Name</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>Room No.</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>Time</string>
-                 </property>
-                </column>
+                <attribute name="verticalHeaderHighlightSections">
+                 <bool>false</bool>
+                </attribute>
                </widget>
               </item>
              </layout>
@@ -524,39 +510,28 @@
                </widget>
               </item>
               <item row="1" column="0">
-               <widget class="QTableWidget" name="recent_check_out_frame_table_widget">
+               <widget class="QTableView" name="recent_check_out_frame_table_view">
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Plain</enum>
+                </property>
+                <property name="showGrid">
+                 <bool>false</bool>
+                </property>
+                <property name="cornerButtonEnabled">
+                 <bool>false</bool>
+                </property>
                 <attribute name="horizontalHeaderDefaultSectionSize">
-                 <number>85</number>
-                </attribute>
-                <attribute name="horizontalHeaderMinimumSectionSize">
-                 <number>85</number>
-                </attribute>
-                <attribute name="horizontalHeaderStretchLastSection">
-                 <bool>true</bool>
+                 <number>90</number>
                 </attribute>
                 <attribute name="verticalHeaderVisible">
                  <bool>false</bool>
                 </attribute>
-                <column>
-                 <property name="text">
-                  <string>Booking ID</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>Guest Name</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>Room No.</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>Time</string>
-                 </property>
-                </column>
+                <attribute name="verticalHeaderHighlightSections">
+                 <bool>false</bool>
+                </attribute>
                </widget>
               </item>
              </layout>
@@ -621,6 +596,25 @@
            <property name="spacing">
             <number>6</number>
            </property>
+           <item row="0" column="2">
+            <widget class="QLineEdit" name="reservation_list_frame_search_lineedit">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>200</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="placeholderText">
+              <string>Search</string>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="0">
             <widget class="QLabel" name="reservation_list_frame_label">
              <property name="minimumSize">
@@ -660,25 +654,6 @@
              </property>
              <property name="text">
               <string>Add Reservation</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QLineEdit" name="reservation_list_frame_search_lineedit">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>200</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="placeholderText">
-              <string>Search</string>
              </property>
             </widget>
            </item>
@@ -735,49 +710,31 @@
             </widget>
            </item>
            <item row="1" column="0" colspan="4">
-            <widget class="QTableWidget" name="reservation_list_frame_table_widget">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>0</height>
-              </size>
+            <widget class="QTableView" name="reservation_list_frame_table_view">
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Plain</enum>
+             </property>
+             <property name="showGrid">
+              <bool>false</bool>
+             </property>
+             <property name="gridStyle">
+              <enum>Qt::SolidLine</enum>
+             </property>
+             <property name="cornerButtonEnabled">
+              <bool>false</bool>
              </property>
              <attribute name="horizontalHeaderDefaultSectionSize">
-              <number>115</number>
+              <number>90</number>
              </attribute>
-             <attribute name="horizontalHeaderStretchLastSection">
-              <bool>true</bool>
+             <attribute name="verticalHeaderVisible">
+              <bool>false</bool>
              </attribute>
-             <column>
-              <property name="text">
-               <string>Reservation ID</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Guest Name</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Room No.</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Room Type</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Check-In &amp; Check-Out</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Status</string>
-              </property>
-             </column>
+             <attribute name="verticalHeaderHighlightSections">
+              <bool>false</bool>
+             </attribute>
             </widget>
            </item>
           </layout>

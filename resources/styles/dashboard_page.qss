@@ -130,14 +130,6 @@ QComboBox::down-arrow {
     border-bottom-right-radius: 10px;
 }
 
-#recent_check_in_frame, #recent_check_in_frame_table_widget{
-    background-color: #E3F2FD;
-}
-
-#recent_check_out_frame, #recent_check_out_frame_table_widget{
-    background-color: #FFF3E0;
-}
-
 #reservation_list_frame, #rooms_frame, #quick_action_frame{
     background-color: #FFFFFF;
     border-radius: 10px;
@@ -204,30 +196,4 @@ QComboBox::down-arrow {
     border: 1px solid #000000;
 }
 
-#recent_check_in_frame_table_widget QTableWidget {
-    background-color: #E3F2FD;
-}
 
-#recent_check_in_frame_table_widget QHeaderView::section {
-    background-color: #E3F2FD;
-    color: black;
-    border: none;
-}
-
-#recent_check_out_frame_table_widget QTableWidget {
-    background-color: #E3F2FD;
-}
-
-#recent_check_out_frame_table_widget QHeaderView::section {
-    background-color: #FFF3E0;
-    color: black;
-    border: none;
-}
-
-#reservation_list_frame_table_widget QHeaderView::section,
-#rooms_frame_table_widget QHeaderView::section{
-
-    background-color: #FFFFFF;
-    color: black;
-    border: none;
-}
