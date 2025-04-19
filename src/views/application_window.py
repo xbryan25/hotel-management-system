@@ -2,12 +2,14 @@ from PyQt6.QtGui import QIcon, QFont, QFontDatabase
 from PyQt6.QtWidgets import QMainWindow, QListWidgetItem
 from PyQt6.QtCore import Qt, QSize
 
-from application.application_window_ui import Ui_MainWindow as ApplicationWindowDesign
+from ui.application_window_ui import Ui_MainWindow as ApplicationWindowDesign
 
-from application.load_application_window_fonts import LoadApplicationWindowFonts
-
-from database_driver.database_driver import DatabaseDriver
+from utils.application_window_font_loader import ApplicationWindowFontLoader
 from utils.sidebar_cursor_changer import SidebarCursorChanger
+
+from db.database_driver import DatabaseDriver
+
+from controllers.dashboard_controller import DashboardController
 
 
 class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
@@ -21,16 +23,15 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.collapsed_sidebar_frame.setVisible(False)
 
         self.initialize_sidebar()
-
-        self.setup_toggle_sidebar_button()
-
-        self.collapsed_buttons_list_widget.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self.expanded_buttons_list_widget.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.add_icon_to_toggle_sidebar_button()
 
         self.set_external_stylesheet()
         self.load_fonts()
 
+        self.setup_toggle_sidebar_button()
         self.add_signals_to_sidebar_items()
+
+        self.setup_controllers()
 
     def show_collapsed_sidebar_frame(self):
         self.collapsed_sidebar_frame.setVisible(True)
@@ -53,6 +54,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.show_icons_only_button.clicked.connect(self.show_collapsed_sidebar_frame)
         self.show_icons_and_text_button.clicked.connect(self.show_expanded_sidebar_frame)
 
+    def add_icon_to_toggle_sidebar_button(self):
         self.show_icons_only_button.setIcon(QIcon("../resources/icons/sidebar/expand_sidebar_icon.svg"))
         self.show_icons_and_text_button.setIcon(QIcon("../resources/icons/sidebar/collapse_sidebar_icon.svg"))
 
@@ -69,6 +71,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                              {"name": "Billing", "icon": "../resources/icons/sidebar/billing_icon.svg"},
                              {"name": "Services", "icon": "../resources/icons/sidebar/services_icon.svg"},
                              {"name": "Settings", "icon": "../resources/icons/sidebar/settings_icon.svg"}]
+
 
         self.expanded_buttons_list_widget.clear()
         self.collapsed_buttons_list_widget.clear()
@@ -108,6 +111,9 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.expanded_buttons_list_widget.viewport().installEventFilter(cursor_filter_expanded)
         self.expanded_buttons_list_widget.viewport().setMouseTracking(True)
 
+        self.collapsed_buttons_list_widget.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.expanded_buttons_list_widget.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+
     def set_external_stylesheet(self):
         with open("../resources/styles/sidebar.qss", "r") as file:
             self.sidebar_frame.setStyleSheet(file.read())
@@ -120,8 +126,11 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         QFontDatabase.addApplicationFont("../resources/fonts/Inter-Light.otf")
         QFontDatabase.addApplicationFont("../resources/fonts/Inter-Medium.otf")
         QFontDatabase.addApplicationFont("../resources/fonts/Inter-SemiBold.otf")
+        QFontDatabase.addApplicationFont("../resources/fonts/Inter-Bold.otf")
+        QFontDatabase.addApplicationFont("../resources/fonts/Inter-ExtraBold.otf")
+        QFontDatabase.addApplicationFont("../resources/fonts/Inter-Black.otf")
 
-        # Get font id
+        # Load fonts and get font id
         inter_font_id = QFontDatabase.addApplicationFont("../resources/fonts/Inter-Regular.otf")
         abz_font_id = QFontDatabase.addApplicationFont("../resources/fonts/ABeeZee-Regular.ttf")
 
@@ -129,9 +138,12 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.inter_font_family = QFontDatabase.applicationFontFamilies(inter_font_id)[0]
         self.abz_font_family = QFontDatabase.applicationFontFamilies(abz_font_id)[0]
 
-        self.load_application_window_fonts = LoadApplicationWindowFonts(self)
+        self.load_application_window_fonts = ApplicationWindowFontLoader(self)
 
         self.load_application_window_fonts.load_fonts()
+
+    def setup_controllers(self):
+        self.dashboard_controller = DashboardController(self.dashboard_page_widget, self.db_driver)
 
     def closeEvent(self, event):
         self.db_driver.close_connection()

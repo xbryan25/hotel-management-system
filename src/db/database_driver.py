@@ -2,7 +2,7 @@ import pymysql
 from dotenv import load_dotenv
 import os
 
-from database_driver.initialize_database import InitializeDatabase
+from db.initialize_database import InitializeDatabase
 
 
 load_dotenv()
