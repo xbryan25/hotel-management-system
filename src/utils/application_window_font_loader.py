@@ -1,7 +1,7 @@
 from PyQt6.QtGui import QFont, QFontDatabase
 
 
-class LoadApplicationWindowFonts:
+class ApplicationWindowFontLoader:
     def __init__(self, application_window):
         self.aw = application_window
 
