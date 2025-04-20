@@ -17,10 +17,11 @@ class DashboardController:
     def set_models(self):
         recent_check_in_initial_data = self.db_driver.get_all_booked_room_today("check_in")
         recent_check_out_initial_data = self.db_driver.get_all_booked_room_today("check_out")
+        reservations_initial_data = self.db_driver.get_all_reservations()
 
         self.recent_check_in_table_model = RecentStaysModel(recent_check_in_initial_data)
         self.recent_check_out_table_model = RecentStaysModel(recent_check_out_initial_data)
-        self.reservation_table_model = ReservationModel()
+        self.reservation_table_model = ReservationModel(reservations_initial_data)
 
         self.view.recent_check_in_frame_table_view.setModel(self.recent_check_in_table_model)
         self.view.recent_check_out_frame_table_view.setModel(self.recent_check_out_table_model)

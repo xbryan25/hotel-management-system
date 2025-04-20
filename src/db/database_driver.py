@@ -316,6 +316,24 @@ class DatabaseDriver:
         else:
             return result[0]
 
+    def get_all_reservations(self):
+        # Gets all future reservations, the order of the results are based on the check_in_date
+
+        sql = f"""SELECT reservedrooms.reservation_id, guests.name, rooms.room_number, rooms.room_type, 
+                reservedrooms.check_in_date, reservedrooms.check_out_date
+                FROM reservedrooms 
+                JOIN guests ON reservedrooms.guest_id = guests.guest_id
+                JOIN rooms ON reservedrooms.room_number = rooms.room_number
+                ORDER BY reservedrooms.check_in_date ASC;"""
+
+        self.cursor.execute(sql)
+
+        result = self.cursor.fetchall()
+
+        list_result = [list(row) for row in result]
+
+        return list_result
+
     def add_reserved_room(self, reserved_room_information):
         sql = """INSERT INTO reservedrooms
                 (reservation_id, reservation_date, check_in_date, check_out_date, payment_status, guest_id, room_number) VALUES
