@@ -1,29 +1,43 @@
 from PyQt6.QtCore import QAbstractTableModel, Qt
+from datetime import datetime
 
 
 class ReservationModel(QAbstractTableModel):
-    def __init__(self):
+    def __init__(self, _data=None):
         super().__init__()
 
-        # self.data = _data
-
-        self.temp_data = [["", "", "", "", ""]]
+        self.data = _data or []
 
         self.columns = ["Reservation ID", "Guest Name", "Room No.", "Room Type", "Check-in & Check-out"]
 
+    def update_data(self, _data):
+        self.beginResetModel()
+        self.data = _data
+        self.endResetModel()
+
     def rowCount(self, index=None):
-        return len(self.temp_data)
+        return len(self.data)
 
     def columnCount(self, index=None):
         return len(self.columns)
 
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
 
-        if not index.isValid():
-            return None
-
         if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:
-            return self.temp_data[index.row()][index.column()]
+
+            if index.column() == 4:
+                check_in_date = self.data[index.row()][index.column()]
+                check_out_date = self.data[index.row()][index.column() + 1]
+
+                if isinstance(check_in_date, datetime) and isinstance(check_out_date, datetime):
+                    return f"{check_in_date.strftime("%b %d, %Y")} - {check_out_date.strftime("%b %d, %Y")}"
+
+                return None
+
+            elif index.column() == 5:
+                return None
+
+            return self.data[index.row()][index.column()]
 
         return None
 

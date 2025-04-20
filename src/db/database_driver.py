@@ -108,6 +108,19 @@ class DatabaseDriver:
         else:
             return result[0]
 
+    def get_room_count(self, availability_status):
+        if availability_status not in ["available", "reserved", "occupied"]:
+            raise ValueError(f"Invalid availability status: {availability_status}. Must be 'available', 'reserved', or 'occupied'.")
+
+        sql = "SELECT COUNT(*) FROM rooms WHERE availability_status=%s;"
+        values = (availability_status,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()[0]
+
+        return result
+
     def add_room(self, room_information):
         sql = """INSERT INTO rooms
                 (room_number, room_type, price, availability_status, capacity) VALUES
@@ -316,6 +329,24 @@ class DatabaseDriver:
         else:
             return result[0]
 
+    def get_all_reservations(self):
+        # Gets all future reservations, the order of the results are based on the check_in_date
+
+        sql = f"""SELECT reservedrooms.reservation_id, guests.name, rooms.room_number, rooms.room_type, 
+                reservedrooms.check_in_date, reservedrooms.check_out_date
+                FROM reservedrooms 
+                JOIN guests ON reservedrooms.guest_id = guests.guest_id
+                JOIN rooms ON reservedrooms.room_number = rooms.room_number
+                ORDER BY reservedrooms.check_in_date ASC;"""
+
+        self.cursor.execute(sql)
+
+        result = self.cursor.fetchall()
+
+        list_result = [list(row) for row in result]
+
+        return list_result
+
     def add_reserved_room(self, reserved_room_information):
         sql = """INSERT INTO reservedrooms
                 (reservation_id, reservation_date, check_in_date, check_out_date, payment_status, guest_id, room_number) VALUES
@@ -372,6 +403,40 @@ class DatabaseDriver:
             return "book-000000"
         else:
             return result[0]
+
+    def get_all_booked_room_today(self, check_type):
+
+        if check_type not in ["check_in", "check_out"]:
+            raise ValueError(f"Invalid check_type: {check_type}. Must be 'check_in' or 'check_out'.")
+
+        sql = f"""SELECT bookedrooms.booking_id, guests.name, bookedrooms.room_number,  bookedrooms.{check_type}_date
+                FROM bookedrooms 
+                JOIN guests ON bookedrooms.guest_id = guests.guest_id
+                WHERE bookedrooms.{check_type}_date = CURDATE();"""
+
+        self.cursor.execute(sql)
+
+        result = self.cursor.fetchall()
+
+        list_result = [list(row) for row in result]
+
+        return list_result
+
+    def get_count_all_booked_room_today(self, check_type):
+
+        if check_type not in ["check_in", "check_out"]:
+            raise ValueError(f"Invalid check_type: {check_type}. Must be 'check_in' or 'check_out'.")
+
+        sql = f"""SELECT COUNT(*)
+                FROM bookedrooms 
+                JOIN guests ON bookedrooms.guest_id = guests.guest_id
+                WHERE bookedrooms.{check_type}_date = CURDATE();"""
+
+        self.cursor.execute(sql)
+
+        result = self.cursor.fetchone()[0]
+
+        return result
 
     def add_booked_room(self, booked_room_information):
         sql = """INSERT INTO bookedrooms
