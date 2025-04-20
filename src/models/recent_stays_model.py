@@ -1,18 +1,24 @@
 from PyQt6.QtCore import QAbstractTableModel, Qt
+from datetime import datetime
 
 
 class RecentStaysModel(QAbstractTableModel):
-    def __init__(self):
+    def __init__(self, _data=None):
         super().__init__()
 
         # self.data = _data
 
-        self.temp_data = [["", "", "", ""]]
+        self.data = _data or []
 
         self.columns = ["Booking ID", "Guest Name", "Room No.", "Time"]
 
+    def update_data(self, _data):
+        self.beginResetModel()
+        self.data = _data
+        self.endResetModel()
+
     def rowCount(self, index=None):
-        return len(self.temp_data)
+        return len(self.data)
 
     def columnCount(self, index=None):
         return len(self.columns)
@@ -23,7 +29,12 @@ class RecentStaysModel(QAbstractTableModel):
             return None
 
         if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:
-            return self.temp_data[index.row()][index.column()]
+            value = self.data[index.row()][index.column()]
+
+            if isinstance(value, datetime):
+                return value.strftime("%I:%M %p")
+
+            return value
 
         return None
 

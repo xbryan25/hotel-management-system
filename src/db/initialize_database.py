@@ -59,7 +59,7 @@ class InitializeDatabase:
         room_number VARCHAR(9) NOT NULL, 
         FOREIGN KEY(guest_id) REFERENCES guests(guest_id),
         FOREIGN KEY(room_number) REFERENCES rooms(room_number), 
-        PRIMARY KEY (room_number)
+        PRIMARY KEY (booking_id)
         )""")
 
         self.cursor.execute(f"""CREATE TABLE IF NOT EXISTS paidRooms(

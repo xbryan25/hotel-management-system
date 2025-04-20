@@ -373,6 +373,24 @@ class DatabaseDriver:
         else:
             return result[0]
 
+    def get_all_booked_room_today(self, check_type):
+
+        if check_type not in ["check_in", "check_out"]:
+            raise ValueError(f"Invalid check_type: {check_type}. Must be 'check_in' or 'check_out'.")
+
+        sql = f"""SELECT bookedrooms.booking_id, guests.name, bookedrooms.room_number,  bookedrooms.{check_type}_date
+                FROM bookedrooms 
+                JOIN guests ON bookedrooms.guest_id = guests.guest_id
+                WHERE bookedrooms.{check_type}_date = CURDATE();"""
+
+        self.cursor.execute(sql)
+
+        result = self.cursor.fetchall()
+
+        list_result = [list(row) for row in result]
+
+        return list_result
+
     def add_booked_room(self, booked_room_information):
         sql = """INSERT INTO bookedrooms
                 (booking_id, check_in_status, check_in_date, check_out_date, guest_id, room_number) VALUES
