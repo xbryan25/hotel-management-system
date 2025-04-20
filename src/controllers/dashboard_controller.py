@@ -1,3 +1,5 @@
+from PyQt6.QtCore import QTime, QDateTime, QTimer
+
 from models.recent_stays_model import RecentStaysModel
 from models.reservation_model import ReservationModel
 
@@ -8,6 +10,33 @@ class DashboardController:
         self.db_driver = db_driver
 
         self.load_data()
+
+        # Set up timer to update every 60,000 ms (60 seconds)
+        self.update_date_and_time_timer = QTimer(self.view)
+        self.update_date_and_time_timer.timeout.connect(self.update_date_and_time)
+
+        self.update_date_and_time()
+        self.sync_timer_to_next_minute()
+
+    def update_date_and_time(self):
+
+        current_time = QDateTime.currentDateTime().toString("hh:mm A")
+        current_day = QDateTime.currentDateTime().toString("ddd, MMM d")
+
+        self.view.current_time_label.setText(f"{current_time}")
+        self.view.current_day_label.setText(f"{current_day}")
+
+    def sync_timer_to_next_minute(self):
+        time_now = QTime.currentTime()
+
+        # seconds until next minute - milliseconds until next second
+        msecs_to_next_minute = (60 - time_now.second()) * 1000 - time_now.msec()
+
+        QTimer.singleShot(msecs_to_next_minute, self.start_minute_timer)
+        QTimer.singleShot(msecs_to_next_minute, self.update_date_and_time)
+
+    def start_minute_timer(self):
+        self.update_date_and_time_timer.start(60000)
 
     def load_data(self):
         self.set_models()
