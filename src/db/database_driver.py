@@ -108,6 +108,19 @@ class DatabaseDriver:
         else:
             return result[0]
 
+    def get_room_count(self, availability_status):
+        if availability_status not in ["available", "reserved", "occupied"]:
+            raise ValueError(f"Invalid availability status: {availability_status}. Must be 'available', 'reserved', or 'occupied'.")
+
+        sql = "SELECT COUNT(*) FROM rooms WHERE availability_status=%s;"
+        values = (availability_status,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()[0]
+
+        return result
+
     def add_room(self, room_information):
         sql = """INSERT INTO rooms
                 (room_number, room_type, price, availability_status, capacity) VALUES
@@ -408,6 +421,22 @@ class DatabaseDriver:
         list_result = [list(row) for row in result]
 
         return list_result
+
+    def get_count_all_booked_room_today(self, check_type):
+
+        if check_type not in ["check_in", "check_out"]:
+            raise ValueError(f"Invalid check_type: {check_type}. Must be 'check_in' or 'check_out'.")
+
+        sql = f"""SELECT COUNT(*)
+                FROM bookedrooms 
+                JOIN guests ON bookedrooms.guest_id = guests.guest_id
+                WHERE bookedrooms.{check_type}_date = CURDATE();"""
+
+        self.cursor.execute(sql)
+
+        result = self.cursor.fetchone()[0]
+
+        return result
 
     def add_booked_room(self, booked_room_information):
         sql = """INSERT INTO bookedrooms
