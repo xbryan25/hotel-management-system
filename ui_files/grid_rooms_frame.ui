@@ -103,7 +103,7 @@
    <item row="1" column="0">
     <widget class="QLabel" name="rate_label">
      <property name="text">
-      <string>TextLabel</string>
+      <string>Rate</string>
      </property>
     </widget>
    </item>
@@ -123,7 +123,7 @@
    <item row="1" column="2">
     <widget class="QLabel" name="status_label">
      <property name="text">
-      <string>TextLabel</string>
+      <string>Status</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -152,7 +152,7 @@
       </size>
      </property>
      <property name="text">
-      <string>TextLabel</string>
+      <string>Actions</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -160,7 +160,7 @@
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="QLabel" name="actual_rate_label">
+    <widget class="QLabel" name="rate_value_label">
      <property name="text">
       <string>TextLabel</string>
      </property>
@@ -180,7 +180,7 @@
     </spacer>
    </item>
    <item row="2" column="2">
-    <widget class="QLabel" name="actual_status_label">
+    <widget class="QLabel" name="status_value_label">
      <property name="text">
       <string>TextLabel</string>
      </property>
