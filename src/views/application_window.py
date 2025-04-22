@@ -9,6 +9,7 @@ from utils.sidebar_cursor_changer import SidebarCursorChanger
 from db.database_driver import DatabaseDriver
 
 from controllers.dashboard_controller import DashboardController
+from controllers.rooms_page_controller import RoomsPageController
 
 from views import *
 
@@ -163,6 +164,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
 
     def setup_controllers(self):
         self.dashboard_controller = DashboardController(self.dashboard_page, self.db_driver)
+        self.rooms_controller = RoomsPageController(self.rooms_page, self.db_driver)
 
     def closeEvent(self, event):
         self.db_driver.close_connection()

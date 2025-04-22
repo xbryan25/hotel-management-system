@@ -20,8 +20,6 @@ class ListRoomsFrame(QFrame, ListRoomsFrameUI):
         self.set_icons()
         self.load_fonts()
 
-        self.set_status_value_label_stylesheet("reserved")
-
     def load_room_details(self):
         self.room_type_value_label.setText(self.room_details["room_type"])
 
@@ -49,11 +47,13 @@ class ListRoomsFrame(QFrame, ListRoomsFrameUI):
 
         self.status_value_label.setFont(QFont("Inter", 14, QFont.Weight.Normal))
 
-    def set_status_value_label_stylesheet(self, value):
+    def set_status_value_label_stylesheet(self):
 
-        if value == "available":
+        value = self.status_value_label.text()
+
+        if value == "Available":
             self.status_value_label.setStyleSheet("QLabel{color: #1FD100}")
-        elif value == "occupied":
+        elif value == "Occupied":
             self.status_value_label.setStyleSheet("QLabel{color: #FF0000}")
-        elif value == "reserved":
+        elif value == "Reserved":
             self.status_value_label.setStyleSheet("QLabel{color: #FFAD4E}")
