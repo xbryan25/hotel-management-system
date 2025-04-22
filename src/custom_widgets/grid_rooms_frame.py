@@ -37,21 +37,18 @@ class GridRoomsFrame(QFrame, GridRoomsFrameUI):
         self.delete_button.setIconSize(QSize(20, 20))
 
     def load_fonts(self):
-        inter_font_id = QFontDatabase.addApplicationFont("../resources/fonts/Inter-Regular.otf")
-        self.inter_font_family = QFontDatabase.applicationFontFamilies(inter_font_id)[0]
-
         # day_and_time_frame
-        self.room_num_and_title_label.setFont(QFont(self.inter_font_family, 13, QFont.Weight.Normal))
+        self.room_num_and_title_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
 
-        self.capacity_label.setFont(QFont(self.inter_font_family, 13, QFont.Weight.Normal))
+        self.capacity_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
 
-        self.rate_label.setFont(QFont(self.inter_font_family, 13, QFont.Weight.Normal))
-        self.actual_rate_label.setFont(QFont(self.inter_font_family, 13, QFont.Weight.Normal))
+        self.rate_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
+        self.actual_rate_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
 
-        self.status_label.setFont(QFont(self.inter_font_family, 13, QFont.Weight.Normal))
-        self.actual_status_label.setFont(QFont(self.inter_font_family, 13, QFont.Weight.Normal))
+        self.status_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
+        self.actual_status_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
 
-        self.actions_label.setFont(QFont(self.inter_font_family, 13, QFont.Weight.Normal))
+        self.actions_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
 
     def set_status_value_label_stylesheet(self, value):
 
