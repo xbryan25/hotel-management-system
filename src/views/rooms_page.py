@@ -1,4 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QSpacerItem, QSizePolicy
+from PyQt6.QtGui import QIcon, QFontDatabase, QFont
+from PyQt6.QtCore import QSize
 
 from custom_widgets import ListRoomsFrame, GridRoomsFrame
 
@@ -17,6 +19,12 @@ class RoomsPage(QWidget, RoomsPageUI):
         self.rooms_view_stacked_widget.setCurrentWidget(self.list_view_widget)
 
         self.add_signals()
+
+        self.set_external_stylesheet()
+
+        self.load_fonts()
+
+        self.set_icons()
 
     def add_signals(self):
         self.grid_view_button.clicked.connect(self.switch_to_grid_view)
@@ -52,8 +60,8 @@ class RoomsPage(QWidget, RoomsPageUI):
         if new_max_list_rooms_frame != self.max_list_rooms_frame:
             self.max_list_rooms_frame = new_max_list_rooms_frame
 
-            spacerItem14 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-            self.list_view_grid_layout.addItem(spacerItem14, self.max_list_rooms_frame, 1, 1, 1)
+            vertical_spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+            self.list_view_grid_layout.addItem(vertical_spacer, self.max_list_rooms_frame, 1, 1, 1)
 
         # print("Elements in list view grid layout: " + str(self.list_view_grid_layout.count()))
 
@@ -155,6 +163,40 @@ class RoomsPage(QWidget, RoomsPageUI):
         # Plus one because row is zero-indexed
         return max_row + 1, max_column + 1
 
+    def set_external_stylesheet(self):
+        with open("../resources/styles/rooms_page.qss", "r") as file:
+            self.setStyleSheet(file.read())
+
+    def set_icons(self):
+        self.grid_view_button.setIcon(QIcon("../resources/icons/rooms_page/grid_view_icon.svg"))
+        self.grid_view_button.setIconSize(QSize(25, 25))
+
+        self.list_view_button.setIcon(QIcon("../resources/icons/rooms_page/list_view_icon.svg"))
+        self.list_view_button.setIconSize(QSize(25, 25))
+
+        self.add_room_button.setIcon(QIcon("../resources/icons/rooms_page/add_icon.svg"))
+        self.add_room_button.setIconSize(QSize(20, 20))
+
+    def load_fonts(self):
+
+        self.rooms_label.setFont(QFont("Inter", 20, QFont.Weight.Bold))
+
+        self.unit_room_no_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
+        self.room_type_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
+        self.capacity_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
+        self.rate_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
+        self.status_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
+        self.action_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
+
+        self.search_lineedit.setFont(QFont("Inter", 16, QFont.Weight.Normal))
+
+        self.room_types_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+        self.room_status_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+        self.add_room_button.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+
+        self.previous_page_button.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.next_page_button.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+
     # resizeEvent will be automatically called when switching to rooms page widget, so no need to preload frames
     def resizeEvent(self, event):
 
@@ -162,5 +204,4 @@ class RoomsPage(QWidget, RoomsPageUI):
             self.make_list_view_rooms_frame()
         else:
             self.make_grid_view_rooms_frame()
-
 

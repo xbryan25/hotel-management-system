@@ -1,9 +1,13 @@
 
+QPushButton:pressed {
+    background-color: transparent;
+    border: none;
+}
+
 QFrame#Frame{
     border-bottom: 1px solid #000000;
     background-color: transparent;
 }
-
 
 #room_image_label{
     border-radius: 5px;

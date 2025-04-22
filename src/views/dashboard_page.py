@@ -24,7 +24,7 @@ class DashboardPage(QWidget, DashboardPageUI):
         self.current_time_label.setFont(QFont("Inter", 26, QFont.Weight.ExtraBold))
 
         # search_bar_frame
-        self.search_bar_frame_search_lineedit.setFont(QFont("Inter", 16, QFont.Weight.Light))
+        self.search_bar_frame_search_lineedit.setFont(QFont("Inter", 16, QFont.Weight.Normal))
 
         # overview_frame
         self.overview_label.setFont(QFont("Inter", 16, QFont.Weight.ExtraBold))

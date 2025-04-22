@@ -160,6 +160,9 @@
       <property name="topMargin">
        <number>0</number>
       </property>
+      <property name="horizontalSpacing">
+       <number>3</number>
+      </property>
       <property name="verticalSpacing">
        <number>0</number>
       </property>
@@ -244,7 +247,7 @@
         </property>
        </spacer>
       </item>
-      <item row="2" column="6">
+      <item row="2" column="5">
        <widget class="QPushButton" name="grid_view_button">
         <property name="minimumSize">
          <size>
@@ -262,11 +265,14 @@
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
         <property name="text">
-         <string>G</string>
+         <string/>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="2" column="7">
+      <item row="2" column="6">
        <widget class="QPushButton" name="list_view_button">
         <property name="minimumSize">
          <size>
@@ -284,25 +290,12 @@
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
         <property name="text">
-         <string>L</string>
+         <string/>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
         </property>
        </widget>
-      </item>
-      <item row="2" column="5">
-       <spacer name="hs_7">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>145</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
       </item>
      </layout>
     </widget>
@@ -339,8 +332,14 @@
        <widget class="QPushButton" name="previous_page_button">
         <property name="minimumSize">
          <size>
-          <width>0</width>
+          <width>120</width>
           <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>120</width>
+          <height>16777215</height>
          </size>
         </property>
         <property name="cursor">
@@ -355,8 +354,14 @@
        <widget class="QPushButton" name="next_page_button">
         <property name="minimumSize">
          <size>
-          <width>0</width>
+          <width>120</width>
           <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>120</width>
+          <height>16777215</height>
          </size>
         </property>
         <property name="cursor">

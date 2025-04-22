@@ -31,10 +31,10 @@ class ListRoomsFrame(QFrame, ListRoomsFrameUI):
 
     def set_icons(self):
         self.edit_room_button.setIcon(QIcon("../resources/icons/custom_widgets/edit_icon.svg"))
-        self.edit_room_button.setIconSize(QSize(20, 20))
+        self.edit_room_button.setIconSize(QSize(25, 25))
 
         self.delete_room_button.setIcon(QIcon("../resources/icons/custom_widgets/delete_icon.svg"))
-        self.delete_room_button.setIconSize(QSize(20, 20))
+        self.delete_room_button.setIconSize(QSize(25, 25))
 
     def load_fonts(self):
 
