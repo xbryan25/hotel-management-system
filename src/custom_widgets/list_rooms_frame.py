@@ -1,4 +1,6 @@
 from PyQt6.QtWidgets import QFrame
+from PyQt6.QtGui import QIcon, QFontDatabase, QFont
+from PyQt6.QtCore import QSize
 
 from ui.list_rooms_frame_ui import Ui_Frame as ListRoomsFrameUI
 
@@ -13,5 +15,47 @@ class ListRoomsFrame(QFrame, ListRoomsFrameUI):
 
         self.load_room_details()
 
+        self.set_external_stylesheet()
+
+        self.set_icons()
+        self.load_fonts()
+
+        self.set_status_value_label_stylesheet("reserved")
+
     def load_room_details(self):
         self.room_type_value_label.setText(self.room_details["room_type"])
+
+    def set_external_stylesheet(self):
+        with open("../resources/styles/list_rooms_frame.qss", "r") as file:
+            self.setStyleSheet(file.read())
+
+    def set_icons(self):
+        self.edit_room_button.setIcon(QIcon("../resources/icons/custom_widgets/edit_icon.svg"))
+        self.edit_room_button.setIconSize(QSize(20, 20))
+
+        self.delete_room_button.setIcon(QIcon("../resources/icons/custom_widgets/delete_icon.svg"))
+        self.delete_room_button.setIconSize(QSize(20, 20))
+
+    def load_fonts(self):
+        inter_font_id = QFontDatabase.addApplicationFont("../resources/fonts/Inter-Regular.otf")
+        self.inter_font_family = QFontDatabase.applicationFontFamilies(inter_font_id)[0]
+
+        # day_and_time_frame
+        self.room_num_label.setFont(QFont(self.inter_font_family, 16, QFont.Weight.Normal))
+
+        self.room_type_value_label.setFont(QFont(self.inter_font_family, 14, QFont.Weight.Normal))
+
+        self.capacity_value_label.setFont(QFont(self.inter_font_family, 14, QFont.Weight.Normal))
+
+        self.rate_value_label.setFont(QFont(self.inter_font_family, 14, QFont.Weight.Normal))
+
+        self.status_value_label.setFont(QFont(self.inter_font_family, 14, QFont.Weight.Normal))
+
+    def set_status_value_label_stylesheet(self, value):
+
+        if value == "available":
+            self.status_value_label.setStyleSheet("QLabel{color: #1FD100}")
+        elif value == "occupied":
+            self.status_value_label.setStyleSheet("QLabel{color: #FF0000}")
+        elif value == "reserved":
+            self.status_value_label.setStyleSheet("QLabel{color: #FFAD4E}")
