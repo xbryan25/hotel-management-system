@@ -153,18 +153,13 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
         QFontDatabase.addApplicationFont("../resources/fonts/Inter-Bold.otf")
         QFontDatabase.addApplicationFont("../resources/fonts/Inter-ExtraBold.otf")
         QFontDatabase.addApplicationFont("../resources/fonts/Inter-Black.otf")
+        QFontDatabase.addApplicationFont("../resources/fonts/Inter-Regular.otf")
 
-        # Load fonts and get font id
-        inter_font_id = QFontDatabase.addApplicationFont("../resources/fonts/Inter-Regular.otf")
-        abz_font_id = QFontDatabase.addApplicationFont("../resources/fonts/ABeeZee-Regular.ttf")
-
-        # Get font family
-        self.inter_font_family = QFontDatabase.applicationFontFamilies(inter_font_id)[0]
-        self.abz_font_family = QFontDatabase.applicationFontFamilies(abz_font_id)[0]
+        QFontDatabase.addApplicationFont("../resources/fonts/ABeeZee-Regular.ttf")
 
     def apply_fonts(self):
-        self.title_label.setFont(QFont(self.abz_font_family, 28, QFont.Weight.Light))
-        self.expanded_buttons_list_widget.setFont(QFont(self.inter_font_family, 14, QFont.Weight.Medium))
+        self.title_label.setFont(QFont("ABeeZee", 28, QFont.Weight.Light))
+        self.expanded_buttons_list_widget.setFont(QFont("Inter", 14, QFont.Weight.Medium))
 
     def setup_controllers(self):
         self.dashboard_controller = DashboardController(self.dashboard_page, self.db_driver)
