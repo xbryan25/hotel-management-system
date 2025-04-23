@@ -48,27 +48,31 @@ class RoomsPageController:
         self.view.previous_page_button_pressed.connect(self.go_to_previous_page)
 
     def go_to_next_page(self):
-        self.rooms_model.set_next_page(self.view_mode)
-        self.load_frames()
-        self.load_data()
+        if self.rooms_model.set_next_page(self.view_mode):
+            self.load_frames()
+            self.load_data()
 
     def go_to_previous_page(self):
-        self.rooms_model.set_previous_page()
-        self.load_frames()
-        self.load_data()
+        if self.rooms_model.set_previous_page():
+            self.load_frames()
+            self.load_data()
 
-    def change_view_mode(self):
+    def change_view_mode(self, new_view_mode):
 
-        if self.view_mode == "list_view":
-            self.view_mode = "grid_view"
+        if self.view_mode == new_view_mode:
+            return
 
-            self.rooms_model.set_max_rows_per_page(self.view.get_grid_view_current_max_rows())
-            self.rooms_model.set_max_columns_per_page(self.view.get_grid_view_current_max_columns())
-        else:
+        if new_view_mode == "list_view":
             self.view_mode = "list_view"
 
             self.rooms_model.set_max_rows_per_page(self.view.get_list_view_current_max_rows())
             self.rooms_model.set_max_columns_per_page(-1)
+
+        elif new_view_mode == "grid_view":
+            self.view_mode = "grid_view"
+
+            self.rooms_model.set_max_rows_per_page(self.view.get_grid_view_current_max_rows())
+            self.rooms_model.set_max_columns_per_page(self.view.get_grid_view_current_max_columns())
 
         self.rooms_model.reset()
 
@@ -89,6 +93,7 @@ class RoomsPageController:
 
         if new_rows != self.rooms_model.get_max_rows_per_page():
             self.rooms_model.set_max_rows_per_page(new_rows)
+            self.rooms_model.check_if_underflow_contents(self.view_mode)
             self.load_frames()
             self.load_data()
 
@@ -99,5 +104,6 @@ class RoomsPageController:
         if (new_rows != self.rooms_model.get_max_rows_per_page()) or (new_columns != self.rooms_model.get_max_columns_per_page()):
             self.rooms_model.set_max_rows_per_page(new_rows)
             self.rooms_model.set_max_columns_per_page(new_columns)
+            self.rooms_model.check_if_underflow_contents(self.view_mode)
             self.load_frames()
             self.load_data()

@@ -14,7 +14,7 @@ class RoomsPage(QWidget, RoomsPageUI):
     window_resized = pyqtSignal(QWidget)
     next_page_button_pressed = pyqtSignal()
     previous_page_button_pressed = pyqtSignal()
-    change_view_mode = pyqtSignal()
+    change_view_mode = pyqtSignal(str)
 
     def __init__(self):
         super().__init__()
@@ -54,11 +54,11 @@ class RoomsPage(QWidget, RoomsPageUI):
 
     def switch_to_list_view(self):
         self.rooms_view_stacked_widget.setCurrentWidget(self.list_view_widget)
-        self.change_view_mode.emit()
+        self.change_view_mode.emit("list_view")
 
     def switch_to_grid_view(self):
         self.rooms_view_stacked_widget.setCurrentWidget(self.grid_view_widget)
-        self.change_view_mode.emit()
+        self.change_view_mode.emit("grid_view")
 
     def make_list_view_rooms_frame(self, amount_of_frames):
 

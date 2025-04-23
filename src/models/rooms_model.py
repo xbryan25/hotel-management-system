@@ -19,11 +19,12 @@ class RoomsModel:
     def set_next_page(self, view_mode):
         if self._current_page + 1 <= self.total_pages(view_mode):
             self._current_page += 1
+            return True
 
     def set_previous_page(self):
         if self._current_page > 1:
             self._current_page -= 1
-            print(self._current_page)
+            return True
 
     def get_per_page(self, view_mode):
         return len(self.get_rooms_from_current_page(view_mode))
@@ -40,8 +41,8 @@ class RoomsModel:
     def get_max_columns_per_page(self):
         return self._columns_per_page
 
-    # def get_current_columns_per_page(self):
-    #     return
+    def get_len_of_data(self):
+        return len(self._rooms)
 
     def get_rooms_from_current_page(self, view_mode):
 
@@ -60,6 +61,10 @@ class RoomsModel:
             end = start + frames_per_page
 
         return self._rooms[start:end]
+
+    def check_if_underflow_contents(self, view_mode):
+        if self.get_per_page(view_mode) == 0:
+            self.set_previous_page()
 
     def reset(self):
         self._current_page = 1
