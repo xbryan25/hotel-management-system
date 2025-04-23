@@ -78,16 +78,26 @@ class RoomsPageController:
     def update_frame_count(self, widget):
 
         if widget == self.view.list_view_widget:
-            self.update_list_view_rows()
+            self.update_list_view_contents()
 
         elif widget == self.view.grid_view_widget:
-            print("Currently at grid view widget")
+            self.update_grid_view_contents()
 
-    def update_list_view_rows(self):
+    def update_list_view_contents(self):
         new_rows = self.view.get_list_view_current_max_rows()
         print(new_rows)
 
         if new_rows != self.rooms_model.get_max_rows_per_page():
             self.rooms_model.set_max_rows_per_page(new_rows)
+            self.load_frames()
+            self.load_data()
+
+    def update_grid_view_contents(self):
+        new_rows = self.view.get_grid_view_current_max_rows()
+        new_columns = self.view.get_grid_view_current_max_columns()
+
+        if (new_rows != self.rooms_model.get_max_rows_per_page()) or (new_columns != self.rooms_model.get_max_columns_per_page()):
+            self.rooms_model.set_max_rows_per_page(new_rows)
+            self.rooms_model.set_max_columns_per_page(new_columns)
             self.load_frames()
             self.load_data()
