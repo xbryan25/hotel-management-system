@@ -20,8 +20,6 @@ class GridRoomsFrame(QFrame, GridRoomsFrameUI):
         self.set_icons()
         self.load_fonts()
 
-        self.set_status_value_label_stylesheet("available")
-
     def load_room_details(self):
         self.room_num_and_title_label.setText(self.room_details["room_type"])
 
@@ -43,18 +41,20 @@ class GridRoomsFrame(QFrame, GridRoomsFrameUI):
         self.capacity_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
 
         self.rate_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
-        self.actual_rate_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
+        self.rate_value_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
 
         self.status_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
-        self.actual_status_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
+        self.status_value_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
 
         self.actions_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
 
-    def set_status_value_label_stylesheet(self, value):
+    def set_status_value_label_stylesheet(self):
 
-        if value == "available":
-            self.actual_status_label.setStyleSheet("QLabel{color: #1FD100}")
-        elif value == "occupied":
-            self.actual_status_label.setStyleSheet("QLabel{color: #FF0000}")
-        elif value == "reserved":
-            self.actual_status_label.setStyleSheet("QLabel{color: #FFAD4E}")
+        value = self.status_value_label.text()
+
+        if value == "Available":
+            self.status_value_label.setStyleSheet("QLabel{color: #1FD100}")
+        elif value == "Occupied":
+            self.status_value_label.setStyleSheet("QLabel{color: #FF0000}")
+        elif value == "Reserved":
+            self.status_value_label.setStyleSheet("QLabel{color: #FFAD4E}")

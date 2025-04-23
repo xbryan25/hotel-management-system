@@ -1,13 +1,21 @@
-from PyQt6.QtWidgets import QWidget, QSpacerItem, QSizePolicy
+from PyQt6.QtWidgets import QWidget, QSpacerItem, QSizePolicy, QFrame
 from PyQt6.QtGui import QIcon, QFontDatabase, QFont
-from PyQt6.QtCore import QSize
+from PyQt6.QtCore import QSize, pyqtSignal, Qt, QTimer
 
 from custom_widgets import ListRoomsFrame, GridRoomsFrame
 
 from ui.rooms_page_ui import Ui_Widget as RoomsPageUI
 
+import math
+
 
 class RoomsPage(QWidget, RoomsPageUI):
+
+    window_resized = pyqtSignal(QWidget)
+    next_page_button_pressed = pyqtSignal()
+    previous_page_button_pressed = pyqtSignal()
+    change_view_mode = pyqtSignal(str)
+
     def __init__(self):
         super().__init__()
 
@@ -15,6 +23,11 @@ class RoomsPage(QWidget, RoomsPageUI):
 
         self.max_list_rooms_frame = 0
         self.max_grid_rooms_frame = 0
+
+        self.previous_width = self.width()
+        self.previous_height = self.height()
+
+        self.size_change_threshold = 10
 
         self.rooms_view_stacked_widget.setCurrentWidget(self.list_view_widget)
 
@@ -30,43 +43,61 @@ class RoomsPage(QWidget, RoomsPageUI):
         self.grid_view_button.clicked.connect(self.switch_to_grid_view)
         self.list_view_button.clicked.connect(self.switch_to_list_view)
 
+        self.next_page_button.clicked.connect(self.emit_next_page)
+        self.previous_page_button.clicked.connect(self.emit_previous_page)
+
+    def emit_next_page(self):
+        self.next_page_button_pressed.emit()
+
+    def emit_previous_page(self):
+        self.previous_page_button_pressed.emit()
+
     def switch_to_list_view(self):
         self.rooms_view_stacked_widget.setCurrentWidget(self.list_view_widget)
-        self.make_list_view_rooms_frame()
+        self.change_view_mode.emit("list_view")
 
     def switch_to_grid_view(self):
         self.rooms_view_stacked_widget.setCurrentWidget(self.grid_view_widget)
-        self.make_grid_view_rooms_frame()
+        self.change_view_mode.emit("grid_view")
 
-    def make_list_view_rooms_frame(self):
+    # List view ------------------------------------------------------------------------------------------------
 
-        list_rooms_frame_min_height = 90
+    def make_list_view_rooms_frame(self, amount_of_frames):
 
-        new_max_list_rooms_frame = self.list_view_contents_frame.height() // list_rooms_frame_min_height
+        new_max_list_rooms_frame = self.get_list_view_current_max_rows()
+
+        # Choose between the lesser value between the two
+        new_max_list_rooms_frame = min(amount_of_frames, new_max_list_rooms_frame)
 
         if new_max_list_rooms_frame < self.max_list_rooms_frame:
             self.clear_list_view_frames(new_max_list_rooms_frame)
 
         elif new_max_list_rooms_frame > self.max_list_rooms_frame:
             for i in range(new_max_list_rooms_frame):
-                item = self.list_view_grid_layout.itemAtPosition(i, 1)
+                item = self.list_view_grid_layout.itemAtPosition(i, 0)
 
                 if item is None:
-                    self.list_view_grid_layout.addWidget(ListRoomsFrame({"room_type": "single"}), i, 1, 1, 1)
+                    self.list_view_grid_layout.addWidget(ListRoomsFrame({"room_type": "single"}), i, 0, 1, 1)
                 elif isinstance(item, QSpacerItem):
                     self.list_view_grid_layout.removeItem(item)
-                    self.list_view_grid_layout.addWidget(ListRoomsFrame({"room_type": "single"}), i, 1, 1, 1)
+                    self.list_view_grid_layout.addWidget(ListRoomsFrame({"room_type": "single"}), i, 0, 1, 1)
 
         if new_max_list_rooms_frame != self.max_list_rooms_frame:
+            vertical_spacer = QSpacerItem(20, 5, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+            self.list_view_grid_layout.addItem(vertical_spacer, new_max_list_rooms_frame, 0, 1, 1,
+                                               Qt.AlignmentFlag.AlignTop)
+
             self.max_list_rooms_frame = new_max_list_rooms_frame
 
-            vertical_spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-            self.list_view_grid_layout.addItem(vertical_spacer, self.max_list_rooms_frame, 1, 1, 1)
+            print("add row: " + str(self.max_list_rooms_frame + 1))
 
-        # print("Elements in list view grid layout: " + str(self.list_view_grid_layout.count()))
+        print("Elements in list view grid layout: " + str(self.list_view_grid_layout.count()))
+        # print("list_view_widget height: " + str(self.list_view_widget.height()))
+        # print("list_view_contents_frame height: " + str(self.list_view_contents_frame.height()))
 
     def clear_list_view_frames(self, new_max_list_rooms_frame):
-        for i in reversed(range(new_max_list_rooms_frame,self.list_view_grid_layout.count())):
+        for i in reversed(range(new_max_list_rooms_frame, self.list_view_grid_layout.count())):
 
             # Removes the item from the grid layout, while returning the item
             item = self.list_view_grid_layout.takeAt(i)
@@ -78,33 +109,93 @@ class RoomsPage(QWidget, RoomsPageUI):
 
             # If item is a QSpacerItem, Python's GC will collect item, since it has no more reference
 
-    def make_grid_view_rooms_frame(self):
-        grid_rooms_frame_min_width = 320
-        grid_rooms_frame_min_height = 250
+    def update_list_view_frames_contents(self, data_from_model):
+        for row in range(self.list_view_grid_layout.count()):
 
-        new_max_grid_rooms_frame_rows = self.grid_view_widget.height() // grid_rooms_frame_min_height
-        new_max_grid_rooms_frame_columns = self.grid_view_widget.width() // grid_rooms_frame_min_width
+            item = self.list_view_grid_layout.itemAtPosition(row, 0)
+            if item:
+                list_rooms_frame = item.widget()
+                if list_rooms_frame:
+                    list_rooms_frame.room_num_label.setText(data_from_model[row][0].replace("room-", "#"))
+                    list_rooms_frame.room_type_value_label.setText(data_from_model[row][1].capitalize())
+                    list_rooms_frame.rate_value_label.setText(f"P{data_from_model[row][2]}/day")
+                    list_rooms_frame.status_value_label.setText(data_from_model[row][3].capitalize())
+                    list_rooms_frame.capacity_value_label.setText(str(data_from_model[row][4]))
+                    list_rooms_frame.set_status_value_label_stylesheet()
+
+    # List view end ------------------------------------------------------------------------------------------------
+    # Grid view ------------------------------------------------------------------------------------------------
+
+    def make_grid_view_rooms_frame(self, amount_of_frames):
+
+        new_max_grid_rooms_frame_rows = self.get_grid_view_current_max_rows()
+        new_max_grid_rooms_frame_columns = self.get_grid_view_current_max_columns()
 
         new_max_grid_rooms_frame = new_max_grid_rooms_frame_columns * new_max_grid_rooms_frame_rows
 
+        # Choose between the lesser value between the two
+        new_max_grid_rooms_frame = min(amount_of_frames, new_max_grid_rooms_frame)
+
+        self.clear_dummy_grid_frames(new_max_grid_rooms_frame_rows, new_max_grid_rooms_frame_columns)
+
         if new_max_grid_rooms_frame < self.max_grid_rooms_frame:
-            self.clear_grid_view_frames(new_max_grid_rooms_frame_columns, new_max_grid_rooms_frame_rows)
+            self.clear_grid_view_frames(new_max_grid_rooms_frame_rows, new_max_grid_rooms_frame_columns, amount_of_frames)
 
         elif new_max_grid_rooms_frame > self.max_grid_rooms_frame:
+            counter = 0
+
             for row in range(new_max_grid_rooms_frame_rows):
                 for column in range(new_max_grid_rooms_frame_columns):
                     item = self.grid_view_grid_layout.itemAtPosition(row, column)
 
-                    if item is None:
+                    counter += 1
+
+                    if counter <= amount_of_frames and item is None:
                         self.grid_view_grid_layout.addWidget(GridRoomsFrame({"room_type": "single"}), row, column, 1, 1)
+
+        self.add_dummy_grid_frames(new_max_grid_rooms_frame_rows, new_max_grid_rooms_frame_columns)
 
         if new_max_grid_rooms_frame != self.max_grid_rooms_frame:
             self.max_grid_rooms_frame = new_max_grid_rooms_frame
 
-        # print("Elements in grid view grid layout 20: " + str(self.grid_view_grid_layout.count()))
+        self.set_column_and_row_stretch(new_max_grid_rooms_frame_rows, new_max_grid_rooms_frame_columns)
 
-    def clear_grid_view_frames(self, new_max_grid_rooms_frame_columns, new_max_grid_rooms_frame_rows):
+        print("Elements in grid view grid layout: " + str(self.grid_view_grid_layout.count()))
 
+        for column in range(new_max_grid_rooms_frame_columns):
+            self.grid_view_grid_layout.setColumnStretch(column, 1)
+
+    def set_column_and_row_stretch(self, max_rows, max_columns):
+        for row in range(max_rows):
+            self.grid_view_grid_layout.setRowStretch(row, 1)
+
+        for column in range(max_columns):
+            self.grid_view_grid_layout.setColumnStretch(column, 1)
+
+    def add_dummy_grid_frames(self, max_row, max_column):
+        for row in range(max_row):
+            for column in range(max_column):
+                item = self.grid_view_grid_layout.itemAtPosition(row, column)
+
+                if not item:
+                    dummy_frame = QFrame()
+                    dummy_frame.setObjectName(f"dummy_frame_{row}_{column}")
+                    dummy_frame.setMinimumSize(320, 250)
+                    dummy_frame.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+                    self.grid_view_grid_layout.addWidget(dummy_frame, row, column)
+
+    def clear_dummy_grid_frames(self, max_row, max_column):
+        for row in range(max_row):
+            for column in range(max_column):
+                item = self.grid_view_grid_layout.itemAtPosition(row, column)
+
+                if item:
+                    widget = item.widget()
+                    if widget and widget.objectName().startswith("dummy_frame_"):
+                        widget.setParent(None)
+                        widget.deleteLater()
+
+    def clear_grid_view_frames(self, new_max_grid_rooms_frame_rows, new_max_grid_rooms_frame_columns, amount_of_frames):
         max_row, max_column = self.get_current_rows_and_columns_in_grid_layout("grid_view")
 
         if new_max_grid_rooms_frame_columns != max_column:
@@ -143,6 +234,26 @@ class RoomsPage(QWidget, RoomsPageUI):
                             self.grid_view_grid_layout.removeItem(item)
                             break
 
+        if amount_of_frames != new_max_grid_rooms_frame_rows * new_max_grid_rooms_frame_columns:
+            counter = 0
+
+            for row in range(max_row):
+                for column in range(max_column):
+
+                    counter += 1
+
+                    if counter > amount_of_frames:
+
+                        item = self.grid_view_grid_layout.itemAtPosition(row, column)
+                        if item:
+                            widget = item.widget()
+                            if widget:
+                                widget.setParent(None)
+                                widget.deleteLater()
+                            else:
+                                self.grid_view_grid_layout.removeItem(item)
+                                break
+
     def get_current_rows_and_columns_in_grid_layout(self, view_type):
 
         if view_type == "grid_view":
@@ -162,6 +273,48 @@ class RoomsPage(QWidget, RoomsPageUI):
 
         # Plus one because row is zero-indexed
         return max_row + 1, max_column + 1
+
+    # Grid view end ------------------------------------------------------------------------------------------------
+
+    def update_grid_view_frames_contents(self, data_from_model):
+
+        max_row, max_column = self.get_current_rows_and_columns_in_grid_layout("grid_view")
+        counter = 0
+
+        for row in range(max_row):
+            for column in range(max_column):
+
+                item = self.grid_view_grid_layout.itemAtPosition(row, column)
+                if item:
+                    grid_rooms_frame = item.widget()
+
+                    # If dummy frame
+                    if grid_rooms_frame.objectName().startswith("dummy_frame_"):
+                        continue
+                    else:
+                        grid_rooms_frame.room_num_and_title_label.setText(
+                            f"{data_from_model[counter][0].replace("room-", "#")} - {data_from_model[counter][1].capitalize()}")
+                        grid_rooms_frame.rate_value_label.setText(f"P{data_from_model[counter][2]}/day")
+                        grid_rooms_frame.status_value_label.setText(data_from_model[counter][3].capitalize())
+                        grid_rooms_frame.capacity_label.setText(str(data_from_model[counter][4]))
+                        grid_rooms_frame.set_status_value_label_stylesheet()
+
+                        counter += 1
+
+    def get_list_view_current_max_rows(self):
+        list_rooms_frame_min_height = 97
+
+        return self.list_view_contents_frame.height() // list_rooms_frame_min_height
+
+    def get_grid_view_current_max_rows(self):
+        grid_rooms_frame_min_height = 250
+
+        return self.grid_view_widget.height() // grid_rooms_frame_min_height
+
+    def get_grid_view_current_max_columns(self):
+        grid_rooms_frame_min_width = 320
+
+        return self.grid_view_widget.width() // grid_rooms_frame_min_width
 
     def set_external_stylesheet(self):
         with open("../resources/styles/rooms_page.qss", "r") as file:
@@ -200,8 +353,17 @@ class RoomsPage(QWidget, RoomsPageUI):
     # resizeEvent will be automatically called when switching to rooms page widget, so no need to preload frames
     def resizeEvent(self, event):
 
-        if self.rooms_view_stacked_widget.currentWidget() == self.list_view_widget:
-            self.make_list_view_rooms_frame()
-        else:
-            self.make_grid_view_rooms_frame()
+        current_width = self.width()
+        current_height = self.height()
+
+        width_diff = abs(self.previous_width - current_width)
+        height_diff = abs(self.previous_height - current_height)
+
+        if width_diff >= self.size_change_threshold or height_diff >= self.size_change_threshold:
+
+            self.window_resized.emit(self.rooms_view_stacked_widget.currentWidget())
+            print("activate")
+
+            self.previous_width = current_width
+            self.previous_height = current_height
 

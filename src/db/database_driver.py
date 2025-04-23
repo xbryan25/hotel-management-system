@@ -108,6 +108,21 @@ class DatabaseDriver:
         else:
             return result[0]
 
+    def get_all_rooms(self):
+
+        sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.price, rooms.availability_status, 
+                rooms.capacity
+                FROM rooms
+                ORDER BY rooms.room_number ASC;"""
+
+        self.cursor.execute(sql)
+
+        result = self.cursor.fetchall()
+
+        list_result = [list(row) for row in result]
+
+        return list_result
+
     def get_room_count(self, availability_status):
         if availability_status not in ["available", "reserved", "occupied"]:
             raise ValueError(f"Invalid availability status: {availability_status}. Must be 'available', 'reserved', or 'occupied'.")
