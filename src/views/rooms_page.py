@@ -24,6 +24,11 @@ class RoomsPage(QWidget, RoomsPageUI):
         self.max_list_rooms_frame = 0
         self.max_grid_rooms_frame = 0
 
+        self.previous_width = self.width()
+        self.previous_height = self.height()
+
+        self.size_change_threshold = 10
+
         self.rooms_view_stacked_widget.setCurrentWidget(self.list_view_widget)
 
         self.add_signals()
@@ -277,7 +282,6 @@ class RoomsPage(QWidget, RoomsPageUI):
 
                         counter += 1
 
-
     def get_list_view_current_max_rows(self):
         list_rooms_frame_min_height = 97
 
@@ -330,9 +334,17 @@ class RoomsPage(QWidget, RoomsPageUI):
     # resizeEvent will be automatically called when switching to rooms page widget, so no need to preload frames
     def resizeEvent(self, event):
 
-        width = event.size().width()
-        height = event.size().height()
-        print(f"Window resized: Width = {width}, Height = {height}")
+        current_width = self.width()
+        current_height = self.height()
 
-        self.window_resized.emit(self.rooms_view_stacked_widget.currentWidget())
+        width_diff = abs(self.previous_width - current_width)
+        height_diff = abs(self.previous_height - current_height)
+
+        if width_diff >= self.size_change_threshold or height_diff >= self.size_change_threshold:
+
+            self.window_resized.emit(self.rooms_view_stacked_widget.currentWidget())
+            print("activate")
+
+            self.previous_width = current_width
+            self.previous_height = current_height
 
