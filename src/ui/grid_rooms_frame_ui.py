@@ -13,6 +13,11 @@ class Ui_Frame(object):
     def setupUi(self, Frame):
         Frame.setObjectName("Frame")
         Frame.resize(320, 250)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(Frame.sizePolicy().hasHeightForWidth())
+        Frame.setSizePolicy(sizePolicy)
         Frame.setMinimumSize(QtCore.QSize(320, 250))
         Frame.setMaximumSize(QtCore.QSize(16777215, 16777215))
         Frame.setStyleSheet("")

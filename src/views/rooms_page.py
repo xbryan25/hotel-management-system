@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QSpacerItem, QSizePolicy, QFrame
 from PyQt6.QtGui import QIcon, QFontDatabase, QFont
-from PyQt6.QtCore import QSize, pyqtSignal, Qt
+from PyQt6.QtCore import QSize, pyqtSignal, Qt, QTimer
 
 from custom_widgets import ListRoomsFrame, GridRoomsFrame
 
@@ -59,6 +59,8 @@ class RoomsPage(QWidget, RoomsPageUI):
     def switch_to_grid_view(self):
         self.rooms_view_stacked_widget.setCurrentWidget(self.grid_view_widget)
         self.change_view_mode.emit("grid_view")
+
+    # List view ------------------------------------------------------------------------------------------------
 
     def make_list_view_rooms_frame(self, amount_of_frames):
 
@@ -121,6 +123,9 @@ class RoomsPage(QWidget, RoomsPageUI):
                     list_rooms_frame.capacity_value_label.setText(str(data_from_model[row][4]))
                     list_rooms_frame.set_status_value_label_stylesheet()
 
+    # List view end ------------------------------------------------------------------------------------------------
+    # Grid view ------------------------------------------------------------------------------------------------
+
     def make_grid_view_rooms_frame(self, amount_of_frames):
 
         new_max_grid_rooms_frame_rows = self.get_grid_view_current_max_rows()
@@ -153,7 +158,19 @@ class RoomsPage(QWidget, RoomsPageUI):
         if new_max_grid_rooms_frame != self.max_grid_rooms_frame:
             self.max_grid_rooms_frame = new_max_grid_rooms_frame
 
+        self.set_column_and_row_stretch(new_max_grid_rooms_frame_rows, new_max_grid_rooms_frame_columns)
+
         print("Elements in grid view grid layout: " + str(self.grid_view_grid_layout.count()))
+
+        for column in range(new_max_grid_rooms_frame_columns):
+            self.grid_view_grid_layout.setColumnStretch(column, 1)
+
+    def set_column_and_row_stretch(self, max_rows, max_columns):
+        for row in range(max_rows):
+            self.grid_view_grid_layout.setRowStretch(row, 1)
+
+        for column in range(max_columns):
+            self.grid_view_grid_layout.setColumnStretch(column, 1)
 
     def add_dummy_grid_frames(self, max_row, max_column):
         for row in range(max_row):
@@ -256,6 +273,8 @@ class RoomsPage(QWidget, RoomsPageUI):
 
         # Plus one because row is zero-indexed
         return max_row + 1, max_column + 1
+
+    # Grid view end ------------------------------------------------------------------------------------------------
 
     def update_grid_view_frames_contents(self, data_from_model):
 

@@ -10,6 +10,12 @@
     <height>250</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="minimumSize">
    <size>
     <width>320</width>
@@ -18,8 +24,8 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>320</width>
-    <height>250</height>
+    <width>16777215</width>
+    <height>16777215</height>
    </size>
   </property>
   <property name="windowTitle">
