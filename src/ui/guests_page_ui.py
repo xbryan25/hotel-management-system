@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_Widget(object):
     def setupUi(self, Widget):
         Widget.setObjectName("Widget")
-        Widget.resize(1030, 750)
+        Widget.resize(1518, 750)
         Widget.setMinimumSize(QtCore.QSize(1030, 750))
         self.gridLayout = QtWidgets.QGridLayout(Widget)
         self.gridLayout.setObjectName("gridLayout")
@@ -48,6 +48,8 @@ class Ui_Widget(object):
         self.search_bar_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.search_bar_frame.setObjectName("search_bar_frame")
         self.gridLayout_3 = QtWidgets.QGridLayout(self.search_bar_frame)
+        self.gridLayout_3.setContentsMargins(0, -1, 0, -1)
+        self.gridLayout_3.setSpacing(0)
         self.gridLayout_3.setObjectName("gridLayout_3")
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
         self.gridLayout_3.addItem(spacerItem1, 0, 0, 1, 1)
