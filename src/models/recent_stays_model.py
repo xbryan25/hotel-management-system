@@ -36,6 +36,9 @@ class RecentStaysModel(QAbstractTableModel):
 
             return value
 
+        if role == Qt.ItemDataRole.TextAlignmentRole:
+            return Qt.AlignmentFlag.AlignCenter
+
         return None
 
     def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole):

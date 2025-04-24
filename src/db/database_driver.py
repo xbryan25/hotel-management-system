@@ -348,7 +348,7 @@ class DatabaseDriver:
         # Gets all future reservations, the order of the results are based on the check_in_date
 
         sql = f"""SELECT reservedrooms.reservation_id, guests.name, rooms.room_number, rooms.room_type, 
-                reservedrooms.check_in_date, reservedrooms.check_out_date
+                reservedrooms.check_in_date, reservedrooms.check_out_date, reservedrooms.payment_status
                 FROM reservedrooms 
                 JOIN guests ON reservedrooms.guest_id = guests.guest_id
                 JOIN rooms ON reservedrooms.room_number = rooms.room_number

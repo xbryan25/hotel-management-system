@@ -10,6 +10,7 @@ class DashboardController:
         self.db_driver = db_driver
 
         self.load_data()
+        self.view.set_table_views_column_widths()
 
         # Set up timer to update every 60,000 ms (60 seconds)
         self.update_date_and_time_timer = QTimer(self.view)

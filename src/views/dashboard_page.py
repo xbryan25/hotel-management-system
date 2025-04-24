@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget
+from PyQt6.QtWidgets import QWidget, QHeaderView
 from PyQt6.QtGui import QFont
 
 from ui.dashboard_page_ui import Ui_Widget as DashboardPageUI
@@ -12,6 +12,44 @@ class DashboardPage(QWidget, DashboardPageUI):
 
         self.set_external_stylesheet()
         self.load_fonts()
+
+    def set_table_views_column_widths(self):
+        recent_check_in_frame_table_view_header = self.recent_check_in_frame_table_view.horizontalHeader()
+
+        recent_check_in_frame_table_view_header.resizeSection(0, 85)
+        recent_check_in_frame_table_view_header.resizeSection(2, 75)
+        recent_check_in_frame_table_view_header.resizeSection(3, 65)
+
+        recent_check_in_frame_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+        recent_check_in_frame_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        recent_check_in_frame_table_view_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
+        recent_check_in_frame_table_view_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
+
+        recent_check_out_frame_table_view_header = self.recent_check_out_frame_table_view.horizontalHeader()
+
+        recent_check_out_frame_table_view_header.resizeSection(0, 85)
+        recent_check_out_frame_table_view_header.resizeSection(2, 75)
+        recent_check_out_frame_table_view_header.resizeSection(3, 65)
+
+        recent_check_out_frame_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+        recent_check_out_frame_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        recent_check_out_frame_table_view_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
+        recent_check_out_frame_table_view_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
+
+        reservation_list_frame_table_view_header = self.reservation_list_frame_table_view.horizontalHeader()
+
+        reservation_list_frame_table_view_header.resizeSection(0, 95)
+        reservation_list_frame_table_view_header.resizeSection(2, 75)
+        reservation_list_frame_table_view_header.resizeSection(3, 95)
+        reservation_list_frame_table_view_header.resizeSection(4, 155)
+        reservation_list_frame_table_view_header.resizeSection(5, 65)
+
+        reservation_list_frame_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+        reservation_list_frame_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        reservation_list_frame_table_view_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
+        reservation_list_frame_table_view_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
+        reservation_list_frame_table_view_header.setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
+        reservation_list_frame_table_view_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
 
     def set_external_stylesheet(self):
         with open("../resources/styles/dashboard_page.qss", "r") as file:
