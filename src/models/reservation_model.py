@@ -8,7 +8,7 @@ class ReservationModel(QAbstractTableModel):
 
         self.data = _data or []
 
-        self.columns = ["Reservation ID", "Guest Name", "Room No.", "Room Type", "Check-in & Check-out"]
+        self.columns = ["Reservation ID", "Guest Name", "Room No.", "Room Type", "Check-in & Check-out", "Status"]
 
     def update_data(self, _data):
         self.beginResetModel()
@@ -24,6 +24,7 @@ class ReservationModel(QAbstractTableModel):
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
 
         if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:
+            print(f"column: {index.column()}")
 
             if index.column() == 4:
                 check_in_date = self.data[index.row()][index.column()]
@@ -35,9 +36,12 @@ class ReservationModel(QAbstractTableModel):
                 return None
 
             elif index.column() == 5:
-                return None
+                return self.data[index.row()][index.column() + 1]
 
             return self.data[index.row()][index.column()]
+
+        if role == Qt.ItemDataRole.TextAlignmentRole:
+            return Qt.AlignmentFlag.AlignCenter
 
         return None
 
