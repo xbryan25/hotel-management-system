@@ -128,7 +128,7 @@ class Ui_Widget(object):
         self.horizontalLayout.addItem(spacerItem5)
         self.gridLayout.addWidget(self.page_buttons_frame, 4, 0, 1, 1)
         self.rooms_view_stacked_widget = QtWidgets.QStackedWidget(parent=Widget)
-        self.rooms_view_stacked_widget.setMinimumSize(QtCore.QSize(0, 550))
+        self.rooms_view_stacked_widget.setMinimumSize(QtCore.QSize(0, 0))
         self.rooms_view_stacked_widget.setObjectName("rooms_view_stacked_widget")
         self.list_view_widget = QtWidgets.QWidget()
         self.list_view_widget.setMinimumSize(QtCore.QSize(0, 550))
@@ -215,7 +215,7 @@ class Ui_Widget(object):
         self.gridLayout.addWidget(self.rooms_view_stacked_widget, 3, 0, 1, 1)
 
         self.retranslateUi(Widget)
-        self.rooms_view_stacked_widget.setCurrentIndex(0)
+        self.rooms_view_stacked_widget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(Widget)
 
     def retranslateUi(self, Widget):
