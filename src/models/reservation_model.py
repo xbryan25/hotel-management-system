@@ -24,7 +24,6 @@ class ReservationModel(QAbstractTableModel):
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
 
         if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:
-            print(f"column: {index.column()}")
 
             if index.column() == 4:
                 check_in_date = self.data[index.row()][index.column()]

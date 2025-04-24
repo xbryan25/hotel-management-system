@@ -130,6 +130,18 @@ QComboBox::down-arrow {
     border-bottom-right-radius: 10px;
 }
 
+#recent_check_in_frame_table_view, #recent_check_in_frame{
+    background-color: #E3F2FD;
+}
+
+#recent_check_out_frame_table_view, #recent_check_out_frame{
+    background-color: #FFF3E0;
+}
+
+#recent_check_in_frame_table_view::item, #recent_check_out_frame_table_view::item{
+    border-bottom: 1px solid #B4B4B4;
+}
+
 #reservation_list_frame, #rooms_frame, #quick_action_frame{
     background-color: #FFFFFF;
     border-radius: 10px;
@@ -166,6 +178,17 @@ QComboBox::down-arrow {
 
 }
 
+#reservation_list_frame_add_reservation_button{
+    background-image: url(../resources/icons/dashboard_page/add_icon.svg);
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-origin: border;
+}
+
+#reservation_list_frame_table_view::item{
+    border-bottom: 1px solid #000000;
+}
+
 #search_bar_frame_search_lineedit{
 
     background-image: url(../resources/icons/dashboard_page/search_icon_big.svg);
@@ -175,13 +198,6 @@ QComboBox::down-arrow {
 
     padding-left: 48px;
 
-}
-
-#reservation_list_frame_add_reservation_button{
-    background-image: url(../resources/icons/dashboard_page/add_icon.svg);
-    background-repeat: no-repeat;
-    background-position: left center;
-    background-origin: border;
 }
 
 #quick_action_frame_cancel_button{

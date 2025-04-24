@@ -1,5 +1,6 @@
-from PyQt6.QtWidgets import QWidget, QHeaderView
+from PyQt6.QtWidgets import QWidget, QHeaderView, QTableView
 from PyQt6.QtGui import QFont
+from PyQt6.QtCore import Qt
 
 from ui.dashboard_page_ui import Ui_Widget as DashboardPageUI
 
@@ -10,11 +11,31 @@ class DashboardPage(QWidget, DashboardPageUI):
 
         self.setupUi(self)
 
+        self.disable_table_views_selection_mode()
+
         self.set_external_stylesheet()
         self.load_fonts()
 
+    def disable_table_views_selection_mode(self):
+        self.recent_check_in_frame_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)
+        self.recent_check_in_frame_table_view.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+
+        self.recent_check_out_frame_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)
+        self.recent_check_out_frame_table_view.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+
+        self.reservation_list_frame_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)
+        self.reservation_list_frame_table_view.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+
     def set_table_views_column_widths(self):
         recent_check_in_frame_table_view_header = self.recent_check_in_frame_table_view.horizontalHeader()
+
+        recent_check_in_frame_table_view_header.setStyleSheet("""
+            QHeaderView::section {
+                background-color: #E3F2FD;
+                border: none;
+                outline: none;
+            }
+        """)
 
         recent_check_in_frame_table_view_header.resizeSection(0, 85)
         recent_check_in_frame_table_view_header.resizeSection(2, 75)
@@ -27,6 +48,14 @@ class DashboardPage(QWidget, DashboardPageUI):
 
         recent_check_out_frame_table_view_header = self.recent_check_out_frame_table_view.horizontalHeader()
 
+        recent_check_out_frame_table_view_header.setStyleSheet("""
+            QHeaderView::section {
+                background-color: #FFF3E0;
+                border: none;
+                outline: none;
+            }
+        """)
+
         recent_check_out_frame_table_view_header.resizeSection(0, 85)
         recent_check_out_frame_table_view_header.resizeSection(2, 75)
         recent_check_out_frame_table_view_header.resizeSection(3, 65)
@@ -38,11 +67,19 @@ class DashboardPage(QWidget, DashboardPageUI):
 
         reservation_list_frame_table_view_header = self.reservation_list_frame_table_view.horizontalHeader()
 
-        reservation_list_frame_table_view_header.resizeSection(0, 95)
-        reservation_list_frame_table_view_header.resizeSection(2, 75)
-        reservation_list_frame_table_view_header.resizeSection(3, 95)
-        reservation_list_frame_table_view_header.resizeSection(4, 155)
-        reservation_list_frame_table_view_header.resizeSection(5, 65)
+        reservation_list_frame_table_view_header.setStyleSheet("""
+            QHeaderView::section {
+                background-color: #FFFFFF;
+                border: none;
+                outline: none;
+            }
+        """)
+
+        reservation_list_frame_table_view_header.resizeSection(0, 115)
+        reservation_list_frame_table_view_header.resizeSection(2, 80)
+        reservation_list_frame_table_view_header.resizeSection(3, 100)
+        reservation_list_frame_table_view_header.resizeSection(4, 185)
+        reservation_list_frame_table_view_header.resizeSection(5, 70)
 
         reservation_list_frame_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
         reservation_list_frame_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
@@ -90,11 +127,13 @@ class DashboardPage(QWidget, DashboardPageUI):
         # todays_activity_frame
         self.todays_activity_frame_label.setFont(QFont("Inter", 16, QFont.Weight.ExtraBold))
 
-        self.recent_check_in_frame_label.setFont(QFont("Inter", 14, QFont.Weight.ExtraBold))
-        # self.aw.recent_check_in_frame_table_widget.horizontalHeader().setFont(QFont(self.inter_font_family, 14, QFont.Weight.ExtraBold))
+        self.recent_check_in_frame_label.setFont(QFont("Inter", 15, QFont.Weight.ExtraBold))
+        self.recent_check_in_frame_table_view.setFont(QFont("Inter", 9, QFont.Weight.Normal))
+        self.recent_check_in_frame_table_view.horizontalHeader().setFont(QFont("Inter", 12, QFont.Weight.DemiBold))
 
-        self.recent_check_out_frame_label.setFont(QFont("Inter", 14, QFont.Weight.ExtraBold))
-        # self.aw.recent_check_out_frame_table_widget.horizontalHeader().setFont(QFont(self.inter_font_family, 14, QFont.Weight.ExtraBold))
+        self.recent_check_out_frame_label.setFont(QFont("Inter", 15, QFont.Weight.ExtraBold))
+        self.recent_check_out_frame_table_view.setFont(QFont("Inter", 9, QFont.Weight.Normal))
+        self.recent_check_out_frame_table_view.horizontalHeader().setFont(QFont("Inter", 12, QFont.Weight.DemiBold))
 
         # reservation_list_frame
         self.reservation_list_frame_label.setFont(QFont("Inter", 16, QFont.Weight.ExtraBold))
@@ -102,6 +141,8 @@ class DashboardPage(QWidget, DashboardPageUI):
             QFont("Inter", 10, QFont.Weight.Normal))
         self.reservation_list_frame_search_lineedit.setFont(QFont("Inter", 10, QFont.Weight.Normal))
         self.reservation_list_frame_status_combobox.setFont(QFont("Inter", 10, QFont.Weight.Normal))
+        self.reservation_list_frame_table_view.setFont(QFont("Inter", 9, QFont.Weight.Normal))
+        self.reservation_list_frame_table_view.horizontalHeader().setFont(QFont("Inter", 12, QFont.Weight.DemiBold))
 
         # quick_action_frame
         self.quick_action_frame_label.setFont(QFont("Inter", 16, QFont.Weight.ExtraBold))
