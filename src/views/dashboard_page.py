@@ -16,6 +16,14 @@ class DashboardPage(QWidget, DashboardPageUI):
     def set_table_views_column_widths(self):
         recent_check_in_frame_table_view_header = self.recent_check_in_frame_table_view.horizontalHeader()
 
+        recent_check_in_frame_table_view_header.setStyleSheet("""
+            QHeaderView::section {
+                background-color: #E3F2FD;
+                border: none;
+                outline: none;
+            }
+        """)
+
         recent_check_in_frame_table_view_header.resizeSection(0, 85)
         recent_check_in_frame_table_view_header.resizeSection(2, 75)
         recent_check_in_frame_table_view_header.resizeSection(3, 65)
@@ -27,6 +35,14 @@ class DashboardPage(QWidget, DashboardPageUI):
 
         recent_check_out_frame_table_view_header = self.recent_check_out_frame_table_view.horizontalHeader()
 
+        recent_check_out_frame_table_view_header.setStyleSheet("""
+            QHeaderView::section {
+                background-color: #FFF3E0;
+                border: none;
+                outline: none;
+            }
+        """)
+
         recent_check_out_frame_table_view_header.resizeSection(0, 85)
         recent_check_out_frame_table_view_header.resizeSection(2, 75)
         recent_check_out_frame_table_view_header.resizeSection(3, 65)
@@ -37,6 +53,14 @@ class DashboardPage(QWidget, DashboardPageUI):
         recent_check_out_frame_table_view_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
 
         reservation_list_frame_table_view_header = self.reservation_list_frame_table_view.horizontalHeader()
+
+        reservation_list_frame_table_view_header.setStyleSheet("""
+            QHeaderView::section {
+                background-color: #FFFFFF;
+                border: none;
+                outline: none;
+            }
+        """)
 
         reservation_list_frame_table_view_header.resizeSection(0, 95)
         reservation_list_frame_table_view_header.resizeSection(2, 75)
