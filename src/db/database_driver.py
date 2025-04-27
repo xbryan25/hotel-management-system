@@ -38,6 +38,24 @@ class DatabaseDriver:
         else:
             return result[0]
 
+    def get_active_guests(self):
+
+        sql = f"""SELECT guests.name, rooms.room_number, bookedrooms.check_in_date, bookedrooms.check_out_date, 
+                        rooms.room_type
+                        FROM guests 
+                        JOIN bookedrooms ON guests.guest_id = bookedrooms.guest_id
+                        JOIN rooms ON bookedrooms.room_number = rooms.room_number
+                        ORDER BY bookedrooms.check_in_date ASC;"""
+
+        self.cursor.execute(sql)
+
+        result = self.cursor.fetchall()
+
+        list_result = [list(row) for row in result]
+
+        return list_result
+
+
     def add_guest(self, guest_information):
         sql = """INSERT INTO guests 
                 (guest_id, name, sex, home_address, email_address, phone_number, 
