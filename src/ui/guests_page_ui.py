@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_Widget(object):
     def setupUi(self, Widget):
         Widget.setObjectName("Widget")
-        Widget.resize(1518, 750)
+        Widget.resize(1030, 750)
         Widget.setMinimumSize(QtCore.QSize(1030, 750))
         self.gridLayout = QtWidgets.QGridLayout(Widget)
         self.gridLayout.setObjectName("gridLayout")
@@ -69,6 +69,7 @@ class Ui_Widget(object):
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.guest_table_view = QtWidgets.QTableView(parent=self.guest_table_view_frame)
         self.guest_table_view.setObjectName("guest_table_view")
+        self.guest_table_view.verticalHeader().setVisible(False)
         self.gridLayout_2.addWidget(self.guest_table_view, 0, 0, 1, 1)
         self.gridLayout.addWidget(self.guest_table_view_frame, 2, 0, 1, 1)
         self.page_buttons_frame = QtWidgets.QFrame(parent=Widget)
