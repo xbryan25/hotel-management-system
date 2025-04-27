@@ -1,5 +1,6 @@
-from PyQt6.QtWidgets import QWidget
+from PyQt6.QtWidgets import QWidget, QHeaderView, QTableView
 from PyQt6.QtGui import QFont
+from PyQt6.QtCore import Qt
 
 from ui.guests_page_ui import Ui_Widget as GuestsPageUI
 
@@ -10,9 +11,41 @@ class GuestsPage(QWidget, GuestsPageUI):
 
         self.setupUi(self)
 
+        self.disable_table_views_selection_mode()
+
         self.set_external_stylesheet()
 
         self.load_fonts()
+
+    def set_table_views_column_widths(self):
+        guest_table_view_header = self.guest_table_view.horizontalHeader()
+
+        guest_table_view_header.setStyleSheet("""
+            QHeaderView::section {
+                background-color: #FFFFFF;
+                border: none;
+                outline: none;
+            }
+        """)
+
+        guest_table_view_header.resizeSection(1, 105)
+        guest_table_view_header.resizeSection(2, 145)
+        guest_table_view_header.resizeSection(3, 145)
+        guest_table_view_header.resizeSection(4, 150)
+        guest_table_view_header.resizeSection(5, 115)
+        guest_table_view_header.resizeSection(6, 45)
+
+        guest_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        guest_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Fixed)
+        guest_table_view_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
+        guest_table_view_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
+        guest_table_view_header.setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
+        guest_table_view_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
+        guest_table_view_header.setSectionResizeMode(6, QHeaderView.ResizeMode.Fixed)
+
+    def disable_table_views_selection_mode(self):
+        self.guest_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)
+        self.guest_table_view.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
     def set_external_stylesheet(self):
         with open("../resources/styles/guests_page.qss", "r") as file:
@@ -26,6 +59,9 @@ class GuestsPage(QWidget, GuestsPageUI):
 
         self.sort_by_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.sort_type_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+
+        self.guest_table_view.setFont(QFont("Inter", 10, QFont.Weight.Normal))
+        self.guest_table_view.horizontalHeader().setFont(QFont("Inter", 14, QFont.Weight.Bold))
 
         self.previous_page_button.setFont(QFont("Inter", 11, QFont.Weight.Normal))
         self.next_page_button.setFont(QFont("Inter", 11, QFont.Weight.Normal))

@@ -68,6 +68,7 @@ class Ui_Widget(object):
         self.gridLayout_2 = QtWidgets.QGridLayout(self.guest_table_view_frame)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.guest_table_view = QtWidgets.QTableView(parent=self.guest_table_view_frame)
+        self.guest_table_view.setShowGrid(False)
         self.guest_table_view.setObjectName("guest_table_view")
         self.guest_table_view.verticalHeader().setVisible(False)
         self.gridLayout_2.addWidget(self.guest_table_view, 0, 0, 1, 1)
