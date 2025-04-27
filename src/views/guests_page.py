@@ -29,8 +29,8 @@ class GuestsPage(QWidget, GuestsPageUI):
         """)
 
         guest_table_view_header.resizeSection(1, 105)
-        guest_table_view_header.resizeSection(2, 145)
-        guest_table_view_header.resizeSection(3, 145)
+        guest_table_view_header.resizeSection(2, 150)
+        guest_table_view_header.resizeSection(3, 150)
         guest_table_view_header.resizeSection(4, 150)
         guest_table_view_header.resizeSection(5, 115)
         guest_table_view_header.resizeSection(6, 45)
