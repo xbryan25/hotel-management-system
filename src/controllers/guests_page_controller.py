@@ -9,6 +9,9 @@ class GuestsPageController:
 
         self.db_driver = db_driver
 
+        self.current_guest_model = None
+        self.guest_info_dialog = GuestInfoDialog()
+
         self.connect_signals_to_slots()
 
         self.set_models()
@@ -32,6 +35,8 @@ class GuestsPageController:
 
         self.view.clicked_info_button.connect(self.show_guest_info)
 
+        self.guest_info_dialog.mode_changed.connect(self.switch_information_mode_guest_info)
+
     def show_guest_info(self, index):
         # Get guest_id of guest from index
         guest_id = self.guests_model.get_guest_id(index.row())
@@ -42,11 +47,14 @@ class GuestsPageController:
         # Put model data to view
 
         guest_data = self.db_driver.get_guest_details(guest_id)
-        guest_model = GuestInfoModel.from_list(guest_data)
+        self.current_guest_model = GuestInfoModel.from_list(guest_data)
 
-        self.guest_info_dialog = GuestInfoDialog()
-        self.guest_info_dialog.set_guest_info(guest_model.to_dict())
+        self.guest_info_dialog.set_guest_info(self.current_guest_model.to_dict())
         self.guest_info_dialog.exec()
+
+    def switch_information_mode_guest_info(self):
+        self.guest_info_dialog.set_guest_info(self.current_guest_model.to_dict())
+        # self.guest_info_dialog.exec()
 
     def update_guests_table_view(self):
         sort_by_text = self.view.sort_by_combobox.currentText().replace("Sort by ", "")
