@@ -5,6 +5,8 @@ from PyQt6.QtCore import Qt
 from ui.guests_page_ui import Ui_Widget as GuestsPageUI
 from custom_widgets import ButtonDelegate, GuestTableView
 
+from views.guest_info_dialog import GuestInfoDialog
+
 
 class GuestsPage(QWidget, GuestsPageUI):
     def __init__(self):
@@ -54,9 +56,14 @@ class GuestsPage(QWidget, GuestsPageUI):
 
     def set_table_views_button_delegate(self):
         self.button_delegate = ButtonDelegate(self.guest_table_view)
-        self.button_delegate.clicked.connect(lambda: print("Info button clicked"))
+
+        self.button_delegate.clicked.connect(self.open_guest_info_dialog)
 
         self.guest_table_view.setItemDelegateForColumn(6, self.button_delegate)
+
+    def open_guest_info_dialog(self, index):
+        self.guest_info_dialog = GuestInfoDialog()
+        self.guest_info_dialog.exec()
 
     def disable_table_views_selection_mode(self):
         self.guest_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)
