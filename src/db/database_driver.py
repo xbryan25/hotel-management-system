@@ -49,8 +49,8 @@ class DatabaseDriver:
 
         sort_type_dict = {"Ascending": "ASC", "Descending": "DESC"}
 
-        sql = f"""SELECT guests.name, rooms.room_number, bookedrooms.check_in_date, bookedrooms.check_out_date,
-                        rooms.room_type
+        sql = f"""SELECT guests.guest_id, guests.name, rooms.room_number, bookedrooms.check_in_date, 
+                        bookedrooms.check_out_date, rooms.room_type
                         FROM guests
                         JOIN bookedrooms ON guests.guest_id = bookedrooms.guest_id
                         JOIN rooms ON bookedrooms.room_number = rooms.room_number
@@ -63,6 +63,24 @@ class DatabaseDriver:
         list_result = [list(row) for row in result]
 
         return list_result
+
+    def get_guest_details(self, guest_id):
+
+        sql = f"""SELECT guests.guest_id, guests.name, guests.sex, guests.home_address, 
+                        guests.email_address, guests.phone_number, guests.birth_date,
+                        guests.government_id, guests.last_visit_date, guests.visit_count
+                        FROM guests
+                        WHERE guests.guest_id=%s;"""
+
+        values = (guest_id,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchall()
+
+        list_result = [list(row) for row in result]
+
+        return list_result[0]
 
 
     def add_guest(self, guest_information):

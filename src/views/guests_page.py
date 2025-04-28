@@ -1,14 +1,14 @@
 from PyQt6.QtWidgets import QWidget, QHeaderView, QTableView
 from PyQt6.QtGui import QFont
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal, QModelIndex
 
 from ui.guests_page_ui import Ui_Widget as GuestsPageUI
 from custom_widgets import ButtonDelegate, GuestTableView
 
-from views.guest_info_dialog import GuestInfoDialog
-
 
 class GuestsPage(QWidget, GuestsPageUI):
+    clicked_info_button = pyqtSignal(QModelIndex)
+
     def __init__(self):
         super().__init__()
 
@@ -39,31 +39,29 @@ class GuestsPage(QWidget, GuestsPageUI):
             }
         """)
 
-        guest_table_view_header.resizeSection(1, 105)
-        guest_table_view_header.resizeSection(2, 150)
+        guest_table_view_header.resizeSection(0, 10)
+        guest_table_view_header.resizeSection(2, 105)
         guest_table_view_header.resizeSection(3, 150)
         guest_table_view_header.resizeSection(4, 150)
-        guest_table_view_header.resizeSection(5, 115)
-        guest_table_view_header.resizeSection(6, 45)
+        guest_table_view_header.resizeSection(5, 150)
+        guest_table_view_header.resizeSection(6, 115)
+        guest_table_view_header.resizeSection(7, 45)
 
-        guest_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
-        guest_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Fixed)
+        guest_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+        guest_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         guest_table_view_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
         guest_table_view_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
         guest_table_view_header.setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
         guest_table_view_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
         guest_table_view_header.setSectionResizeMode(6, QHeaderView.ResizeMode.Fixed)
+        guest_table_view_header.setSectionResizeMode(7, QHeaderView.ResizeMode.Fixed)
 
     def set_table_views_button_delegate(self):
         self.button_delegate = ButtonDelegate(self.guest_table_view)
 
-        self.button_delegate.clicked.connect(self.open_guest_info_dialog)
+        self.button_delegate.clicked.connect(self.clicked_info_button.emit)
 
-        self.guest_table_view.setItemDelegateForColumn(6, self.button_delegate)
-
-    def open_guest_info_dialog(self, index):
-        self.guest_info_dialog = GuestInfoDialog()
-        self.guest_info_dialog.exec()
+        self.guest_table_view.setItemDelegateForColumn(7, self.button_delegate)
 
     def disable_table_views_selection_mode(self):
         self.guest_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)

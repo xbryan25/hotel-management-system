@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QTableView, QApplication
 from PyQt6.QtCore import Qt
 
+
 class GuestTableView(QTableView):
     def __init__(self, parent):
 
@@ -12,6 +13,10 @@ class GuestTableView(QTableView):
         self.verticalHeader().setVisible(False)
 
         self._hovered = False
+
+    def hide_first_column(self):
+        # Hide 'Guest ID' column
+        self.setColumnHidden(0, True)
 
     def mouseMoveEvent(self, event):
 
