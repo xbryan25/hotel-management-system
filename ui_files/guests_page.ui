@@ -51,6 +51,31 @@
           <string>Sort by Guest Name</string>
          </property>
         </item>
+        <item>
+         <property name="text">
+          <string>Sort by Room Number</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Sort by Check In Date</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Sort by Check Out Date</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Sort by Room Type</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Sort by Amount Due</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item row="1" column="0">
@@ -80,6 +105,11 @@
         <item>
          <property name="text">
           <string>Ascending</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Descending</string>
          </property>
         </item>
        </widget>
