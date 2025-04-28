@@ -3,6 +3,7 @@ from PyQt6.QtGui import QFont
 from PyQt6.QtCore import Qt
 
 from ui.guests_page_ui import Ui_Widget as GuestsPageUI
+from custom_widgets import ButtonDelegate, GuestTableView
 
 
 class GuestsPage(QWidget, GuestsPageUI):
@@ -11,11 +12,19 @@ class GuestsPage(QWidget, GuestsPageUI):
 
         self.setupUi(self)
 
+        self.update_table_view()
+
         self.disable_table_views_selection_mode()
+        self.set_table_views_button_delegate()
 
         self.set_external_stylesheet()
 
         self.load_fonts()
+
+    def update_table_view(self):
+        self.guest_table_view = GuestTableView(parent=self.guest_table_view_frame)
+
+        self.gridLayout_2.addWidget(self.guest_table_view, 0, 0, 1, 1)
 
     def set_table_views_column_widths(self):
         guest_table_view_header = self.guest_table_view.horizontalHeader()
@@ -42,6 +51,12 @@ class GuestsPage(QWidget, GuestsPageUI):
         guest_table_view_header.setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
         guest_table_view_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
         guest_table_view_header.setSectionResizeMode(6, QHeaderView.ResizeMode.Fixed)
+
+    def set_table_views_button_delegate(self):
+        self.button_delegate = ButtonDelegate(self.guest_table_view)
+        self.button_delegate.clicked.connect(lambda: print("Info button clicked"))
+
+        self.guest_table_view.setItemDelegateForColumn(6, self.button_delegate)
 
     def disable_table_views_selection_mode(self):
         self.guest_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)
