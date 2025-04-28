@@ -38,14 +38,23 @@ class DatabaseDriver:
         else:
             return result[0]
 
-    def get_active_guests(self):
+    def get_active_guests(self, sort_by, sort_type):
 
-        sql = f"""SELECT guests.name, rooms.room_number, bookedrooms.check_in_date, bookedrooms.check_out_date, 
+        sort_by_dict = {"Guest Name": "guests.name",
+                        "Room Number": "rooms.room_number",
+                        "Check In Date": "bookedrooms.check_in_date",
+                        "Check Out Date": "bookedrooms.check_out_date",
+                        "Room Type": "rooms.room_type",
+                        "Amount Due": "rooms.room_type"}
+
+        sort_type_dict = {"Ascending": "ASC", "Descending": "DESC"}
+
+        sql = f"""SELECT guests.name, rooms.room_number, bookedrooms.check_in_date, bookedrooms.check_out_date,
                         rooms.room_type
-                        FROM guests 
+                        FROM guests
                         JOIN bookedrooms ON guests.guest_id = bookedrooms.guest_id
                         JOIN rooms ON bookedrooms.room_number = rooms.room_number
-                        ORDER BY bookedrooms.check_in_date ASC;"""
+                        ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]};"""
 
         self.cursor.execute(sql)
 
