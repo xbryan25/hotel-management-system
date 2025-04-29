@@ -3,11 +3,17 @@ from PyQt6.QtCore import QTime, QDateTime, QTimer
 from models.recent_stays_model import RecentStaysModel
 from models.reservation_model import ReservationModel
 
+from views.new_reservation_dialog import NewReservationDialog
+
+from controllers.new_reservation_dialog_controller import NewReservationDialogController
+
 
 class DashboardController:
     def __init__(self, page_widget, db_driver):
         self.view = page_widget
         self.db_driver = db_driver
+
+        self.connect_signals_to_slots()
 
         self.load_data()
         self.view.set_table_views_column_widths()
@@ -18,6 +24,15 @@ class DashboardController:
 
         self.update_date_and_time()
         self.sync_timer_to_next_minute()
+
+    def connect_signals_to_slots(self):
+        self.view.clicked_new_reservation_button.connect(self.open_new_reservation_dialog)
+
+    def open_new_reservation_dialog(self):
+        self.new_reservation_dialog = NewReservationDialog()
+        self.new_reservation_dialog_controller = NewReservationDialogController(self.new_reservation_dialog, self.db_driver)
+
+        self.new_reservation_dialog.exec()
 
     def update_date_and_time(self):
 

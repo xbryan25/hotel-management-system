@@ -1,20 +1,28 @@
 from PyQt6.QtWidgets import QWidget, QHeaderView, QTableView
 from PyQt6.QtGui import QFont
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal
 
 from ui.dashboard_page_ui import Ui_Widget as DashboardPageUI
 
 
 class DashboardPage(QWidget, DashboardPageUI):
+
+    clicked_new_reservation_button = pyqtSignal()
+
     def __init__(self):
         super().__init__()
 
         self.setupUi(self)
 
+        self.connect_signals_to_slots()
+
         self.disable_table_views_selection_mode()
 
         self.set_external_stylesheet()
         self.load_fonts()
+
+    def connect_signals_to_slots(self):
+        self.reservation_list_frame_add_reservation_button.clicked.connect(self.clicked_new_reservation_button.emit)
 
     def disable_table_views_selection_mode(self):
         self.recent_check_in_frame_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)
