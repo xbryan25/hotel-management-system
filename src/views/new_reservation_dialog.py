@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QDialog
-from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtCore import pyqtSignal, QDateTime
 
 from ui.new_reservation_dialog_ui import Ui_Dialog as NewReservationDialogUI
 
@@ -11,11 +11,29 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         super().__init__()
         self.setupUi(self)
 
+        self.update_current_date_and_time()
+
         self.connect_signals_to_slots()
 
         self.current_page = 1
 
+    def update_current_date_and_time(self):
+        self.check_in_date_time_edit.setMinimumDateTime(QDateTime.currentDateTime().addDays(1))
+        self.check_in_date_time_edit.setDateTime(QDateTime.currentDateTime().addDays(1))
+
+        self.check_out_date_time_edit.setMinimumDateTime(QDateTime.currentDateTime().addDays(2))
+        self.check_out_date_time_edit.setDateTime(QDateTime.currentDateTime().addDays(2))
+
+    def update_check_out_date_time_edit_min_date(self):
+        check_in_date_time_current_value = self.check_in_date_time_edit.dateTime()
+
+        self.check_out_date_time_edit.setMinimumDateTime(check_in_date_time_current_value.addDays(1))
+        self.check_out_date_time_edit.setDateTime(check_in_date_time_current_value.addDays(1))
+
     def connect_signals_to_slots(self):
+
+        self.check_in_date_time_edit.dateTimeChanged.connect(self.update_check_out_date_time_edit_min_date)
+
         self.left_button.clicked.connect(lambda: self.page_change("left_button"))
         self.right_button.clicked.connect(lambda: self.page_change("right_button"))
 
