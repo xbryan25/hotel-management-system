@@ -1,9 +1,11 @@
 from PyQt6.QtWidgets import QDialog
+from PyQt6.QtCore import pyqtSignal
 
 from ui.new_reservation_dialog_ui import Ui_Dialog as NewReservationDialogUI
 
 
 class NewReservationDialog(QDialog, NewReservationDialogUI):
+    room_type_changed = pyqtSignal(str)
 
     def __init__(self):
         super().__init__()
@@ -16,6 +18,8 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
     def connect_signals_to_slots(self):
         self.left_button.clicked.connect(lambda: self.page_change("left_button"))
         self.right_button.clicked.connect(lambda: self.page_change("right_button"))
+
+        self.room_type_filter_combobox.currentTextChanged.connect(self.room_type_changed.emit)
 
     def page_change(self, button_type):
         if self.current_page < 3 and button_type == "right_button":

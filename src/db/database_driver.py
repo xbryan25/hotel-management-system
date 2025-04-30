@@ -153,6 +153,33 @@ class DatabaseDriver:
         else:
             return result[0]
 
+    def get_available_rooms(self, room_type=None):
+        if not room_type:
+            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.price, rooms.availability_status, 
+                            rooms.capacity
+                            FROM rooms
+                            WHERE rooms.availability_status="available"
+                            ORDER BY rooms.room_number ASC;"""
+
+            self.cursor.execute(sql)
+        else:
+            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.price, rooms.availability_status, 
+                            rooms.capacity
+                            FROM rooms
+                            WHERE rooms.room_type=%s
+                            AND rooms.availability_status="available"
+                            ORDER BY rooms.room_number ASC;"""
+
+            values = (room_type,)
+
+            self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchall()
+
+        list_result = [list(row) for row in result]
+
+        return list_result
+
     def get_all_rooms(self):
 
         sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.price, rooms.availability_status, 
