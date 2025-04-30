@@ -6,6 +6,8 @@ from ui.new_reservation_dialog_ui import Ui_Dialog as NewReservationDialogUI
 
 class NewReservationDialog(QDialog, NewReservationDialogUI):
     room_type_changed = pyqtSignal(str)
+    room_changed = pyqtSignal(str)
+    date_time_changed = pyqtSignal(str)
 
     def __init__(self):
         super().__init__()
@@ -16,6 +18,10 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         self.connect_signals_to_slots()
 
         self.current_page = 1
+
+    def get_check_in_check_out_date_and_time(self):
+        return {"check_in": self.check_in_date_time_edit.dateTime(),
+                "check_out": self.check_out_date_time_edit.dateTime()}
 
     def update_current_date_and_time(self):
         self.check_in_date_time_edit.setMinimumDateTime(QDateTime.currentDateTime().addDays(1))
@@ -30,14 +36,33 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         self.check_out_date_time_edit.setMinimumDateTime(check_in_date_time_current_value.addDays(1))
         self.check_out_date_time_edit.setDateTime(check_in_date_time_current_value.addDays(1))
 
+    def update_room_cost_value_label(self, room_cost):
+        self.room_cost_value_label.setText(str(room_cost))
+
+        self.update_total_cost_value_label()
+
+    def update_total_cost_value_label(self):
+        room_cost = float(self.room_cost_value_label.text())
+
+        self.total_cost_value_label.setText(str(room_cost))
+
+    # def update_cost_summary(self):
+    #     self.room_cost_value_label.setText("Yo")
+    #     self.service_cost_value_label.setText("")
+    #     self.total_cost_value_label.setText("")
+
     def connect_signals_to_slots(self):
 
         self.check_in_date_time_edit.dateTimeChanged.connect(self.update_check_out_date_time_edit_min_date)
+        self.check_in_date_time_edit.dateTimeChanged.connect(lambda: self.date_time_changed.emit(self.rooms_combobox.currentText()))
+
+        self.check_out_date_time_edit.dateTimeChanged.connect(lambda: self.date_time_changed.emit(self.rooms_combobox.currentText()))
 
         self.left_button.clicked.connect(lambda: self.page_change("left_button"))
         self.right_button.clicked.connect(lambda: self.page_change("right_button"))
 
         self.room_type_filter_combobox.currentTextChanged.connect(self.room_type_changed.emit)
+        self.rooms_combobox.currentTextChanged.connect(self.room_changed.emit)
 
     def page_change(self, button_type):
         if self.current_page < 3 and button_type == "right_button":

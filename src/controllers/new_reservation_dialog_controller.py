@@ -13,6 +13,23 @@ class NewReservationDialogController:
     def connect_signals_to_slots(self):
         self.view.room_type_changed.connect(self.update_models)
 
+        self.view.room_changed.connect(self.calculate_room_cost)
+        self.view.date_time_changed.connect(self.calculate_room_cost)
+
+    def calculate_room_cost(self, current_room):
+        check_in_check_out_date_time = self.view.get_check_in_check_out_date_and_time()
+
+        seconds = check_in_check_out_date_time["check_in"].secsTo(check_in_check_out_date_time["check_out"])
+
+        hours = seconds / 3600
+
+        current_room_cost = self.available_room_numbers_model.get_cost_of_room(current_room)
+
+        total_room_cost = (((hours-1)//24) + 1) * current_room_cost
+
+        self.view.update_room_cost_value_label(total_room_cost)
+
+
     def set_models(self):
         available_rooms = self.db_driver.get_available_rooms()
 

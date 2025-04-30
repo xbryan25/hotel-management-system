@@ -22,8 +22,12 @@ class AvailableRoomsModel(QAbstractListModel):
 
             self._rooms = unique_rooms
 
-    def change_data_to_display(self, data_to_display):
-        self.data_to_display = data_to_display
+    def get_cost_of_room(self, room_number):
+        for room in self._rooms:
+            if room[0] == room_number:
+                return room[2]
+
+
 
     def rowCount(self, parent=None):
         return len(self._rooms)
