@@ -193,7 +193,7 @@ class Ui_Dialog(object):
         self.gridLayout.addWidget(self.contents_stacked_widget, 1, 0, 1, 2)
 
         self.retranslateUi(Dialog)
-        self.contents_stacked_widget.setCurrentIndex(2)
+        self.contents_stacked_widget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):

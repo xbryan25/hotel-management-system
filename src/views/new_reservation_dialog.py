@@ -9,6 +9,7 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
     room_type_changed = pyqtSignal(str)
     room_changed = pyqtSignal(str)
     date_time_changed = pyqtSignal(str)
+    spinbox_enabled = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -42,53 +43,68 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
 
         self.update_total_cost_value_label()
 
+    def update_service_cost_value_label(self, total_service_cost):
+
+        if total_service_cost == 0:
+            self.service_cost_value_label.setText("-")
+        else:
+            self.service_cost_value_label.setText(str(total_service_cost))
+
+        self.update_total_cost_value_label()
+
     def update_total_cost_value_label(self):
         room_cost = float(self.room_cost_value_label.text())
 
-        self.total_cost_value_label.setText(str(room_cost))
+        try:
+            service_cost = float(self.service_cost_value_label.text())
+        except ValueError:
+            service_cost = 0
 
-    def load_services_frames(self, services):
+        self.total_cost_value_label.setText(f"{room_cost + service_cost}")
 
-        for i in range(len(services)):
-            temp_frame = QFrame(parent=self.services_scroll_area_contents)
-            temp_frame.setFrameShape(QFrame.Shape.StyledPanel)
-            temp_frame.setFrameShadow(QFrame.Shadow.Raised)
-            temp_frame.setObjectName("temp_frame")
+    def create_service_frame(self, service):
 
-            horizontalLayout_2 = QHBoxLayout(temp_frame)
-            horizontalLayout_2.setObjectName("horizontalLayout_2")
+        frame = QFrame(parent=self.services_scroll_area_contents)
+        frame.setFrameShape(QFrame.Shape.StyledPanel)
+        frame.setFrameShadow(QFrame.Shadow.Raised)
+        frame.setObjectName(f"{service[1].replace(" ", "_")}_frame")
 
-            temp_label = QLabel(parent=temp_frame)
-            temp_label.setObjectName("temp_label")
-            temp_label.setText(services[i][1])
+        h_layout = QHBoxLayout(frame)
+        h_layout.setObjectName(f"{service[1].replace(" ", "_")}_h_layout")
 
-            horizontalLayout_2.addWidget(temp_label)
-            temp_checkbox = QCheckBox(parent=temp_frame)
-            temp_checkbox.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-            temp_checkbox.setText("")
-            temp_checkbox.setObjectName("temp_checkbox")
+        service_name_label = QLabel(parent=frame)
+        service_name_label.setObjectName(f"{service[1].replace(" ", "_")}_label")
+        service_name_label.setText(service[1])
+        h_layout.addWidget(service_name_label)
 
-            horizontalLayout_2.addWidget(temp_checkbox)
-            temp_spinbox = QSpinBox(parent=temp_frame)
-            temp_spinbox.setObjectName("temp_spinbox")
-            temp_spinbox.setEnabled(False)
-            horizontalLayout_2.addWidget(temp_spinbox)
+        checkbox = QCheckBox(parent=frame)
+        checkbox.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        checkbox.setText("")
+        checkbox.setObjectName(f"{service[1].replace(" ", "_")}_checkbox")
+        h_layout.addWidget(checkbox)
 
-            temp_checkbox.checkStateChanged.connect(lambda _, s=temp_spinbox: self.enable_spinbox(s))
+        spinbox = QSpinBox(parent=frame)
+        spinbox.setObjectName(f"{service[1].replace(" ", "_")}_spinbox")
+        spinbox.setEnabled(False)
+        h_layout.addWidget(spinbox)
 
-            self.services_scroll_area_grid_layout.addWidget(temp_frame, i, 0, 1, 1)
+        checkbox.checkStateChanged.connect(lambda _, f=frame: self.enable_spinbox(f))
 
-        spacerItem5 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum,
-                                            QSizePolicy.Policy.Expanding)
-        self.services_scroll_area_grid_layout.addItem(spacerItem5, len(services), 0, 1, 1)
+        frame.spinbox = spinbox
+        frame.service = service
+        frame.is_spinbox_enabled = False
 
-    @staticmethod
-    def enable_spinbox(spinbox):
-        if spinbox.isEnabled():
-            spinbox.setEnabled(False)
+        return frame
+
+    def enable_spinbox(self, frame):
+        if frame.spinbox.isEnabled():
+            frame.spinbox.setEnabled(False)
+            frame.is_spinbox_enabled = False
         else:
-            spinbox.setEnabled(True)
+            frame.spinbox.setEnabled(True)
+            frame.is_spinbox_enabled = True
 
+        self.spinbox_enabled.emit()
 
     def connect_signals_to_slots(self):
 

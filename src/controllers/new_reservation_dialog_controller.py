@@ -1,3 +1,5 @@
+from PyQt6.QtWidgets import QSizePolicy, QSpacerItem
+
 from models.available_rooms_model import AvailableRoomsModel
 from models.services_model import ServicesModel
 
@@ -6,18 +8,21 @@ class NewReservationDialogController:
     def __init__(self, dialog, db_driver):
         self.view = dialog
         self.db_driver = db_driver
+        self.service_frames = []
 
         self.connect_signals_to_slots()
 
         self.set_models()
 
-        self.view.load_services_frames(self.services_model.get_all())
+        self.create_service_frames(self.services_model.get_all())
 
     def connect_signals_to_slots(self):
         self.view.room_type_changed.connect(self.update_models)
 
         self.view.room_changed.connect(self.calculate_room_cost)
         self.view.date_time_changed.connect(self.calculate_room_cost)
+
+        self.view.spinbox_enabled.connect(lambda: self.update_total_service_cost(self.service_frames))
 
     def calculate_room_cost(self, current_room):
         check_in_check_out_date_time = self.view.get_check_in_check_out_date_and_time()
@@ -31,6 +36,32 @@ class NewReservationDialogController:
         total_room_cost = (((hours-1)//24) + 1) * current_room_cost
 
         self.view.update_room_cost_value_label(total_room_cost)
+
+    def update_total_service_cost(self, service_frames):
+
+        total_services_cost = 0
+
+        for service_frame in service_frames:
+            if service_frame.is_spinbox_enabled:
+                price = service_frame.service[2]
+                quantity = service_frame.spinbox.value()
+                total_services_cost += price * quantity
+
+        self.view.update_service_cost_value_label(float(total_services_cost))
+
+    def create_service_frames(self, services):
+        for i in range(len(services)):
+            frame = self.view.create_service_frame(services[i])
+
+            self.view.services_scroll_area_grid_layout.addWidget(frame, i, 0, 1, 1)
+
+            self.service_frames.append(frame)
+
+            frame.spinbox.valueChanged.connect(lambda: self.update_total_service_cost(self.service_frames))
+
+        v_spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.view.services_scroll_area_grid_layout.addItem(v_spacer, len(services), 0, 1, 1)
 
     # def calculate_total_service_cost(self, ):
 
