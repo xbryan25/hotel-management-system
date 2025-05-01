@@ -1,4 +1,5 @@
 from models.available_rooms_model import AvailableRoomsModel
+from models.services_model import ServicesModel
 
 
 class NewReservationDialogController:
@@ -9,6 +10,8 @@ class NewReservationDialogController:
         self.connect_signals_to_slots()
 
         self.set_models()
+
+        self.view.load_services_frames(self.services_model.get_all())
 
     def connect_signals_to_slots(self):
         self.view.room_type_changed.connect(self.update_models)
@@ -29,6 +32,7 @@ class NewReservationDialogController:
 
         self.view.update_room_cost_value_label(total_room_cost)
 
+    # def calculate_total_service_cost(self, ):
 
     def set_models(self):
         available_rooms = self.db_driver.get_available_rooms()
@@ -42,6 +46,10 @@ class NewReservationDialogController:
         self.view.room_type_filter_combobox.blockSignals(True)
         self.view.room_type_filter_combobox.setModel(self.available_room_types_model)
         self.view.room_type_filter_combobox.blockSignals(False)
+
+        available_services = self.db_driver.get_all_services()
+        self.services_model = ServicesModel(available_services)
+
 
     def update_models(self, room_type):
 

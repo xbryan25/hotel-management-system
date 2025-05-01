@@ -1,5 +1,6 @@
-from PyQt6.QtWidgets import QDialog
-from PyQt6.QtCore import pyqtSignal, QDateTime
+from PyQt6.QtWidgets import QDialog, QSpacerItem, QFrame, QHBoxLayout, QLabel, QCheckBox, QSizePolicy, QSpinBox
+from PyQt6.QtGui import QCursor
+from PyQt6.QtCore import pyqtSignal, QDateTime, Qt
 
 from ui.new_reservation_dialog_ui import Ui_Dialog as NewReservationDialogUI
 
@@ -46,10 +47,48 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
 
         self.total_cost_value_label.setText(str(room_cost))
 
-    # def update_cost_summary(self):
-    #     self.room_cost_value_label.setText("Yo")
-    #     self.service_cost_value_label.setText("")
-    #     self.total_cost_value_label.setText("")
+    def load_services_frames(self, services):
+
+        for i in range(len(services)):
+            temp_frame = QFrame(parent=self.services_scroll_area_contents)
+            temp_frame.setFrameShape(QFrame.Shape.StyledPanel)
+            temp_frame.setFrameShadow(QFrame.Shadow.Raised)
+            temp_frame.setObjectName("temp_frame")
+
+            horizontalLayout_2 = QHBoxLayout(temp_frame)
+            horizontalLayout_2.setObjectName("horizontalLayout_2")
+
+            temp_label = QLabel(parent=temp_frame)
+            temp_label.setObjectName("temp_label")
+            temp_label.setText(services[i][1])
+
+            horizontalLayout_2.addWidget(temp_label)
+            temp_checkbox = QCheckBox(parent=temp_frame)
+            temp_checkbox.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+            temp_checkbox.setText("")
+            temp_checkbox.setObjectName("temp_checkbox")
+
+            horizontalLayout_2.addWidget(temp_checkbox)
+            temp_spinbox = QSpinBox(parent=temp_frame)
+            temp_spinbox.setObjectName("temp_spinbox")
+            temp_spinbox.setEnabled(False)
+            horizontalLayout_2.addWidget(temp_spinbox)
+
+            temp_checkbox.checkStateChanged.connect(lambda _, s=temp_spinbox: self.enable_spinbox(s))
+
+            self.services_scroll_area_grid_layout.addWidget(temp_frame, i, 0, 1, 1)
+
+        spacerItem5 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum,
+                                            QSizePolicy.Policy.Expanding)
+        self.services_scroll_area_grid_layout.addItem(spacerItem5, len(services), 0, 1, 1)
+
+    @staticmethod
+    def enable_spinbox(spinbox):
+        if spinbox.isEnabled():
+            spinbox.setEnabled(False)
+        else:
+            spinbox.setEnabled(True)
+
 
     def connect_signals_to_slots(self):
 

@@ -261,6 +261,15 @@ class DatabaseDriver:
         else:
             return result[0]
 
+    def get_all_services(self):
+        self.cursor.execute("""SELECT * FROM services;""")
+
+        result = self.cursor.fetchall()
+
+        list_result = [list(row) for row in result]
+
+        return list_result
+
     def add_service(self, service_information):
         sql = """INSERT INTO services
                 (service_id, service_name, rate) VALUES
