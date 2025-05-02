@@ -1,0 +1,12 @@
+QDialog{
+    background-color: #f6f6f6;
+}
+
+#services_scroll_area_contents{
+    background-color: #f6f6f6;
+}
+
+#summary_frame{
+    background-color: #e0e1e0;
+    border-radius: 10px;
+}
