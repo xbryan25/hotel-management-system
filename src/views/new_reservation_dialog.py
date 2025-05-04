@@ -97,6 +97,7 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
 
         checkbox.checkStateChanged.connect(lambda _, f=frame: self.enable_spinbox(f))
 
+        frame.service_name = service[1]
         frame.spinbox = spinbox
         frame.service = service
         frame.is_spinbox_enabled = False
@@ -125,6 +126,36 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
 
         self.room_type_filter_combobox.currentTextChanged.connect(self.room_type_changed.emit)
         self.rooms_combobox.currentTextChanged.connect(self.room_changed.emit)
+
+    def get_guest_inputs(self):
+        guest_inputs = {}
+
+        guest_inputs.update({"first_name": self.first_name_lineedit.text()})
+        guest_inputs.update({"last_name": self.last_name_lineedit.text()})
+        guest_inputs.update({"sex": self.sex_combobox.currentText()})
+        guest_inputs.update({"birth_date": self.birth_date_dateedit.date()})
+        guest_inputs.update({"home_address": self.home_address_lineedit.text()})
+        guest_inputs.update({"email_address": self.first_name_lineedit.text()})
+        guest_inputs.update({"government_id_lineedit": self.government_id_lineedit.text()})
+
+        return guest_inputs
+
+    def get_reservation_inputs(self):
+        reservation_inputs = {}
+
+        reservation_inputs.update({"check_in_date": self.check_in_date_time_edit.datetime()})
+        reservation_inputs.update({"check_out_date": self.check_out_date_time_edit.datetime()})
+        reservation_inputs.update({"room_number": self.rooms_combobox.currentText()})
+        reservation_inputs.update({"total_reservation_cost": self.total_cost_value_label.text()})
+
+    @staticmethod
+    def get_availed_services_inputs(service_frames):
+        availed_services_inputs = {}
+
+        for frame in service_frames:
+            availed_services_inputs.update({frame.service_name: frame.spinbox.value()})
+
+        return availed_services_inputs
 
     def page_change(self, button_type):
         if self.current_page < 3 and button_type == "right_button":
