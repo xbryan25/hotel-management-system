@@ -82,25 +82,41 @@ class DatabaseDriver:
 
         return list_result[0]
 
+    def get_guest_id_from_name(self, guest_name):
+
+        sql = f"""SELECT guests.guest_id
+                    FROM guests
+                    WHERE guests.name=%s;"""
+
+        values = (guest_name,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        return result[0]
 
     def add_guest(self, guest_information):
+
+        # SQL avoids duplication of names
         sql = """INSERT INTO guests 
                 (guest_id, name, sex, home_address, email_address, phone_number, 
                 birth_date, government_id, visit_count) VALUES
-                (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE name = name"""
 
         latest_guest_id = self.get_latest_guest_id()
 
         new_guest_id = f"guest-{int(latest_guest_id[7:]) + 1:06}"
 
         values = (new_guest_id,
-                  guest_information[0],
-                  guest_information[1],
-                  guest_information[2],
-                  guest_information[3],
-                  guest_information[4],
-                  guest_information[5],
-                  guest_information[6],
+                  guest_information["name"],
+                  guest_information["sex"],
+                  guest_information["home_address"],
+                  guest_information["email_address"],
+                  guest_information["phone_number"],
+                  guest_information["birth_date"],
+                  guest_information["government_id"],
                   1)
 
         self.cursor.execute(sql, values)
@@ -453,12 +469,12 @@ class DatabaseDriver:
         new_reservation_id = f"reserve-{int(latest_reservation_id[9:]) + 1:06}"
 
         values = (new_reservation_id,
-                  reserved_room_information[0],
-                  reserved_room_information[1],
-                  reserved_room_information[2],
-                  reserved_room_information[3],
-                  reserved_room_information[4],
-                  reserved_room_information[5])
+                  reserved_room_information["reservation_date"],
+                  reserved_room_information["check_in_date"],
+                  reserved_room_information["check_out_date"],
+                  reserved_room_information["payment_status"],
+                  reserved_room_information["guest_id"],
+                  reserved_room_information["room_number"])
 
         self.cursor.execute(sql, values)
         self.db.commit()

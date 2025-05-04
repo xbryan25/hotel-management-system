@@ -24,6 +24,8 @@ class NewReservationDialogController:
 
         self.view.spinbox_enabled.connect(lambda: self.update_total_service_cost(self.service_frames))
 
+        self.view.clicked_reservation.connect(self.make_reservation)
+
     def calculate_room_cost(self, current_room):
         check_in_check_out_date_time = self.view.get_check_in_check_out_date_and_time()
 
@@ -63,8 +65,6 @@ class NewReservationDialogController:
 
         self.view.services_scroll_area_grid_layout.addItem(v_spacer, len(services), 0, 1, 1)
 
-    # def calculate_total_service_cost(self, ):
-
     def set_models(self):
         available_rooms = self.db_driver.get_available_rooms()
 
@@ -81,7 +81,6 @@ class NewReservationDialogController:
         available_services = self.db_driver.get_all_services()
         self.services_model = ServicesModel(available_services)
 
-
     def update_models(self, room_type):
 
         if room_type == "-":
@@ -90,3 +89,18 @@ class NewReservationDialogController:
             available_rooms_from_room_type = self.db_driver.get_available_rooms(room_type)
 
         self.available_room_numbers_model.set_rooms(available_rooms_from_room_type)
+
+    def make_reservation(self):
+        guest_inputs = self.view.get_guest_inputs()
+        reservation_inputs = self.view.get_reservation_inputs()
+        availed_services_inputs = self.view.get_availed_services_inputs(self.service_frames)
+
+        self.db_driver.add_guest(guest_inputs)
+
+        reservation_inputs.update({"guest_id": self.db_driver.get_guest_id_from_name(guest_inputs["name"])})
+
+        print("Yo")
+
+        self.db_driver.add_reserved_room(reservation_inputs)
+
+

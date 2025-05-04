@@ -2,6 +2,8 @@ from PyQt6.QtWidgets import QDialog, QSpacerItem, QFrame, QHBoxLayout, QLabel, Q
 from PyQt6.QtGui import QCursor, QFont
 from PyQt6.QtCore import pyqtSignal, QDateTime, Qt
 
+from datetime import datetime
+
 from ui.new_reservation_dialog_ui import Ui_Dialog as NewReservationDialogUI
 
 
@@ -10,16 +12,17 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
     room_changed = pyqtSignal(str)
     date_time_changed = pyqtSignal(str)
     spinbox_enabled = pyqtSignal()
+    clicked_reservation = pyqtSignal()
 
     def __init__(self):
         super().__init__()
         self.setupUi(self)
 
+        self.current_page = 1
+
         self.update_current_date_and_time()
 
         self.connect_signals_to_slots()
-
-        self.current_page = 1
 
         self.load_fonts()
         self.set_external_stylesheet()
@@ -121,32 +124,57 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
 
         self.check_out_date_time_edit.dateTimeChanged.connect(lambda: self.date_time_changed.emit(self.rooms_combobox.currentText()))
 
-        self.left_button.clicked.connect(lambda: self.page_change("left_button"))
-        self.right_button.clicked.connect(lambda: self.page_change("right_button"))
-
         self.room_type_filter_combobox.currentTextChanged.connect(self.room_type_changed.emit)
         self.rooms_combobox.currentTextChanged.connect(self.room_changed.emit)
+
+        self.change_button_signals()
+
+    def change_button_signals(self):
+        self.remove_button_signals()
+
+        if self.current_page == 1:
+            self.left_button.clicked.connect(self.close)
+            self.right_button.clicked.connect(lambda: self.page_change("right_button"))
+
+        elif self.current_page == 2:
+            self.left_button.clicked.connect(lambda: self.page_change("left_button"))
+            self.right_button.clicked.connect(self.validate_form_completion)
+
+        elif self.current_page == 3:
+            self.left_button.clicked.connect(lambda: self.page_change("left_button"))
+            self.right_button.clicked.connect(self.clicked_reservation.emit)
+
+        self.left_button.clicked.connect(self.change_button_signals)
+        self.right_button.clicked.connect(self.change_button_signals)
+
+    def remove_button_signals(self):
+        self.left_button.disconnect()
+        self.right_button.disconnect()
 
     def get_guest_inputs(self):
         guest_inputs = {}
 
-        guest_inputs.update({"first_name": self.first_name_lineedit.text()})
-        guest_inputs.update({"last_name": self.last_name_lineedit.text()})
+        guest_inputs.update({"name": f"{self.first_name_lineedit.text()} {self.last_name_lineedit.text()}"})
         guest_inputs.update({"sex": self.sex_combobox.currentText()})
-        guest_inputs.update({"birth_date": self.birth_date_dateedit.date()})
+        guest_inputs.update({"birth_date": self.birth_date_dateedit.date().toPyDate()})
         guest_inputs.update({"home_address": self.home_address_lineedit.text()})
         guest_inputs.update({"email_address": self.first_name_lineedit.text()})
-        guest_inputs.update({"government_id_lineedit": self.government_id_lineedit.text()})
+        guest_inputs.update({"government_id": self.government_id_lineedit.text()})
+        guest_inputs.update({"phone_number": "1123123"})
 
         return guest_inputs
 
     def get_reservation_inputs(self):
         reservation_inputs = {}
 
-        reservation_inputs.update({"check_in_date": self.check_in_date_time_edit.datetime()})
-        reservation_inputs.update({"check_out_date": self.check_out_date_time_edit.datetime()})
+        reservation_inputs.update({"reservation_date": datetime.now()})
+        reservation_inputs.update({"payment_status": "not paid"})
+        reservation_inputs.update({"check_in_date": self.check_in_date_time_edit.dateTime().toPyDateTime()})
+        reservation_inputs.update({"check_out_date": self.check_out_date_time_edit.dateTime().toPyDateTime()})
         reservation_inputs.update({"room_number": self.rooms_combobox.currentText()})
         reservation_inputs.update({"total_reservation_cost": self.total_cost_value_label.text()})
+
+        return reservation_inputs
 
     @staticmethod
     def get_availed_services_inputs(service_frames):
@@ -156,6 +184,25 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
             availed_services_inputs.update({frame.service_name: frame.spinbox.value()})
 
         return availed_services_inputs
+
+    def validate_form_completion(self):
+        is_valid = True
+
+        values = [self.first_name_lineedit.text(),
+                  self.last_name_lineedit.text(),
+                  self.home_address_lineedit.text(),
+                  self.first_name_lineedit.text(),
+                  self.government_id_lineedit.text()]
+
+        for value in values:
+            if not value:
+                is_valid = False
+                break
+
+        if is_valid:
+            self.page_change("right_button")
+        else:
+            print("One of the fields is blank")
 
     def page_change(self, button_type):
         if self.current_page < 3 and button_type == "right_button":
