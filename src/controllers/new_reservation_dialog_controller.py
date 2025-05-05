@@ -97,10 +97,8 @@ class NewReservationDialogController:
 
         self.db_driver.add_guest(guest_inputs)
 
-        reservation_inputs.update({"guest_id": self.db_driver.get_guest_id_from_name(guest_inputs["name"])})
-
-        print("Yo")
+        guest_id = self.db_driver.get_guest_id_from_name(guest_inputs["name"])
+        reservation_inputs.update({"guest_id": guest_id})
 
         self.db_driver.add_reserved_room(reservation_inputs)
-
-
+        self.db_driver.add_availed_services(availed_services_inputs, guest_id)

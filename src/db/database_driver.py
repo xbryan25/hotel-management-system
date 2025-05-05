@@ -1,4 +1,6 @@
 import pymysql
+from datetime import date
+
 from dotenv import load_dotenv
 import os
 
@@ -335,22 +337,26 @@ class DatabaseDriver:
         else:
             return result[0]
 
-    def add_availed_service(self, availed_service_information):
-        sql = """INSERT INTO availedservices
-                (avail_id, avail_date, guest_id, service_id) VALUES
-                (%s, %s, %s, %s)"""
+    def add_availed_services(self, availed_service_information, guest_id):
 
-        latest_avail_id = self.get_latest_avail_id()
+        for service_id, quantity in availed_service_information.items():
 
-        new_avail_id = f"avail-{int(latest_avail_id[9:]) + 1:06}"
+            sql = """INSERT INTO availedservices
+                    (avail_id, avail_date, quantity, guest_id, service_id) VALUES
+                    (%s, %s, %s, %s, %s)"""
 
-        values = (new_avail_id,
-                  availed_service_information[0],
-                  availed_service_information[1],
-                  availed_service_information[2])
+            latest_avail_id = self.get_latest_avail_id()
 
-        self.cursor.execute(sql, values)
-        self.db.commit()
+            new_avail_id = f"avail-{int(latest_avail_id[9:]) + 1:06}"
+
+            values = (new_avail_id,
+                      date.today(),
+                      quantity,
+                      guest_id,
+                      service_id)
+
+            self.cursor.execute(sql, values)
+            self.db.commit()
 
     def update_availed_service(self, old_avail_id, availed_service_information):
         sql = """UPDATE availedservices SET avail_id=%s, avail_date=%s, guest_id=%s, service_id=%s
@@ -461,8 +467,9 @@ class DatabaseDriver:
 
     def add_reserved_room(self, reserved_room_information):
         sql = """INSERT INTO reservedrooms
-                (reservation_id, reservation_date, check_in_date, check_out_date, payment_status, guest_id, room_number) VALUES
-                (%s, %s, %s, %s, %s, %s, %s)"""
+                (reservation_id, reservation_date, check_in_date, check_out_date, payment_status, total_reservation_cost,
+                guest_id, room_number) VALUES
+                (%s, %s, %s, %s, %s, %s, %s, %s)"""
 
         latest_reservation_id = self.get_latest_reservation_id()
 
@@ -473,6 +480,7 @@ class DatabaseDriver:
                   reserved_room_information["check_in_date"],
                   reserved_room_information["check_out_date"],
                   reserved_room_information["payment_status"],
+                  reserved_room_information["total_reservation_cost"],
                   reserved_room_information["guest_id"],
                   reserved_room_information["room_number"])
 

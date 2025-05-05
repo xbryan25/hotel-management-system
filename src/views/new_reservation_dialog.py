@@ -100,7 +100,7 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
 
         checkbox.checkStateChanged.connect(lambda _, f=frame: self.enable_spinbox(f))
 
-        frame.service_name = service[1]
+        frame.service_id = service[0]
         frame.spinbox = spinbox
         frame.service = service
         frame.is_spinbox_enabled = False
@@ -181,7 +181,7 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         availed_services_inputs = {}
 
         for frame in service_frames:
-            availed_services_inputs.update({frame.service_name: frame.spinbox.value()})
+            availed_services_inputs.update({frame.service_id: frame.spinbox.value()})
 
         return availed_services_inputs
 
