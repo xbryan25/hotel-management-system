@@ -10,3 +10,18 @@ QDialog{
     background-color: #e0e1e0;
     border-radius: 10px;
 }
+
+#left_button, #right_button{
+    padding: 5px;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+#left_button{
+    background-color: transparent;
+}
+
+#right_button{
+    background-color: #194FCC;
+    color: white;
+}

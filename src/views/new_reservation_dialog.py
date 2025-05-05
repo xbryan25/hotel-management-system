@@ -213,7 +213,7 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         if self.current_page == 1:
             self.left_button.setText("Cancel")
         elif self.current_page == 2:
-            self.left_button.setText("Prev")
+            self.left_button.setText("Back")
             self.right_button.setText("Next")
         else:
             self.right_button.setText("Reserve")
