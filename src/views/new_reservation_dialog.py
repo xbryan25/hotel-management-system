@@ -5,6 +5,7 @@ from PyQt6.QtCore import pyqtSignal, QDateTime, Qt
 from datetime import datetime
 
 from ui.new_reservation_dialog_ui import Ui_Dialog as NewReservationDialogUI
+from views.confirmation_dialog import ConfirmationDialog
 
 
 class NewReservationDialog(QDialog, NewReservationDialogUI):
@@ -142,7 +143,7 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
 
         elif self.current_page == 3:
             self.left_button.clicked.connect(lambda: self.page_change("left_button"))
-            self.right_button.clicked.connect(self.clicked_reservation.emit)
+            self.right_button.clicked.connect(self.confirm_reservation)
 
         self.left_button.clicked.connect(self.change_button_signals)
         self.right_button.clicked.connect(self.change_button_signals)
@@ -203,6 +204,17 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
             self.page_change("right_button")
         else:
             print("One of the fields is blank")
+
+    def confirm_reservation(self):
+        header_message = "Are you sure you want to make this reservation?"
+        subheader_message = "Double check all input fields before proceeding."
+        self.confirmation_dialog = ConfirmationDialog(header_message, subheader_message)
+
+        self.confirmation_dialog.exec()
+
+        if self.confirmation_dialog.get_choice():
+            print("made reservation")
+            # self.clicked_reservation.emit()
 
     def page_change(self, button_type):
         if self.current_page < 3 and button_type == "right_button":
