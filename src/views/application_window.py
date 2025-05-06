@@ -8,9 +8,7 @@ from utils.sidebar_cursor_changer import SidebarCursorChanger
 
 from db.database_driver import DatabaseDriver
 
-from controllers.dashboard_controller import DashboardController
-from controllers.rooms_page_controller import RoomsPageController
-from controllers.guests_page_controller import GuestsPageController
+from controllers import DashboardController, RoomsPageController, GuestsPageController
 
 from views import *
 

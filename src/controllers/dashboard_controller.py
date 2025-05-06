@@ -3,7 +3,7 @@ from PyQt6.QtCore import QTime, QDateTime, QTimer
 from models import RecentStaysModel, ReservationModel
 from views import NewReservationDialog
 
-from controllers.new_reservation_dialog_controller import NewReservationDialogController
+from controllers import NewReservationDialogController
 
 
 class DashboardController:
