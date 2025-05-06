@@ -66,7 +66,7 @@ class NewReservationDialogController:
         self.view.services_scroll_area_grid_layout.addItem(v_spacer, len(services), 0, 1, 1)
 
     def set_models(self):
-        available_rooms = self.db_driver.get_available_rooms()
+        available_rooms = self.db_driver.room_queries.get_available_rooms()
 
         # list(available_rooms) makes a copy of available_rooms so that it won't be affected
         self.available_room_numbers_model = AvailableRoomsModel(available_rooms, 0)
@@ -78,15 +78,15 @@ class NewReservationDialogController:
         self.view.room_type_filter_combobox.setModel(self.available_room_types_model)
         self.view.room_type_filter_combobox.blockSignals(False)
 
-        available_services = self.db_driver.get_all_services()
+        available_services = self.db_driver.service_queries.get_all_services()
         self.services_model = ServicesModel(available_services)
 
     def update_models(self, room_type):
 
         if room_type == "-":
-            available_rooms_from_room_type = self.db_driver.get_available_rooms()
+            available_rooms_from_room_type = self.db_driver.room_queries.get_available_rooms()
         else:
-            available_rooms_from_room_type = self.db_driver.get_available_rooms(room_type)
+            available_rooms_from_room_type = self.db_driver.room_queries.get_available_rooms(room_type)
 
         self.available_room_numbers_model.set_rooms(available_rooms_from_room_type)
 
@@ -95,13 +95,13 @@ class NewReservationDialogController:
         reservation_inputs = self.view.get_reservation_inputs()
         availed_services_inputs = self.view.get_availed_services_inputs(self.service_frames)
 
-        self.db_driver.add_guest(guest_inputs)
+        self.db_driver.guest_queries.add_guest(guest_inputs)
 
-        guest_id = self.db_driver.get_guest_id_from_name(guest_inputs["name"])
+        guest_id = self.db_driver.guest_queries.get_guest_id_from_name(guest_inputs["name"])
         reservation_inputs.update({"guest_id": guest_id})
 
-        self.db_driver.add_reserved_room(reservation_inputs)
-        self.db_driver.add_availed_services(availed_services_inputs, guest_id)
+        self.db_driver.reserved_room_queries.add_reserved_room(reservation_inputs)
+        self.db_driver.availed_service_queries.add_availed_services(availed_services_inputs, guest_id)
 
         self.success_dialog = FeedbackDialog("Reservation added successfully.", connected_view=self.view)
         self.success_dialog.exec()

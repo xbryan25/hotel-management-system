@@ -57,9 +57,9 @@ class DashboardController:
         self.load_data_in_labels()
 
     def set_models(self):
-        recent_check_in_initial_data = self.db_driver.get_all_booked_room_today("check_in")
-        recent_check_out_initial_data = self.db_driver.get_all_booked_room_today("check_out")
-        reservations_initial_data = self.db_driver.get_all_reservations()
+        recent_check_in_initial_data = self.db_driver.booked_room_queries.get_all_booked_room_today("check_in")
+        recent_check_out_initial_data = self.db_driver.booked_room_queries.get_all_booked_room_today("check_out")
+        reservations_initial_data = self.db_driver.reserved_room_queries.get_all_reservations()
 
         self.recent_check_in_table_model = RecentStaysModel(recent_check_in_initial_data)
         self.recent_check_out_table_model = RecentStaysModel(recent_check_out_initial_data)
@@ -71,16 +71,16 @@ class DashboardController:
 
     def load_data_in_labels(self):
         self.view.today_check_in_frame_num_label.setText(
-            str(self.db_driver.get_count_all_booked_room_today('check_in')))
+            str(self.db_driver.booked_room_queries.get_count_all_booked_room_today('check_in')))
 
         self.view.today_check_out_frame_num_label.setText(
-            str(self.db_driver.get_count_all_booked_room_today('check_out')))
+            str(self.db_driver.booked_room_queries.get_count_all_booked_room_today('check_out')))
 
         self.view.available_rooms_frame_num_label.setText(
-            str(self.db_driver.get_room_count('available')))
+            str(self.db_driver.room_queries.get_room_count('available')))
 
         self.view.reserved_rooms_frame_num_label.setText(
-            str(self.db_driver.get_room_count('reserved')))
+            str(self.db_driver.room_queries.get_room_count('reserved')))
 
         self.view.booked_rooms_frame_num_label.setText(
-            str(self.db_driver.get_room_count('occupied')))
+            str(self.db_driver.room_queries.get_room_count('occupied')))

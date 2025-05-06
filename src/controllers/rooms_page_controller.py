@@ -18,7 +18,7 @@ class RoomsPageController:
         self.load_data()
 
     def set_models(self):
-        rooms_initial_data = self.db_driver.get_all_rooms()
+        rooms_initial_data = self.db_driver.room_queries.get_all_rooms()
 
         # Only for list view
         initial_rows = self.view.get_list_view_current_max_rows()
