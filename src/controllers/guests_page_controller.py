@@ -1,6 +1,5 @@
-from models.guests_model import GuestsModel
-from models.guest_info_model import GuestInfoModel
-from views.guest_info_dialog import GuestInfoDialog
+from models import GuestsModel, GuestInfoModel
+from views import GuestInfoDialog
 
 
 class GuestsPageController:

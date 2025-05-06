@@ -1,6 +1,6 @@
 from PyQt6.QtCore import QTimer
 
-from models.rooms_model import RoomsModel
+from models import RoomsModel
 
 
 class RoomsPageController:

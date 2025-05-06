@@ -1,9 +1,7 @@
 from PyQt6.QtCore import QTime, QDateTime, QTimer
 
-from models.recent_stays_model import RecentStaysModel
-from models.reservation_model import ReservationModel
-
-from views.new_reservation_dialog import NewReservationDialog
+from models import RecentStaysModel, ReservationModel
+from views import NewReservationDialog
 
 from controllers.new_reservation_dialog_controller import NewReservationDialogController
 

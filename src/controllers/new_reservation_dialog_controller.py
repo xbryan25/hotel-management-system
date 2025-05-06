@@ -1,9 +1,7 @@
 from PyQt6.QtWidgets import QSizePolicy, QSpacerItem
 
-from models.available_rooms_model import AvailableRoomsModel
-from models.services_model import ServicesModel
-
-from views.feedback_dialog import FeedbackDialog
+from models import AvailableRoomsModel, ServicesModel
+from views import FeedbackDialog
 
 
 class NewReservationDialogController:
