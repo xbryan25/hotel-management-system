@@ -2,5 +2,3 @@
 from .dashboard_controller import DashboardController
 from .guests_page_controller import GuestsPageController
 from .rooms_page_controller import RoomsPageController
-
-from .new_reservation_dialog_controller import NewReservationDialogController

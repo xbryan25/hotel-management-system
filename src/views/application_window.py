@@ -3,13 +3,9 @@ from PyQt6.QtWidgets import QMainWindow, QListWidgetItem
 from PyQt6.QtCore import Qt, QSize
 
 from ui import ApplicationWindowUI
-
-from utils.sidebar_cursor_changer import SidebarCursorChanger
-
-from db.database_driver import DatabaseDriver
-
+from utils import SidebarCursorChanger
+from db import DatabaseDriver
 from controllers import DashboardController, RoomsPageController, GuestsPageController
-
 from views import *
 
 
