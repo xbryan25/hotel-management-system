@@ -21,7 +21,7 @@ class GuestsPageController:
         sort_by_text = self.view.sort_by_combobox.currentText().replace("Sort by ", "")
         sort_type_text = self.view.sort_type_combobox.currentText()
 
-        guests_data_from_db = self.db_driver.get_active_guests(sort_by_text, sort_type_text)
+        guests_data_from_db = self.db_driver.guest_queries.get_active_guests(sort_by_text, sort_type_text)
 
         self.guests_model = GuestsModel(guests_data_from_db)
 
@@ -45,7 +45,7 @@ class GuestsPageController:
         # Put fetched data to model
         # Put model data to view
 
-        guest_data = self.db_driver.get_guest_details(guest_id)
+        guest_data = self.db_driver.guest_queries.get_guest_details(guest_id)
         self.current_guest_model = GuestInfoModel.from_list(guest_data)
 
         self.guest_info_dialog.set_guest_info(self.current_guest_model.to_dict())
@@ -59,6 +59,6 @@ class GuestsPageController:
         sort_by_text = self.view.sort_by_combobox.currentText().replace("Sort by ", "")
         sort_type_text = self.view.sort_type_combobox.currentText()
 
-        guests_data_from_db = self.db_driver.get_active_guests(sort_by_text, sort_type_text)
+        guests_data_from_db = self.db_driver.guest_queries.get_active_guests(sort_by_text, sort_type_text)
 
         self.guests_model.update_data(guests_data_from_db)
