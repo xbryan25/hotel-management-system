@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog, QWidget
 from PyQt6.QtGui import QFont
 
-from ui.feedback_dialog_ui import Ui_Dialog as FeedbackDialogUI
+from ui import FeedbackDialogUI
 
 
 class FeedbackDialog(QDialog, FeedbackDialogUI):

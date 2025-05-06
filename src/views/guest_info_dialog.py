@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtCore import pyqtSignal
 
-from ui.guest_info_dialog_ui import Ui_Dialog as GuestInfoDialogUI
+from ui import GuestInfoDialogUI
 
 
 class GuestInfoDialog(QDialog, GuestInfoDialogUI):

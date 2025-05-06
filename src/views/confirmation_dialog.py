@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QFont
 
-from ui.confirmation_dialog_ui import Ui_Dialog as ConfirmationDialogUI
+from ui import ConfirmationDialogUI
 
 
 class ConfirmationDialog(QDialog, ConfirmationDialogUI):

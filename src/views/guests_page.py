@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import QWidget, QHeaderView, QTableView
 from PyQt6.QtGui import QFont
 from PyQt6.QtCore import Qt, pyqtSignal, QModelIndex
 
-from ui.guests_page_ui import Ui_Widget as GuestsPageUI
+from ui import GuestsPageUI
 from custom_widgets import ButtonDelegate, GuestTableView
 
 

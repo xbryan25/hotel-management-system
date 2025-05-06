@@ -2,7 +2,7 @@ from PyQt6.QtGui import QIcon, QFont, QFontDatabase
 from PyQt6.QtWidgets import QMainWindow, QListWidgetItem
 from PyQt6.QtCore import Qt, QSize
 
-from ui.application_window_ui import Ui_MainWindow as ApplicationWindowUI
+from ui import ApplicationWindowUI
 
 from utils.sidebar_cursor_changer import SidebarCursorChanger
 

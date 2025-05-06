@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import QWidget, QHeaderView, QTableView
 from PyQt6.QtGui import QFont
 from PyQt6.QtCore import Qt, pyqtSignal
 
-from ui.dashboard_page_ui import Ui_Widget as DashboardPageUI
+from ui import DashboardPageUI
 
 
 class DashboardPage(QWidget, DashboardPageUI):
