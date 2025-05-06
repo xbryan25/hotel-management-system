@@ -22,7 +22,6 @@ class InitializeDatabase:
         visit_count SMALLINT NOT NULL,
         PRIMARY KEY (guest_id),         
         CONSTRAINT UC_email_address UNIQUE (email_address),
-        CONSTRAINT UC_phone_number UNIQUE (phone_number),
         CONSTRAINT UC_government_id UNIQUE (government_id)
         )
         """)

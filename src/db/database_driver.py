@@ -1,4 +1,6 @@
 import pymysql
+from datetime import date
+
 from dotenv import load_dotenv
 import os
 
@@ -82,25 +84,46 @@ class DatabaseDriver:
 
         return list_result[0]
 
+    def get_guest_id_from_name(self, guest_name):
+
+        sql = f"""SELECT guests.guest_id
+                    FROM guests
+                    WHERE guests.name=%s;"""
+
+        values = (guest_name,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        return result[0]
 
     def add_guest(self, guest_information):
+
+        # SQL avoids duplication of names
         sql = """INSERT INTO guests 
                 (guest_id, name, sex, home_address, email_address, phone_number, 
                 birth_date, government_id, visit_count) VALUES
                 (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+
+        # sql = """INSERT INTO guests
+        #                 (guest_id, name, sex, home_address, email_address, phone_number,
+        #                 birth_date, government_id, visit_count) VALUES
+        #                 (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        #                 ON DUPLICATE KEY UPDATE name = name"""
 
         latest_guest_id = self.get_latest_guest_id()
 
         new_guest_id = f"guest-{int(latest_guest_id[7:]) + 1:06}"
 
         values = (new_guest_id,
-                  guest_information[0],
-                  guest_information[1],
-                  guest_information[2],
-                  guest_information[3],
-                  guest_information[4],
-                  guest_information[5],
-                  guest_information[6],
+                  guest_information["name"],
+                  guest_information["sex"],
+                  guest_information["home_address"],
+                  guest_information["email_address"],
+                  guest_information["phone_number"],
+                  guest_information["birth_date"],
+                  guest_information["government_id"],
                   1)
 
         self.cursor.execute(sql, values)
@@ -152,6 +175,33 @@ class DatabaseDriver:
             return "room-0000"
         else:
             return result[0]
+
+    def get_available_rooms(self, room_type=None):
+        if not room_type:
+            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.price, rooms.availability_status, 
+                            rooms.capacity
+                            FROM rooms
+                            WHERE rooms.availability_status="available"
+                            ORDER BY rooms.room_number ASC;"""
+
+            self.cursor.execute(sql)
+        else:
+            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.price, rooms.availability_status, 
+                            rooms.capacity
+                            FROM rooms
+                            WHERE rooms.room_type=%s
+                            AND rooms.availability_status="available"
+                            ORDER BY rooms.room_number ASC;"""
+
+            values = (room_type,)
+
+            self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchall()
+
+        list_result = [list(row) for row in result]
+
+        return list_result
 
     def get_all_rooms(self):
 
@@ -234,6 +284,15 @@ class DatabaseDriver:
         else:
             return result[0]
 
+    def get_all_services(self):
+        self.cursor.execute("""SELECT * FROM services;""")
+
+        result = self.cursor.fetchall()
+
+        list_result = [list(row) for row in result]
+
+        return list_result
+
     def add_service(self, service_information):
         sql = """INSERT INTO services
                 (service_id, service_name, rate) VALUES
@@ -283,22 +342,26 @@ class DatabaseDriver:
         else:
             return result[0]
 
-    def add_availed_service(self, availed_service_information):
-        sql = """INSERT INTO availedservices
-                (avail_id, avail_date, guest_id, service_id) VALUES
-                (%s, %s, %s, %s)"""
+    def add_availed_services(self, availed_service_information, guest_id):
 
-        latest_avail_id = self.get_latest_avail_id()
+        for service_id, quantity in availed_service_information.items():
 
-        new_avail_id = f"avail-{int(latest_avail_id[9:]) + 1:06}"
+            sql = """INSERT INTO availedservices
+                    (avail_id, avail_date, quantity, guest_id, service_id) VALUES
+                    (%s, %s, %s, %s, %s)"""
 
-        values = (new_avail_id,
-                  availed_service_information[0],
-                  availed_service_information[1],
-                  availed_service_information[2])
+            latest_avail_id = self.get_latest_avail_id()
 
-        self.cursor.execute(sql, values)
-        self.db.commit()
+            new_avail_id = f"avail-{int(latest_avail_id[9:]) + 1:06}"
+
+            values = (new_avail_id,
+                      date.today(),
+                      quantity,
+                      guest_id,
+                      service_id)
+
+            self.cursor.execute(sql, values)
+            self.db.commit()
 
     def update_availed_service(self, old_avail_id, availed_service_information):
         sql = """UPDATE availedservices SET avail_id=%s, avail_date=%s, guest_id=%s, service_id=%s
@@ -409,20 +472,22 @@ class DatabaseDriver:
 
     def add_reserved_room(self, reserved_room_information):
         sql = """INSERT INTO reservedrooms
-                (reservation_id, reservation_date, check_in_date, check_out_date, payment_status, guest_id, room_number) VALUES
-                (%s, %s, %s, %s, %s, %s, %s)"""
+                (reservation_id, reservation_date, check_in_date, check_out_date, payment_status, total_reservation_cost,
+                guest_id, room_number) VALUES
+                (%s, %s, %s, %s, %s, %s, %s, %s)"""
 
         latest_reservation_id = self.get_latest_reservation_id()
 
         new_reservation_id = f"reserve-{int(latest_reservation_id[9:]) + 1:06}"
 
         values = (new_reservation_id,
-                  reserved_room_information[0],
-                  reserved_room_information[1],
-                  reserved_room_information[2],
-                  reserved_room_information[3],
-                  reserved_room_information[4],
-                  reserved_room_information[5])
+                  reserved_room_information["reservation_date"],
+                  reserved_room_information["check_in_date"],
+                  reserved_room_information["check_out_date"],
+                  reserved_room_information["payment_status"],
+                  reserved_room_information["total_reservation_cost"],
+                  reserved_room_information["guest_id"],
+                  reserved_room_information["room_number"])
 
         self.cursor.execute(sql, values)
         self.db.commit()

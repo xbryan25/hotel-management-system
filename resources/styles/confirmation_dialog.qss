@@ -1,0 +1,18 @@
+QDialog{
+    background-color: #f6f6f6;
+}
+
+#left_button, #right_button{
+    padding: 5px;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+#left_button{
+    background-color: transparent;
+}
+
+#right_button{
+    background-color: #194FCC;
+    color: white;
+}
