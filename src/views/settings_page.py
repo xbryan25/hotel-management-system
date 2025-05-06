@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QWidget
 
-from ui.settings_page_ui import Ui_Widget as SettingsPageUI
+from ui import SettingsPageUI
 
 
 class SettingsPage(QWidget, SettingsPageUI):

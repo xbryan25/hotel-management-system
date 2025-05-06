@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QWidget
 
-from ui.booking_page_ui import Ui_Widget as BookingPageUI
+from ui import BookingPageUI
 
 
 class BookingPage(QWidget, BookingPageUI):

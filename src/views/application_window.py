@@ -2,16 +2,10 @@ from PyQt6.QtGui import QIcon, QFont, QFontDatabase
 from PyQt6.QtWidgets import QMainWindow, QListWidgetItem
 from PyQt6.QtCore import Qt, QSize
 
-from ui.application_window_ui import Ui_MainWindow as ApplicationWindowUI
-
-from utils.sidebar_cursor_changer import SidebarCursorChanger
-
-from db.database_driver import DatabaseDriver
-
-from controllers.dashboard_controller import DashboardController
-from controllers.rooms_page_controller import RoomsPageController
-from controllers.guests_page_controller import GuestsPageController
-
+from ui import ApplicationWindowUI
+from utils import SidebarCursorChanger
+from db import DatabaseDriver
+from controllers import DashboardController, RoomsPageController, GuestsPageController
 from views import *
 
 

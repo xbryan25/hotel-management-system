@@ -4,7 +4,7 @@ from PyQt6.QtCore import pyqtSignal, QDateTime, Qt
 
 from datetime import datetime
 
-from ui.new_reservation_dialog_ui import Ui_Dialog as NewReservationDialogUI
+from ui import NewReservationDialogUI
 from views.confirmation_dialog import ConfirmationDialog
 from views.feedback_dialog import FeedbackDialog
 

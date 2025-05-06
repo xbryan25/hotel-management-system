@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QWidget
 
-from ui.services_page_ui import Ui_Widget as ServicesPageUI
+from ui import ServicesPageUI
 
 
 class ServicesPage(QWidget, ServicesPageUI):

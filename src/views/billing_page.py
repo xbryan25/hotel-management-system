@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QWidget
 
-from ui.billing_page_ui import Ui_Widget as BillingPageUI
+from ui import BillingPageUI
 
 
 class BillingPage(QWidget, BillingPageUI):

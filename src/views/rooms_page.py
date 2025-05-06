@@ -4,7 +4,7 @@ from PyQt6.QtCore import QSize, pyqtSignal, Qt, QTimer
 
 from custom_widgets import ListRoomsFrame, GridRoomsFrame
 
-from ui.rooms_page_ui import Ui_Widget as RoomsPageUI
+from ui import RoomsPageUI
 
 import math
 
