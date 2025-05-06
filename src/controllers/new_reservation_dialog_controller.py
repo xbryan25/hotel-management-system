@@ -3,6 +3,8 @@ from PyQt6.QtWidgets import QSizePolicy, QSpacerItem
 from models.available_rooms_model import AvailableRoomsModel
 from models.services_model import ServicesModel
 
+from views.feedback_dialog import FeedbackDialog
+
 
 class NewReservationDialogController:
     def __init__(self, dialog, db_driver):
@@ -102,3 +104,6 @@ class NewReservationDialogController:
 
         self.db_driver.add_reserved_room(reservation_inputs)
         self.db_driver.add_availed_services(availed_services_inputs, guest_id)
+
+        self.success_dialog = FeedbackDialog("Reservation added successfully.", connected_view=self.view)
+        self.success_dialog.exec()

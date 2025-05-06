@@ -104,8 +104,13 @@ class DatabaseDriver:
         sql = """INSERT INTO guests 
                 (guest_id, name, sex, home_address, email_address, phone_number, 
                 birth_date, government_id, visit_count) VALUES
-                (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                ON DUPLICATE KEY UPDATE name = name"""
+                (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+
+        # sql = """INSERT INTO guests
+        #                 (guest_id, name, sex, home_address, email_address, phone_number,
+        #                 birth_date, government_id, visit_count) VALUES
+        #                 (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        #                 ON DUPLICATE KEY UPDATE name = name"""
 
         latest_guest_id = self.get_latest_guest_id()
 

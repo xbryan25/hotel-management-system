@@ -6,6 +6,7 @@ from datetime import datetime
 
 from ui.new_reservation_dialog_ui import Ui_Dialog as NewReservationDialogUI
 from views.confirmation_dialog import ConfirmationDialog
+from views.feedback_dialog import FeedbackDialog
 
 
 class NewReservationDialog(QDialog, NewReservationDialogUI):
@@ -203,7 +204,8 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         if is_valid:
             self.page_change("right_button")
         else:
-            print("One of the fields is blank")
+            self.warning_dialog = FeedbackDialog("At least one of the fields is blank. Please recheck.")
+            self.warning_dialog.exec()
 
     def confirm_reservation(self):
         header_message = "Are you sure you want to make this reservation?"
@@ -213,8 +215,7 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         self.confirmation_dialog.exec()
 
         if self.confirmation_dialog.get_choice():
-            print("made reservation")
-            # self.clicked_reservation.emit()
+            self.clicked_reservation.emit()
 
     def page_change(self, button_type):
         if self.current_page < 3 and button_type == "right_button":
