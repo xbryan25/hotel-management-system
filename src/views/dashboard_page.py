@@ -8,6 +8,7 @@ from ui import DashboardPageUI
 class DashboardPage(QWidget, DashboardPageUI):
 
     clicked_new_reservation_button = pyqtSignal()
+    changed_room_status = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -23,6 +24,7 @@ class DashboardPage(QWidget, DashboardPageUI):
 
     def connect_signals_to_slots(self):
         self.reservation_list_frame_add_reservation_button.clicked.connect(self.clicked_new_reservation_button.emit)
+        self.rooms_frame_status_combobox.valueChanged.connect(self.changed_room_status.emit)
 
     def disable_table_views_selection_mode(self):
         self.recent_check_in_frame_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)
@@ -95,6 +97,21 @@ class DashboardPage(QWidget, DashboardPageUI):
         reservation_list_frame_table_view_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
         reservation_list_frame_table_view_header.setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
         reservation_list_frame_table_view_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
+
+        rooms_frame_table_view_header = self.rooms_frame_table_view.horizontalHeader()
+
+        rooms_frame_table_view_header.setStyleSheet("""
+                    QHeaderView::section {
+                        background-color: #FFFFFF;
+                        border: none;
+                        outline: none;
+                    }
+                """)
+
+        rooms_frame_table_view_header.resizeSection(0, 100)
+
+        rooms_frame_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+        rooms_frame_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
 
     def set_external_stylesheet(self):
         with open("../resources/styles/dashboard_page.qss", "r") as file:
@@ -169,5 +186,6 @@ class DashboardPage(QWidget, DashboardPageUI):
 
         # rooms_frame
         self.rooms_frame_label.setFont(QFont("Inter", 16, QFont.Weight.ExtraBold))
-
         self.rooms_frame_status_combobox.setFont(QFont("Inter", 10, QFont.Weight.Normal))
+        self.rooms_frame_table_view.setFont(QFont("Inter", 9, QFont.Weight.Normal))
+        self.rooms_frame_table_view.horizontalHeader().setFont(QFont("Inter", 12, QFont.Weight.DemiBold))
