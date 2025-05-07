@@ -44,12 +44,24 @@ class RoomQueries:
 
         return list_result
 
-    def get_all_rooms(self):
+    def get_all_rooms(self, room_status=None):
 
-        sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.price, rooms.availability_status, 
-                rooms.capacity
-                FROM rooms
-                ORDER BY rooms.room_number ASC;"""
+        # Maintenance still not in DB, configure later
+        if room_status == "Maintenance":
+            room_status = None
+
+        if not room_status or room_status == "All status":
+            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.price, rooms.availability_status, 
+                    rooms.capacity
+                    FROM rooms
+                    ORDER BY rooms.room_number ASC;"""
+
+        else:
+            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.price, rooms.availability_status, 
+                                rooms.capacity
+                                FROM rooms
+                                WHERE rooms.availability_status='{room_status.lower()}'
+                                ORDER BY rooms.room_number ASC;"""
 
         self.cursor.execute(sql)
 

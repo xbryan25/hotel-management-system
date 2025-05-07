@@ -77,6 +77,11 @@ class RoomsModel(QAbstractTableModel):
     def current_page_index(self):
         return self._current_page
 
+    def update_data(self, rooms):
+        self.beginResetModel()
+        self._rooms = rooms
+        self.endResetModel()
+
     # Only for dashboard
     def rowCount(self, index=None):
         return len(self._rooms)

@@ -26,7 +26,7 @@ class DashboardController:
     def connect_signals_to_slots(self):
         self.view.clicked_new_reservation_button.connect(self.open_new_reservation_dialog)
 
-        self.view.changed_room_status.connect(lambda: print("hello"))
+        self.view.changed_room_status.connect(self.update_rooms_view)
 
     def open_new_reservation_dialog(self):
         self.new_reservation_dialog = NewReservationDialog()
@@ -89,3 +89,8 @@ class DashboardController:
 
         self.view.booked_rooms_frame_num_label.setText(
             str(self.db_driver.room_queries.get_room_count('occupied')))
+
+    def update_rooms_view(self, room_status):
+
+        rooms_initial_data = self.db_driver.room_queries.get_all_rooms(room_status)
+        self.rooms_model.update_data(rooms_initial_data)

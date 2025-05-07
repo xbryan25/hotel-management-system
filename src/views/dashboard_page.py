@@ -8,7 +8,7 @@ from ui import DashboardPageUI
 class DashboardPage(QWidget, DashboardPageUI):
 
     clicked_new_reservation_button = pyqtSignal()
-    changed_room_status = pyqtSignal()
+    changed_room_status = pyqtSignal(str)
 
     def __init__(self):
         super().__init__()
@@ -24,7 +24,7 @@ class DashboardPage(QWidget, DashboardPageUI):
 
     def connect_signals_to_slots(self):
         self.reservation_list_frame_add_reservation_button.clicked.connect(self.clicked_new_reservation_button.emit)
-        self.rooms_frame_status_combobox.valueChanged.connect(self.changed_room_status.emit)
+        self.rooms_frame_status_combobox.currentTextChanged.connect(self.changed_room_status.emit)
 
     def disable_table_views_selection_mode(self):
         self.recent_check_in_frame_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)
@@ -35,6 +35,9 @@ class DashboardPage(QWidget, DashboardPageUI):
 
         self.reservation_list_frame_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)
         self.reservation_list_frame_table_view.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+
+        self.rooms_frame_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)
+        self.rooms_frame_table_view.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
     def set_table_views_column_widths(self):
         recent_check_in_frame_table_view_header = self.recent_check_in_frame_table_view.horizontalHeader()
