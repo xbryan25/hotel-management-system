@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import QWidget, QSpacerItem, QSizePolicy, QFrame
 from PyQt6.QtGui import QIcon, QFontDatabase, QFont
 from PyQt6.QtCore import QSize, pyqtSignal, Qt, QTimer
 
-from custom_widgets import ListRoomsFrame, GridRoomsFrame
+from views.custom_widgets import ListRoomsFrame, GridRoomsFrame
 
 from ui import RoomsPageUI
 
