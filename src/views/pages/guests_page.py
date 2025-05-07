@@ -3,7 +3,7 @@ from PyQt6.QtGui import QFont
 from PyQt6.QtCore import Qt, pyqtSignal, QModelIndex
 
 from ui import GuestsPageUI
-from custom_widgets import ButtonDelegate, GuestTableView
+from views.custom_widgets import ButtonDelegate, GuestTableView
 
 
 class GuestsPage(QWidget, GuestsPageUI):
