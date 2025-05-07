@@ -5,7 +5,7 @@ from PyQt6.QtCore import Qt, QSize
 from ui import ApplicationWindowUI
 from utils import SidebarCursorChanger
 from db import DatabaseDriver
-from controllers import DashboardController, RoomsPageController, GuestsPageController
+from controllers import DashboardController, RoomsPageController, GuestsPageController, ServicesPageController
 from views import *
 
 
@@ -159,8 +159,9 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
 
     def setup_controllers(self):
         self.dashboard_controller = DashboardController(self.dashboard_page, self.db_driver)
-        self.rooms_controller = RoomsPageController(self.rooms_page, self.db_driver)
-        self.guests_controller = GuestsPageController(self.guests_page, self.db_driver)
+        self.rooms_page_controller = RoomsPageController(self.rooms_page, self.db_driver)
+        self.guests_page_controller = GuestsPageController(self.guests_page, self.db_driver)
+        self.services_page_controller = ServicesPageController(self.services_page, self.db_driver)
 
     def closeEvent(self, event):
         self.db_driver.close_connection()
