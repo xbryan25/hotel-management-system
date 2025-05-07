@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget
+from PyQt6.QtWidgets import QWidget, QHeaderView
 from PyQt6.QtGui import QFont, QIcon
 from PyQt6.QtCore import QSize
 
@@ -15,6 +15,23 @@ class ServicesPage(QWidget, ServicesPageUI):
         self.load_fonts()
 
         self.set_icons()
+
+    def set_table_views_column_widths(self):
+        services_table_view_header = self.services_table_view.horizontalHeader()
+
+        services_table_view_header.setStyleSheet("""
+            QHeaderView::section {
+                background-color: #FFFFFF;
+                border: none;
+                outline: none;
+            }
+        """)
+
+        services_table_view_header.resizeSection(1, 250)
+
+        services_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        services_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Fixed)
+
 
     def set_icons(self):
         self.add_service_button.setIcon(QIcon("../resources/icons/services_page/add_icon.svg"))

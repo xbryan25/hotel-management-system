@@ -17,8 +17,18 @@ class ServiceQueries:
         else:
             return result[0]
 
-    def get_all_services(self):
-        self.cursor.execute("""SELECT * FROM services;""")
+    def get_all_services(self, sort_by, sort_type):
+
+        sort_by_dict = {"Service Name": "services.service_name",
+                        "Rate": "services.rate"}
+
+        sort_type_dict = {"Ascending": "ASC", "Descending": "DESC"}
+
+        sql = f"""SELECT services.service_name, services.rate
+                FROM services
+                ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]};"""
+
+        self.cursor.execute(sql)
 
         result = self.cursor.fetchall()
 
