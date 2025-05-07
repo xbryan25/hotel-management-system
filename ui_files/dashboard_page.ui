@@ -1361,23 +1361,6 @@ border-radius: 20px;</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" colspan="2">
-       <widget class="QTableWidget" name="rooms_frame_table_widget">
-        <attribute name="horizontalHeaderStretchLastSection">
-         <bool>true</bool>
-        </attribute>
-        <column>
-         <property name="text">
-          <string>Room No.</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Status</string>
-         </property>
-        </column>
-       </widget>
-      </item>
       <item row="0" column="1">
        <widget class="QComboBox" name="rooms_frame_status_combobox">
         <property name="minimumSize">
@@ -1417,6 +1400,22 @@ border-radius: 20px;</string>
           <string>Available</string>
          </property>
         </item>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="2">
+       <widget class="QTableView" name="rooms_frame_table_view">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="showGrid">
+         <bool>false</bool>
+        </property>
+        <property name="cornerButtonEnabled">
+         <bool>false</bool>
+        </property>
+        <attribute name="verticalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
        </widget>
       </item>
      </layout>

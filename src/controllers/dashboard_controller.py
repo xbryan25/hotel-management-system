@@ -1,6 +1,6 @@
 from PyQt6.QtCore import QTime, QDateTime, QTimer
 
-from models import RecentStaysModel, ReservationModel
+from models import RecentStaysModel, ReservationModel, RoomsModel
 from views import NewReservationDialog
 
 from controllers.new_reservation_dialog_controller import NewReservationDialogController
@@ -25,6 +25,8 @@ class DashboardController:
 
     def connect_signals_to_slots(self):
         self.view.clicked_new_reservation_button.connect(self.open_new_reservation_dialog)
+
+        self.view.changed_room_status.connect(self.update_rooms_view)
 
     def open_new_reservation_dialog(self):
         self.new_reservation_dialog = NewReservationDialog()
@@ -60,14 +62,17 @@ class DashboardController:
         recent_check_in_initial_data = self.db_driver.booked_room_queries.get_all_booked_room_today("check_in")
         recent_check_out_initial_data = self.db_driver.booked_room_queries.get_all_booked_room_today("check_out")
         reservations_initial_data = self.db_driver.reserved_room_queries.get_all_reservations()
+        rooms_initial_data = self.db_driver.room_queries.get_all_rooms()
 
         self.recent_check_in_table_model = RecentStaysModel(recent_check_in_initial_data)
         self.recent_check_out_table_model = RecentStaysModel(recent_check_out_initial_data)
         self.reservation_table_model = ReservationModel(reservations_initial_data)
+        self.rooms_model = RoomsModel(rooms_initial_data)
 
         self.view.recent_check_in_frame_table_view.setModel(self.recent_check_in_table_model)
         self.view.recent_check_out_frame_table_view.setModel(self.recent_check_out_table_model)
         self.view.reservation_list_frame_table_view.setModel(self.reservation_table_model)
+        self.view.rooms_frame_table_view.setModel(self.rooms_model)
 
     def load_data_in_labels(self):
         self.view.today_check_in_frame_num_label.setText(
@@ -84,3 +89,8 @@ class DashboardController:
 
         self.view.booked_rooms_frame_num_label.setText(
             str(self.db_driver.room_queries.get_room_count('occupied')))
+
+    def update_rooms_view(self, room_status):
+
+        rooms_initial_data = self.db_driver.room_queries.get_all_rooms(room_status)
+        self.rooms_model.update_data(rooms_initial_data)

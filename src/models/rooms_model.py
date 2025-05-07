@@ -1,13 +1,18 @@
+from PyQt6.QtCore import QAbstractTableModel, Qt
 
 
-class RoomsModel:
-    def __init__(self, room_list: list[dict], initial_rows_per_page, initial_columns_per_page):
+class RoomsModel(QAbstractTableModel):
+    def __init__(self, room_list: list[dict], initial_rows_per_page=None, initial_columns_per_page=None):
+        super().__init__()
+
         self._rooms = room_list
 
         self._rows_per_page = initial_rows_per_page
         self._columns_per_page = initial_columns_per_page
 
         self._current_page = 1
+
+        self.columns = ["Room No.", "Status"]
 
     def total_pages(self, view_mode):
 
@@ -71,3 +76,38 @@ class RoomsModel:
 
     def current_page_index(self):
         return self._current_page
+
+    def update_data(self, rooms):
+        self.beginResetModel()
+        self._rooms = rooms
+        self.endResetModel()
+
+    # Only for dashboard
+    def rowCount(self, index=None):
+        return len(self._rooms)
+
+    def columnCount(self, index=None):
+        return len(self.columns)
+
+    def data(self, index, role=Qt.ItemDataRole.DisplayRole):
+
+        if not index.isValid():
+            return None
+
+        if role == Qt.ItemDataRole.DisplayRole:
+            if index.column() == 0:
+                return self._rooms[index.row()][0]
+
+            elif index.column() == 1:
+                return self._rooms[index.row()][3]
+
+        if role == Qt.ItemDataRole.TextAlignmentRole:
+            return Qt.AlignmentFlag.AlignCenter
+
+        return None
+
+    def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole):
+        if orientation == Qt.Orientation.Horizontal and role == Qt.ItemDataRole.DisplayRole:
+            return self.columns[section]
+
+        return super().headerData(section, orientation, role)
