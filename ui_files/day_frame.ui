@@ -12,7 +12,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>75</width>
+    <width>95</width>
     <height>0</height>
    </size>
   </property>
@@ -29,6 +29,9 @@
    <string>Frame</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
    <item>
     <widget class="QLabel" name="weekday_name">
      <property name="text">
@@ -41,6 +44,12 @@
    </item>
    <item>
     <widget class="QLabel" name="day_number">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>30</height>
+      </size>
+     </property>
      <property name="text">
       <string>TextLabel</string>
      </property>

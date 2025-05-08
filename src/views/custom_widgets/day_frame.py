@@ -18,12 +18,14 @@ class DayFrame(QFrame, DayFrameUI):
 
         self.set_text_in_labels()
 
-        self.setStyleSheet("QFrame#Frame{border: 1px solid black;}")
+        self.set_external_stylesheet()
+        self.load_fonts()
+
         self.is_current_date_today()
 
     def set_text_in_labels(self):
-        self.day_number.setText(self.current_date.strftime("%a"))
-        self.weekday_name.setText(self.current_date.strftime("%b %d"))
+        self.day_number.setText(self.current_date.strftime("%b %d"))
+        self.weekday_name.setText(self.current_date.strftime("%a"))
 
     def update_current_date(self, current_date):
         self.current_date = current_date
@@ -36,15 +38,23 @@ class DayFrame(QFrame, DayFrameUI):
     def is_current_date_today(self):
         if self.current_date == date.today():
             self.setStyleSheet("""
-                       QFrame#Frame {
-                           background-color: blue;
-                       }
-                       #day_number, #weekday_name{
+                        QFrame#Frame {
+                           background-color: #194FCC;
+                           border: 2px solid #000000;
+                           border-radius: 5px;
+                        }
+                        #day_number, #weekday_name{
                            color: white;
-                       }
+                        }
                    """)
-        else:
-            self.setStyleSheet("QFrame#Frame{background-color: transparent;}")
+
+    def set_external_stylesheet(self):
+        with open("../resources/styles/day_frame.qss", "r") as file:
+            self.setStyleSheet(file.read())
+
+    def load_fonts(self):
+        self.day_number.setFont(QFont("Inter", 15, QFont.Weight.Bold))
+        self.weekday_name.setFont(QFont("Inter", 13, QFont.Weight.Normal))
 
     def mousePressEvent(self, event):
         self.clicked.emit(self.current_date)
