@@ -27,8 +27,6 @@ class AvailableRoomsModel(QAbstractListModel):
             if room[0] == room_number:
                 return room[2]
 
-
-
     def rowCount(self, parent=None):
         return len(self._rooms)
 
