@@ -17,16 +17,20 @@ class ServiceQueries:
         else:
             return result[0]
 
-    def get_all_services(self, sort_by, sort_type):
+    def get_all_services(self, sort_by=None, sort_type=None):
 
         sort_by_dict = {"Service Name": "services.service_name",
                         "Rate": "services.rate"}
 
         sort_type_dict = {"Ascending": "ASC", "Descending": "DESC"}
 
-        sql = f"""SELECT services.service_name, services.rate
-                FROM services
-                ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]};"""
+        if sort_by and sort_type:
+            sql = f"""SELECT services.service_name, services.rate
+                    FROM services
+                    ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]};"""
+        else:
+            sql = f"""SELECT services.service_id, services.service_name, services.rate
+                    FROM services"""
 
         self.cursor.execute(sql)
 
