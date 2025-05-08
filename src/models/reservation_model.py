@@ -3,12 +3,15 @@ from datetime import datetime
 
 
 class ReservationModel(QAbstractTableModel):
-    def __init__(self, _data=None):
+    def __init__(self, _data=None, view_mode="dashboard_view"):
         super().__init__()
 
         self.data = _data or []
 
-        self.columns = ["Reservation ID", "Guest Name", "Room No.", "Room Type", "Check-in & Check-out", "Status"]
+        if view_mode == "dashboard_view":
+            self.columns = ["Reservation ID", "Guest Name", "Room No.", "Room Type", "Check-in & Check-out", "Status"]
+        else:
+            self.columns = ["Reservation ID", "Guest Name", "Room No.", "Room Type", "Check-in & Check-out", "Status", ""]
 
     def update_data(self, _data):
         self.beginResetModel()
@@ -36,6 +39,9 @@ class ReservationModel(QAbstractTableModel):
 
             elif index.column() == 5:
                 return self.data[index.row()][index.column() + 1]
+
+            elif index.column() == 6:
+                return ""
 
             return self.data[index.row()][index.column()]
 
