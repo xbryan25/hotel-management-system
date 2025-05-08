@@ -19,24 +19,468 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>140</y>
-     <width>221</width>
-     <height>121</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>36</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Reservation</string>
-   </property>
-  </widget>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="4" column="0">
+    <widget class="QFrame" name="page_buttons_frame">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>50</height>
+      </size>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_5">
+      <item row="0" column="0">
+       <spacer name="hs_4">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="next_page_button">
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="text">
+         <string>Next Page</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="previous_page_button">
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="text">
+         <string>Previous Page</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <spacer name="hs_5">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QFrame" name="search_bar_frame">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>50</height>
+      </size>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <item row="0" column="0">
+       <spacer name="hs_1">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="search_lineedit">
+        <property name="minimumSize">
+         <size>
+          <width>425</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="readOnly">
+         <bool>false</bool>
+        </property>
+        <property name="placeholderText">
+         <string>Search</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <spacer name="hs_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QFrame" name="reservations_table_view_frame">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QTableView" name="reservations_table_view">
+        <property name="showGrid">
+         <bool>false</bool>
+        </property>
+        <attribute name="verticalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QFrame" name="reservations_list_label_and_actions_frame">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>50</height>
+      </size>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_4">
+      <item row="0" column="0">
+       <widget class="QLabel" name="reservation_and_bookings_label">
+        <property name="text">
+         <string>Reservations and Bookings</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <spacer name="hs_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="4">
+       <widget class="QComboBox" name="sort_type_combobox">
+        <property name="minimumSize">
+         <size>
+          <width>125</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <item>
+         <property name="text">
+          <string>Ascending</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Descending</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="services_list_label">
+        <property name="minimumSize">
+         <size>
+          <width>250</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>April 24, 2025</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="6">
+       <widget class="QPushButton" name="new_reservation_button">
+        <property name="minimumSize">
+         <size>
+          <width>125</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="text">
+         <string>New Reservation</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="5">
+       <widget class="Line" name="v_line_2">
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QComboBox" name="view_type_combobox">
+        <property name="minimumSize">
+         <size>
+          <width>125</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <item>
+         <property name="text">
+          <string>View All</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>View Reservations</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>View Bookings</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>View Elapsed All</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>View Elapsed Reservations</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>View Elapsed Bookings</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QComboBox" name="sort_by_combobox">
+        <property name="minimumSize">
+         <size>
+          <width>125</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <item>
+         <property name="text">
+          <string>Sort by Reference ID</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Sort by Name</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Sort by Room No.</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Sort by Room Type</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Sort by Check-In Date</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Sort by Check-out Date</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Sort by Status</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QFrame" name="buttons_and_sections_frame">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>60</height>
+      </size>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_6">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="left_button">
+        <property name="maximumSize">
+         <size>
+          <width>30</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="text">
+         <string>&lt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QPushButton" name="right_button">
+        <property name="maximumSize">
+         <size>
+          <width>30</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="text">
+         <string>&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QPushButton" name="reset_button">
+        <property name="maximumSize">
+         <size>
+          <width>50</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="text">
+         <string>Reset</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QFrame" name="sections_frame">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>45</height>
+         </size>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QHBoxLayout" name="sections_frame_h_layout"/>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="Line" name="v_line_1">
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>
