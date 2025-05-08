@@ -2,14 +2,14 @@ from PyQt6.QtWidgets import QTableView, QApplication
 from PyQt6.QtCore import Qt
 
 
-class GuestTableView(QTableView):
-    def __init__(self, parent):
+class CustomTableView(QTableView):
+    def __init__(self, parent, table_view_mode=None):
 
         super().__init__(parent)
 
         self.setShowGrid(False)
         self.setMouseTracking(True)
-        self.setObjectName("guest_table_view")
+        self.setObjectName(f"{table_view_mode}_table_view")
         self.verticalHeader().setVisible(False)
 
         self._hovered = False
