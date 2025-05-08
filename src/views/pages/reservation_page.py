@@ -1,5 +1,5 @@
 from PyQt6.QtCore import QTime, QTimer, QSize
-from PyQt6.QtWidgets import QWidget, QFrame
+from PyQt6.QtWidgets import QWidget, QFrame, QHeaderView
 from PyQt6.QtGui import QFont, QIcon
 
 from ui import ReservationPageUI
@@ -30,6 +30,31 @@ class ReservationPage(QWidget, ReservationPageUI):
 
         self.update_selected_day(self.left_most_day)
         self.update_selected_date_label(self.left_most_day)
+
+    def set_table_views_column_widths(self):
+        reservations_table_view_header = self.reservations_table_view.horizontalHeader()
+
+        reservations_table_view_header.setStyleSheet("""
+            QHeaderView::section {
+                background-color: #FFFFFF;
+                border: none;
+                outline: none;
+                padding-top: 10px;
+            }
+        """)
+
+        reservations_table_view_header.resizeSection(0, 130)
+        reservations_table_view_header.resizeSection(2, 105)
+        reservations_table_view_header.resizeSection(3, 150)
+        reservations_table_view_header.resizeSection(4, 200)
+        reservations_table_view_header.resizeSection(5, 150)
+
+        reservations_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+        reservations_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        reservations_table_view_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
+        reservations_table_view_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
+        reservations_table_view_header.setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
+        reservations_table_view_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
 
     def connect_signals_to_slots(self):
         self.reset_button.clicked.connect(lambda: self.update_day_frames("reset"))
