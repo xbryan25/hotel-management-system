@@ -16,7 +16,44 @@ class ReservationPage(QWidget, ReservationPageUI):
 
         self.is_widget_shown = False
 
+        # Days from left_most_day
         self.day_difference = 0
+        self.left_most_day = date.today()
+        self.selected_day = None
+
+        self.connect_signals_to_slots()
+
+    def connect_signals_to_slots(self):
+        self.reset_button.clicked.connect(lambda: self.update_day_frames("reset"))
+        self.left_button.clicked.connect(lambda: self.update_day_frames("previous"))
+        self.right_button.clicked.connect(lambda: self.update_day_frames("next"))
+
+    def update_selected_date_label(self, selected_date):
+        self.selected_date_label.setText(selected_date.strftime("%b %d, %Y"))
+
+    def update_selected_day(self, selected_date):
+        self.selected_day = selected_date
+
+    def update_day_frames(self, direction):
+
+        if direction == "previous":
+            self.left_most_day = self.left_most_day - timedelta(days=self.sections_frame_h_layout.count())
+        elif direction == "next":
+            self.left_most_day = self.left_most_day + timedelta(days=self.sections_frame_h_layout.count())
+        elif direction == "reset":
+            self.left_most_day = date.today()
+
+        for i in range(self.sections_frame_h_layout.count()):
+            item = self.sections_frame_h_layout.itemAt(i)
+            widget = item.widget()
+
+            if isinstance(widget, QFrame):
+                widget.update_current_date(self.left_most_day + timedelta(days=i))
+
+        self.update_selected_date_label(self.left_most_day)
+
+    def initialize_left_most_day(self, left_most_day):
+        self.left_most_day = left_most_day
 
     def load_day_frames(self):
 
@@ -37,7 +74,10 @@ class ReservationPage(QWidget, ReservationPageUI):
 
     def add_day_frames_to_sections_frame(self, num_of_day_frames, num_children_frames):
         for i in range(num_of_day_frames - num_children_frames):
-            self.sections_frame_h_layout.addWidget(DayFrame(date.today() + timedelta(days=self.day_difference)))
+            day_frame = DayFrame(self.left_most_day + timedelta(days=self.day_difference))
+            day_frame.clicked.connect(self.update_selected_date_label)
+            day_frame.clicked.connect(self.update_selected_day)
+            self.sections_frame_h_layout.addWidget(day_frame)
             self.day_difference += 1
 
     def remove_day_frames_to_sections_frame(self, num_of_day_frames):
@@ -52,11 +92,18 @@ class ReservationPage(QWidget, ReservationPageUI):
                 self.sections_frame_h_layout.removeWidget(widget)
                 widget.setParent(None)
                 widget.deleteLater()
-
                 self.day_difference -= 1
 
-        self.sections_frame.setUpdatesEnabled(True)
+        # Getting the date of the current rightmost day frame
+        item = self.sections_frame_h_layout.itemAt(num_of_day_frames - 1)
+        widget = item.widget()
+        widget_date = widget.get_current_date()
 
+        if self.selected_day > widget_date:
+            self.update_selected_day(widget_date)
+            self.update_selected_date_label(widget_date)
+
+        self.sections_frame.setUpdatesEnabled(True)
 
     def showEvent(self, event):
 
