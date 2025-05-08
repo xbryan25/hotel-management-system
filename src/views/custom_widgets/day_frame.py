@@ -47,6 +47,14 @@ class DayFrame(QFrame, DayFrameUI):
                            color: white;
                         }
                    """)
+        else:
+            self.setStyleSheet("""
+                        QFrame#Frame{
+                            background-color: #FFFFFF;
+                            border: 2px solid black;
+                            border-radius: 5px;
+                        }
+            """)
 
     def set_external_stylesheet(self):
         with open("../resources/styles/day_frame.qss", "r") as file:

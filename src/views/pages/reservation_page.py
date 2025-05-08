@@ -1,5 +1,6 @@
-from PyQt6.QtCore import QTime, QTimer
+from PyQt6.QtCore import QTime, QTimer, QSize
 from PyQt6.QtWidgets import QWidget, QFrame
+from PyQt6.QtGui import QFont, QIcon
 
 from ui import ReservationPageUI
 
@@ -19,9 +20,16 @@ class ReservationPage(QWidget, ReservationPageUI):
         # Days from left_most_day
         self.day_difference = 0
         self.left_most_day = date.today()
-        self.selected_day = None
+        self.selected_day = date.today()
 
         self.connect_signals_to_slots()
+
+        self.set_icons()
+        self.set_external_stylesheet()
+        self.load_fonts()
+
+        self.update_selected_day(self.left_most_day)
+        self.update_selected_date_label(self.left_most_day)
 
     def connect_signals_to_slots(self):
         self.reset_button.clicked.connect(lambda: self.update_day_frames("reset"))
@@ -59,7 +67,7 @@ class ReservationPage(QWidget, ReservationPageUI):
 
         sections_frame_width = self.sections_frame.width()
 
-        num_of_day_frames = sections_frame_width // 80
+        num_of_day_frames = sections_frame_width // 100
 
         children_frames = [child for child in self.sections_frame.findChildren(QFrame) if child.parent() == self.sections_frame]
         num_children_frames = len(children_frames)
@@ -104,6 +112,40 @@ class ReservationPage(QWidget, ReservationPageUI):
             self.update_selected_date_label(widget_date)
 
         self.sections_frame.setUpdatesEnabled(True)
+
+    def set_external_stylesheet(self):
+        with open("../resources/styles/reservation_page.qss", "r") as file:
+            self.setStyleSheet(file.read())
+
+    def set_icons(self):
+        self.add_reservation_button.setIcon(QIcon("../resources/icons/reservation_page/add_icon.svg"))
+        self.add_reservation_button.setIconSize(QSize(20, 20))
+
+        self.left_button.setIcon(QIcon("../resources/icons/reservation_page/arrow_left_icon.svg"))
+        self.left_button.setIconSize(QSize(20, 20))
+
+        self.right_button.setIcon(QIcon("../resources/icons/reservation_page/arrow_right_icon.svg"))
+        self.right_button.setIconSize(QSize(20, 20))
+
+        self.reset_button.setIcon(QIcon("../resources/icons/reservation_page/refresh_icon.svg"))
+        self.reset_button.setIconSize(QSize(20, 20))
+
+    def load_fonts(self):
+        self.search_lineedit.setFont(QFont("Inter", 16, QFont.Weight.Normal))
+
+        self.reservation_and_bookings_label.setFont(QFont("Inter", 20, QFont.Weight.Bold))
+        self.selected_date_label.setFont(QFont("Inter", 18, QFont.Weight.Normal))
+
+        self.view_type_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+        self.sort_by_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+        self.sort_type_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+
+        self.add_reservation_button.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+
+        self.reset_button.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+
+        self.previous_page_button.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.next_page_button.setFont(QFont("Inter", 11, QFont.Weight.Normal))
 
     def showEvent(self, event):
 
