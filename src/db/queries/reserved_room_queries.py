@@ -1,7 +1,8 @@
 
 
 class ReservedRoomQueries:
-    def __init__(self, cursor):
+    def __init__(self, db, cursor):
+        self.db = db
         self.cursor = cursor
 
     def get_all_reservations(self, sort_by="Reservation ID", sort_type="Ascending", view_type="Reservations"):

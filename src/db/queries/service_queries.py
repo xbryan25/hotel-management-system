@@ -1,7 +1,8 @@
 
 
 class ServiceQueries:
-    def __init__(self, cursor):
+    def __init__(self, db, cursor):
+        self.db = db
         self.cursor = cursor
 
     def get_latest_service_id(self):
