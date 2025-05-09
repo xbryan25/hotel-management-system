@@ -1,8 +1,41 @@
 
 
 class ReservedRoomQueries:
-    def __init__(self, cursor):
+    def __init__(self, db, cursor):
+        self.db = db
         self.cursor = cursor
+
+    def get_all_reservations(self, sort_by="Reservation ID", sort_type="Ascending", view_type="Reservations"):
+
+        sort_by_dict = {"Reservation ID": "reservedrooms.reservation_id",
+                        "Name": "guests.name",
+                        "Room No.": "rooms.room_number",
+                        "Room Type": "rooms.room_type",
+                        "Check-in Date": "reservedrooms.check_in_date",
+                        "Check-out Date": "reservedrooms.check_out_date",
+                        "Status": "payment_status"}
+
+        sort_type_dict = {"Ascending": "ASC", "Descending": "DESC"}
+
+        view_type_dict = {"Reservations": "WHERE reservedrooms.check_in_date >= CURDATE()",
+                          "Past Reservations": "WHERE reservedrooms.check_in_date < CURDATE()",
+                          "All": ""}
+
+        sql = f"""SELECT reservedrooms.reservation_id, guests.name, rooms.room_number, rooms.room_type, 
+                        reservedrooms.check_in_date, reservedrooms.check_out_date, reservedrooms.payment_status
+                        FROM reservedrooms 
+                        JOIN guests ON reservedrooms.guest_id = guests.guest_id
+                        JOIN rooms ON reservedrooms.room_number = rooms.room_number
+                        {view_type_dict[view_type]}
+                        ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]};"""
+
+        self.cursor.execute(sql)
+
+        result = self.cursor.fetchall()
+
+        list_result = [list(row) for row in result]
+
+        return list_result
 
     def get_latest_reservation_id(self):
 
@@ -16,24 +49,6 @@ class ReservedRoomQueries:
             return "reserve-000000"
         else:
             return result[0]
-
-    def get_all_reservations(self):
-        # Gets all future reservations, the order of the results are based on the check_in_date
-
-        sql = f"""SELECT reservedrooms.reservation_id, guests.name, rooms.room_number, rooms.room_type, 
-                reservedrooms.check_in_date, reservedrooms.check_out_date, reservedrooms.payment_status
-                FROM reservedrooms 
-                JOIN guests ON reservedrooms.guest_id = guests.guest_id
-                JOIN rooms ON reservedrooms.room_number = rooms.room_number
-                ORDER BY reservedrooms.check_in_date ASC;"""
-
-        self.cursor.execute(sql)
-
-        result = self.cursor.fetchall()
-
-        list_result = [list(row) for row in result]
-
-        return list_result
 
     def add_reserved_room(self, reserved_room_information):
         sql = """INSERT INTO reservedrooms

@@ -27,13 +27,13 @@ class DatabaseDriver:
 
         self.init_db = InitializeDatabase(self.cursor)
 
-        self.availed_service_queries = AvailedServiceQueries(self.cursor)
-        self.booked_room_queries = BookedRoomQueries(self.cursor)
-        self.guest_queries = GuestQueries(self.cursor)
-        self.paid_room_queries = PaidRoomQueries(self.cursor)
-        self.reserved_room_queries =  ReservedRoomQueries(self.cursor)
-        self.room_queries = RoomQueries(self.cursor)
-        self.service_queries = ServiceQueries(self.cursor)
+        self.availed_service_queries = AvailedServiceQueries(self.db, self.cursor)
+        self.booked_room_queries = BookedRoomQueries(self.db, self.cursor)
+        self.guest_queries = GuestQueries(self.db, self.cursor)
+        self.paid_room_queries = PaidRoomQueries(self.db, self.cursor)
+        self.reserved_room_queries = ReservedRoomQueries(self.db, self.cursor)
+        self.room_queries = RoomQueries(self.db, self.cursor)
+        self.service_queries = ServiceQueries(self.db, self.cursor)
 
     def close_connection(self):
         self.db.close()

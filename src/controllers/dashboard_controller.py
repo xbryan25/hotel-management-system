@@ -66,7 +66,7 @@ class DashboardController:
 
         self.recent_check_in_table_model = RecentStaysModel(recent_check_in_initial_data)
         self.recent_check_out_table_model = RecentStaysModel(recent_check_out_initial_data)
-        self.reservation_table_model = ReservationModel(reservations_initial_data)
+        self.reservation_table_model = ReservationModel(reservations_initial_data, "dashboard_view")
         self.rooms_model = RoomsModel(rooms_initial_data)
 
         self.view.recent_check_in_frame_table_view.setModel(self.recent_check_in_table_model)

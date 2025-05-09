@@ -1,7 +1,8 @@
 
 
 class PaidRoomQueries:
-    def __init__(self, cursor):
+    def __init__(self, db, cursor):
+        self.db = db
         self.cursor = cursor
 
     def get_latest_payment_id(self):

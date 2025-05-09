@@ -3,7 +3,7 @@ from PyQt6.QtGui import QFont
 from PyQt6.QtCore import Qt, pyqtSignal, QModelIndex
 
 from ui import GuestsPageUI
-from views.custom_widgets import ButtonDelegate, GuestTableView
+from views.custom_widgets import ButtonDelegate, CustomTableView
 
 
 class GuestsPage(QWidget, GuestsPageUI):
@@ -24,7 +24,16 @@ class GuestsPage(QWidget, GuestsPageUI):
         self.load_fonts()
 
     def update_table_view(self):
-        self.guest_table_view = GuestTableView(parent=self.guest_table_view_frame)
+        # Remove old table view before adding
+
+        for i in reversed(range(self.gridLayout_2.count())):
+            item = self.gridLayout_2.itemAt(i)
+            widget = item.widget()
+            if widget and widget.objectName() == "guest_table_view":
+                self.gridLayout_2.removeWidget(widget)
+                widget.setParent(None)
+
+        self.guest_table_view = CustomTableView(parent=self.guest_table_view_frame, table_view_mode="guest")
 
         self.gridLayout_2.addWidget(self.guest_table_view, 0, 0, 1, 1)
 

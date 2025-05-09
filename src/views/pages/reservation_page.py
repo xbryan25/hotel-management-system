@@ -1,15 +1,17 @@
-from PyQt6.QtCore import QTime, QTimer, QSize
-from PyQt6.QtWidgets import QWidget, QFrame
+from PyQt6.QtCore import QTime, QTimer, QSize, Qt, pyqtSignal
+from PyQt6.QtWidgets import QWidget, QFrame, QHeaderView, QTableView
 from PyQt6.QtGui import QFont, QIcon
 
 from ui import ReservationPageUI
 
-from views.custom_widgets import DayFrame
+from views.custom_widgets import DayFrame, ButtonDelegate, CustomTableView
 
 from datetime import date, timedelta
 
 
 class ReservationPage(QWidget, ReservationPageUI):
+    clicked_add_reservation_button = pyqtSignal()
+
     def __init__(self):
         super().__init__()
 
@@ -24,17 +26,76 @@ class ReservationPage(QWidget, ReservationPageUI):
 
         self.connect_signals_to_slots()
 
+        self.update_table_view()
+
         self.set_icons()
         self.set_external_stylesheet()
         self.load_fonts()
 
+        self.set_table_views_button_delegate()
+        self.disable_table_views_selection_mode()
+
         self.update_selected_day(self.left_most_day)
         self.update_selected_date_label(self.left_most_day)
+
+    def update_table_view(self):
+        # Remove old table view before adding
+
+        for i in reversed(range(self.gridLayout_2.count())):
+            item = self.gridLayout_2.itemAt(i)
+            widget = item.widget()
+            if widget and widget.objectName() == "reservations_table_view":
+                self.gridLayout_2.removeWidget(widget)
+                widget.setParent(None)
+
+        self.reservations_table_view = CustomTableView(parent=self.reservations_table_view_frame, table_view_mode="reservations")
+
+        self.gridLayout_2.addWidget(self.reservations_table_view, 0, 0, 1, 1)
+
+    def set_table_views_column_widths(self):
+        reservations_table_view_header = self.reservations_table_view.horizontalHeader()
+
+        reservations_table_view_header.setStyleSheet("""
+            QHeaderView::section {
+                background-color: #FFFFFF;
+                border: none;
+                outline: none;
+                padding-top: 10px;
+            }
+        """)
+
+        reservations_table_view_header.resizeSection(0, 150)
+        reservations_table_view_header.resizeSection(2, 105)
+        reservations_table_view_header.resizeSection(3, 150)
+        reservations_table_view_header.resizeSection(4, 220)
+        reservations_table_view_header.resizeSection(5, 150)
+        reservations_table_view_header.resizeSection(6, 45)
+
+        reservations_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+        reservations_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        reservations_table_view_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
+        reservations_table_view_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
+        reservations_table_view_header.setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
+        reservations_table_view_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
+        reservations_table_view_header.setSectionResizeMode(6, QHeaderView.ResizeMode.Fixed)
+
+    def set_table_views_button_delegate(self):
+        self.button_delegate = ButtonDelegate(self.reservations_table_view)
+
+        # self.button_delegate.clicked.connect(self.clicked_info_button.emit)
+
+        self.reservations_table_view.setItemDelegateForColumn(6, self.button_delegate)
+
+    def disable_table_views_selection_mode(self):
+        self.reservations_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)
+        self.reservations_table_view.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
     def connect_signals_to_slots(self):
         self.reset_button.clicked.connect(lambda: self.update_day_frames("reset"))
         self.left_button.clicked.connect(lambda: self.update_day_frames("previous"))
         self.right_button.clicked.connect(lambda: self.update_day_frames("next"))
+
+        self.add_reservation_button.clicked.connect(self.clicked_add_reservation_button.emit)
 
     def update_selected_date_label(self, selected_date):
         self.selected_date_label.setText(selected_date.strftime("%b %d, %Y"))
@@ -139,6 +200,9 @@ class ReservationPage(QWidget, ReservationPageUI):
         self.view_type_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.sort_by_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.sort_type_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+
+        self.reservations_table_view.setFont(QFont("Inter", 10, QFont.Weight.Normal))
+        self.reservations_table_view.horizontalHeader().setFont(QFont("Inter", 14, QFont.Weight.Bold))
 
         self.add_reservation_button.setFont(QFont("Inter", 12, QFont.Weight.Normal))
 

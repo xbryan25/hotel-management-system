@@ -1,8 +1,18 @@
 
 
 class RoomQueries:
-    def __init__(self, cursor):
+    def __init__(self, db, cursor):
+        self.db = db
         self.cursor = cursor
+
+    def set_reserved_room(self, room_number):
+
+        sql = """UPDATE rooms SET rooms.availability_status='reserved' WHERE rooms.room_number=%s;"""
+        values = (room_number,)
+
+        self.cursor.execute(sql, values)
+
+        self.db.commit()
 
     def get_latest_room_number(self):
 

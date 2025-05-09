@@ -65,11 +65,6 @@ QFrame#inner_buttons_and_sections_frame{
     background-color: #FFFFFF;
 }
 
-#reservations_table_view{
-    border: none;
-    background-color: #FFFFFF;
-}
-
 #previous_page_button, #next_page_button{
     background-color: #D9D9D9;
     color: black;
@@ -80,4 +75,9 @@ QFrame#inner_buttons_and_sections_frame{
 
 #v_line_1{
     background-color: #8B8B8B;
+}
+
+#reservations_table_view{
+    border: none;
+    background-color: #FFFFFF;
 }
