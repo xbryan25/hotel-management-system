@@ -26,12 +26,18 @@
    <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>9</number>
+   </property>
    <item row="1" column="0" colspan="3">
     <widget class="QLabel" name="header_message_label">
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>40</height>
+       <height>35</height>
       </size>
      </property>
      <property name="text">
@@ -42,6 +48,22 @@
      </property>
      <property name="wordWrap">
       <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="3">
+    <widget class="QPushButton" name="proceed_button">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="text">
+      <string>Yes</string>
      </property>
     </widget>
    </item>
@@ -61,6 +83,22 @@
      </property>
     </spacer>
    </item>
+   <item row="2" column="0" colspan="3">
+    <widget class="QLabel" name="subheader_message_label">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>20</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
    <item row="3" column="0">
     <spacer name="vs_1">
      <property name="orientation">
@@ -72,26 +110,10 @@
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>20</height>
+       <height>10</height>
       </size>
      </property>
     </spacer>
-   </item>
-   <item row="4" column="0" colspan="3">
-    <widget class="QPushButton" name="proceed_button">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
-     <property name="text">
-      <string>Yes</string>
-     </property>
-    </widget>
    </item>
   </layout>
  </widget>
