@@ -1,4 +1,4 @@
-from PyQt6.QtCore import QTime, QTimer, QSize, Qt, pyqtSignal
+from PyQt6.QtCore import QTime, QTimer, QSize, Qt, pyqtSignal, QModelIndex
 from PyQt6.QtWidgets import QWidget, QFrame, QHeaderView, QTableView
 from PyQt6.QtGui import QFont, QIcon
 
@@ -6,11 +6,14 @@ from ui import ReservationPageUI
 
 from views.custom_widgets import DayFrame, ButtonDelegate, CustomTableView
 
+
 from datetime import date, timedelta
 
 
 class ReservationPage(QWidget, ReservationPageUI):
     clicked_add_reservation_button = pyqtSignal()
+    clicked_info_button = pyqtSignal(QModelIndex)
+    clicked_check_in_button = pyqtSignal(QModelIndex)
 
     def __init__(self):
         super().__init__()
@@ -68,8 +71,9 @@ class ReservationPage(QWidget, ReservationPageUI):
         reservations_table_view_header.resizeSection(2, 105)
         reservations_table_view_header.resizeSection(3, 150)
         reservations_table_view_header.resizeSection(4, 220)
-        reservations_table_view_header.resizeSection(5, 150)
-        reservations_table_view_header.resizeSection(6, 45)
+        reservations_table_view_header.resizeSection(5, 125)
+        reservations_table_view_header.resizeSection(6, 40)
+        reservations_table_view_header.resizeSection(7, 40)
 
         reservations_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
         reservations_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
@@ -78,13 +82,20 @@ class ReservationPage(QWidget, ReservationPageUI):
         reservations_table_view_header.setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
         reservations_table_view_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
         reservations_table_view_header.setSectionResizeMode(6, QHeaderView.ResizeMode.Fixed)
+        reservations_table_view_header.setSectionResizeMode(7, QHeaderView.ResizeMode.Fixed)
 
     def set_table_views_button_delegate(self):
-        self.button_delegate = ButtonDelegate(self.reservations_table_view)
+        info_button_delegate_icon_path = "../resources/icons/reservation_page/info_icon.svg"
+        self.info_button_delegate = ButtonDelegate(info_button_delegate_icon_path, self.reservations_table_view)
 
-        # self.button_delegate.clicked.connect(self.clicked_info_button.emit)
+        self.info_button_delegate.clicked.connect(self.clicked_info_button.emit)
+        self.reservations_table_view.setItemDelegateForColumn(6, self.info_button_delegate)
 
-        self.reservations_table_view.setItemDelegateForColumn(6, self.button_delegate)
+        check_in_button_delegate_icon_path = "../resources/icons/reservation_page/check_in_icon.svg"
+        self.check_in_button_delegate = ButtonDelegate(check_in_button_delegate_icon_path, self.reservations_table_view)
+
+        self.check_in_button_delegate.clicked.connect(self.clicked_check_in_button.emit)
+        self.reservations_table_view.setItemDelegateForColumn(7, self.check_in_button_delegate)
 
     def disable_table_views_selection_mode(self):
         self.reservations_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)

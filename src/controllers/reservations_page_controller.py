@@ -1,5 +1,6 @@
 from models import ReservationModel
 from views import NewReservationDialog
+from views.message_dialogs import ConfirmationDialog, FeedbackDialog
 from controllers.new_reservation_dialog_controller import NewReservationDialogController
 
 
@@ -28,6 +29,26 @@ class ReservationsPageController:
         self.view.view_type_combobox.currentTextChanged.connect(self.update_reservations_table_view)
 
         self.view.clicked_add_reservation_button.connect(self.open_new_reservation_dialog)
+
+        self.view.clicked_info_button.connect(lambda: print("clicked info button"))
+        self.view.clicked_check_in_button.connect(self.convert_reservation_to_booking)
+
+    def convert_reservation_to_booking(self, index):
+
+        selected_payment_status = index.sibling(index.row(), 5).data()
+
+        if selected_payment_status == "fully paid":
+            selected_reservation_id = index.sibling(index.row(), 0).data()
+
+            self.confirmation_dialog = ConfirmationDialog(f"Confirm check-in of {selected_reservation_id}?")
+
+            self.confirmation_dialog.exec()
+
+            print(self.confirmation_dialog.get_choice())
+
+        else:
+            self.feedback_dialog = FeedbackDialog("Remaining balance detected.", "Complete payment to proceed.")
+            self.feedback_dialog.exec()
 
     def set_models(self):
         reservations_initial_data = self.db_driver.reserved_room_queries.get_all_reservations()

@@ -11,7 +11,7 @@ class ReservationModel(QAbstractTableModel):
         if view_mode == "dashboard_view":
             self.columns = ["Reservation ID", "Guest Name", "Room No.", "Room Type", "Check-in & Check-out", "Status"]
         else:
-            self.columns = ["Reservation ID", "Guest Name", "Room No.", "Room Type", "Check-in & Check-out", "Status", ""]
+            self.columns = ["Reservation ID", "Guest Name", "Room No.", "Room Type", "Check-in & Check-out", "Status", "", ""]
 
     def update_data(self, _data):
         self.beginResetModel()
@@ -40,7 +40,7 @@ class ReservationModel(QAbstractTableModel):
             elif index.column() == 5:
                 return self.data[index.row()][index.column() + 1]
 
-            elif index.column() == 6:
+            elif index.column() == 6 or index.column() == 7:
                 return ""
 
             return self.data[index.row()][index.column()]
