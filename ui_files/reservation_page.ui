@@ -462,32 +462,17 @@
            </property>
            <item>
             <property name="text">
-             <string>All</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
              <string>Reservations</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Bookings</string>
+             <string>Past Reservations</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>All (Past)</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Reservations (Past)</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Bookings (Past)</string>
+             <string>All</string>
             </property>
            </item>
           </widget>
@@ -505,7 +490,7 @@
            </property>
            <item>
             <property name="text">
-             <string>Sort by Reference ID</string>
+             <string>Sort by Reservation ID</string>
             </property>
            </item>
            <item>
