@@ -1,4 +1,6 @@
 from models import ReservationModel
+from views import NewReservationDialog
+from controllers.new_reservation_dialog_controller import NewReservationDialogController
 
 
 class ReservationsPageController:
@@ -12,10 +14,20 @@ class ReservationsPageController:
 
         self.view.set_table_views_column_widths()
 
+    def open_new_reservation_dialog(self):
+        self.new_reservation_dialog = NewReservationDialog()
+        self.new_reservation_dialog_controller = NewReservationDialogController(self.new_reservation_dialog, self.db_driver)
+
+        self.new_reservation_dialog.exec()
+
+        self.update_reservations_table_view()
+
     def connect_signals_to_slots(self):
         self.view.sort_by_combobox.currentTextChanged.connect(self.update_reservations_table_view)
         self.view.sort_type_combobox.currentTextChanged.connect(self.update_reservations_table_view)
         self.view.view_type_combobox.currentTextChanged.connect(self.update_reservations_table_view)
+
+        self.view.clicked_add_reservation_button.connect(self.open_new_reservation_dialog)
 
     def set_models(self):
         reservations_initial_data = self.db_driver.reserved_room_queries.get_all_reservations()

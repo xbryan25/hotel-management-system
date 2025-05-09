@@ -1,4 +1,4 @@
-from PyQt6.QtCore import QTime, QTimer, QSize, Qt
+from PyQt6.QtCore import QTime, QTimer, QSize, Qt, pyqtSignal
 from PyQt6.QtWidgets import QWidget, QFrame, QHeaderView, QTableView
 from PyQt6.QtGui import QFont, QIcon
 
@@ -10,6 +10,8 @@ from datetime import date, timedelta
 
 
 class ReservationPage(QWidget, ReservationPageUI):
+    clicked_add_reservation_button = pyqtSignal()
+
     def __init__(self):
         super().__init__()
 
@@ -92,6 +94,8 @@ class ReservationPage(QWidget, ReservationPageUI):
         self.reset_button.clicked.connect(lambda: self.update_day_frames("reset"))
         self.left_button.clicked.connect(lambda: self.update_day_frames("previous"))
         self.right_button.clicked.connect(lambda: self.update_day_frames("next"))
+
+        self.add_reservation_button.clicked.connect(self.clicked_add_reservation_button.emit)
 
     def update_selected_date_label(self, selected_date):
         self.selected_date_label.setText(selected_date.strftime("%b %d, %Y"))
