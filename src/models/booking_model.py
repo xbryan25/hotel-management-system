@@ -2,18 +2,15 @@ from PyQt6.QtCore import QAbstractTableModel, Qt
 from datetime import datetime
 
 
-class ReservationModel(QAbstractTableModel):
+class BookingModel(QAbstractTableModel):
     BUTTON_ENABLED_ROLE = Qt.ItemDataRole.UserRole + 1
 
-    def __init__(self, data=None, view_mode="dashboard_view"):
+    def __init__(self, data=None):
         super().__init__()
 
         self._data = data or []
 
-        if view_mode == "dashboard_view":
-            self.columns = ["Reservation ID", "Guest Name", "Room No.", "Room Type", "Check-in & Check-out", "Status"]
-        else:
-            self.columns = ["Reservation ID", "Guest Name", "Room No.", "Room Type", "Check-in & Check-out", "Status", "", ""]
+        self.columns = ["Booking ID", "Guest Name", "Room No.", "Room Type", "Check-in & Check-out", "", ""]
 
     def update_data(self, data):
         self.beginResetModel()
@@ -39,10 +36,7 @@ class ReservationModel(QAbstractTableModel):
 
                 return None
 
-            elif index.column() == 5:
-                return self._data[index.row()][index.column() + 1]
-
-            elif index.column() == 6 or index.column() == 7:
+            elif index.column() in [5, 6]:
                 return ""
 
             return self._data[index.row()][index.column()]
@@ -52,14 +46,14 @@ class ReservationModel(QAbstractTableModel):
 
         if role == Qt.ItemDataRole.ToolTipRole:
             if index.column() == 6:
-                return "View reservation details?"
+                return "View booking details?"
             elif index.column() == 7:
-                return "Check in?"
+                return "Check out?"
 
-        if role == self.BUTTON_ENABLED_ROLE and index.column() == 7:
-            reservation_status = self._data[index.row()][7]  # assume column 1 holds status
+        if role == self.BUTTON_ENABLED_ROLE and index.column() == 6:
+            check_in_status = self._data[index.row()][6]
 
-            return reservation_status == "pending"
+            return check_in_status == "in progress"
 
         return None
 
