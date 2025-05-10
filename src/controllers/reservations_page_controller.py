@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from models import ReservationModel
 from views import NewReservationDialog
 from views.message_dialogs import ConfirmationDialog, FeedbackDialog
@@ -44,7 +46,27 @@ class ReservationsPageController:
 
             self.confirmation_dialog.exec()
 
-            print(self.confirmation_dialog.get_choice())
+            if self.confirmation_dialog.get_choice():
+                check_in_date, check_out_date = index.sibling(index.row(), 4).data().split("-")
+
+                booking_inputs = {"check_in_status": "checked in",
+                                  "check_in_date": datetime.strptime(check_in_date.strip(), "%b %d, %Y"),
+                                  "check_out_date": datetime.strptime(check_out_date.strip(), "%b %d, %Y"),
+                                  "actual_check_in_date": datetime.now(),
+                                  "actual_check_out_date": None,
+                                  "guest_id": self.db_driver.reserved_room_queries.get_guest_id_from_reservation(selected_reservation_id),
+                                  "room_number": index.sibling(index.row(), 2).data()}
+
+                self.db_driver.booked_room_queries.add_booked_room(booking_inputs)
+                self.db_driver.reserved_room_queries.set_confirmed_reservation(selected_reservation_id)
+
+                self.update_reservations_table_view()
+
+                latest_booking_id = self.db_driver.booked_room_queries.get_latest_booking_id()
+
+                self.feedback_dialog = FeedbackDialog("Reservation converted to booking!",
+                                                      f"The booking id is {latest_booking_id}.")
+                self.feedback_dialog.exec()
 
         else:
             self.feedback_dialog = FeedbackDialog("Remaining balance detected.", "Complete payment to proceed.")

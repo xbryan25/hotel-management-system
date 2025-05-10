@@ -5,6 +5,23 @@ class ReservedRoomQueries:
         self.db = db
         self.cursor = cursor
 
+    def set_confirmed_reservation(self, reservation_id):
+        sql = "UPDATE reservedrooms SET reservation_status=%s WHERE reservation_id=%s"
+        values = ('confirmed', reservation_id)
+
+        self.cursor.execute(sql, values)
+        self.db.commit()
+
+    def get_guest_id_from_reservation(self, reservation_id):
+        sql = "SELECT reservedrooms.guest_id FROM reservedrooms WHERE reservation_id=%s"
+        values = (reservation_id,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()[0]
+
+        return result
+
     def get_all_reservations(self, sort_by="Reservation ID", sort_type="Ascending", view_type="Reservations"):
 
         sort_by_dict = {"Reservation ID": "reservedrooms.reservation_id",
@@ -17,8 +34,8 @@ class ReservedRoomQueries:
 
         sort_type_dict = {"Ascending": "ASC", "Descending": "DESC"}
 
-        view_type_dict = {"Reservations": "WHERE reservedrooms.check_in_date >= CURDATE()",
-                          "Past Reservations": "WHERE reservedrooms.check_in_date < CURDATE()",
+        view_type_dict = {"Reservations": "reservedrooms.check_in_date >= CURDATE() AND",
+                          "Past Reservations": "reservedrooms.check_in_date < CURDATE() AND",
                           "All": ""}
 
         sql = f"""SELECT reservedrooms.reservation_id, guests.name, rooms.room_number, rooms.room_type, 
@@ -26,7 +43,7 @@ class ReservedRoomQueries:
                         FROM reservedrooms 
                         JOIN guests ON reservedrooms.guest_id = guests.guest_id
                         JOIN rooms ON reservedrooms.room_number = rooms.room_number
-                        {view_type_dict[view_type]}
+                        WHERE {view_type_dict[view_type]} reservedrooms.reservation_status='pending'
                         ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]};"""
 
         self.cursor.execute(sql)
@@ -53,8 +70,8 @@ class ReservedRoomQueries:
     def add_reserved_room(self, reserved_room_information):
         sql = """INSERT INTO reservedrooms
                 (reservation_id, reservation_date, check_in_date, check_out_date, payment_status, total_reservation_cost,
-                guest_id, room_number) VALUES
-                (%s, %s, %s, %s, %s, %s, %s, %s)"""
+                reservation_status, guest_id, room_number) VALUES
+                (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
         latest_reservation_id = self.get_latest_reservation_id()
 
@@ -66,6 +83,7 @@ class ReservedRoomQueries:
                   reserved_room_information["check_out_date"],
                   reserved_room_information["payment_status"],
                   reserved_room_information["total_reservation_cost"],
+                  reserved_room_information["reservation_status"],
                   reserved_room_information["guest_id"],
                   reserved_room_information["room_number"])
 
