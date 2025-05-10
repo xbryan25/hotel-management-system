@@ -51,7 +51,7 @@ class BookingModel(QAbstractTableModel):
                 return "Check out?"
 
         if role == self.BUTTON_ENABLED_ROLE and index.column() == 6:
-            check_in_status = self._data[index.row()][6]  # assume column 1 holds status
+            check_in_status = self._data[index.row()][6]
 
             return check_in_status == "in progress"
 

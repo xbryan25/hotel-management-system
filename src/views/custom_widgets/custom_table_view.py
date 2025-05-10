@@ -32,7 +32,7 @@ class CustomTableView(QTableView):
         if index.isValid():
             delegate = self.itemDelegateForColumn(index.column())
 
-            if hasattr(delegate, "enable_role") and delegate.enable_role:
+            if hasattr(delegate, "enable_role") and delegate.enable_role and delegate.can_be_disabled:
                 enabled = index.model().data(index, delegate.enable_role)
                 if not enabled:
                     if self._hovered:
@@ -57,7 +57,7 @@ class CustomTableView(QTableView):
         elif self.table_view_mode in ("reservations", "bookings"):
             second_last_column = self.model().columnCount() - 2
 
-            if column in (last_column, second_last_column):
+            if column == last_column or column == second_last_column:
                 if not self._hovered:
                     QApplication.setOverrideCursor(Qt.CursorShape.PointingHandCursor)
                     self._hovered = True
