@@ -24,42 +24,23 @@ class BookingsPageController:
         self.view.clicked_check_out_button.connect(self.booking_check_out)
 
     def booking_check_out(self, index):
-        print("check out")
 
-        # selected_payment_status = index.sibling(index.row(), 5).data()
-        #
-        # if selected_payment_status == "fully paid":
-        #     selected_reservation_id = index.sibling(index.row(), 0).data()
-        #
-        #     self.confirmation_dialog = ConfirmationDialog(f"Confirm check-in of {selected_reservation_id}?")
-        #
-        #     self.confirmation_dialog.exec()
-        #
-        #     if self.confirmation_dialog.get_choice():
-        #         check_in_date, check_out_date = index.sibling(index.row(), 4).data().split("-")
-        #
-        #         booking_inputs = {"check_in_status": "in progress",
-        #                           "check_in_date": datetime.strptime(check_in_date.strip(), "%b %d, %Y"),
-        #                           "check_out_date": datetime.strptime(check_out_date.strip(), "%b %d, %Y"),
-        #                           "actual_check_in_date": datetime.now(),
-        #                           "actual_check_out_date": None,
-        #                           "guest_id": self.db_driver.reserved_room_queries.get_guest_id_from_reservation(selected_reservation_id),
-        #                           "room_number": index.sibling(index.row(), 2).data()}
-        #
-        #         self.db_driver.booked_room_queries.add_booked_room(booking_inputs)
-        #         self.db_driver.reserved_room_queries.set_confirmed_reservation(selected_reservation_id)
-        #
-        #         self.update_reservations_table_view()
-        #
-        #         latest_booking_id = self.db_driver.booked_room_queries.get_latest_booking_id()
-        #
-        #         self.feedback_dialog = FeedbackDialog("Reservation converted to booking!",
-        #                                               f"The booking id is {latest_booking_id}.")
-        #         self.feedback_dialog.exec()
-        #
-        # else:
-        #     self.feedback_dialog = FeedbackDialog("Remaining balance detected.", "Complete payment to proceed.")
-        #     self.feedback_dialog.exec()
+        selected_booking_id = index.sibling(index.row(), 0).data()
+        booking_room_number = index.sibling(index.row(), 2).data()
+
+        self.confirmation_dialog = ConfirmationDialog(f"Confirm check-out of {selected_booking_id}?")
+
+        self.confirmation_dialog.exec()
+
+        if self.confirmation_dialog.get_choice():
+
+            self.db_driver.booked_room_queries.set_check_out_booking(selected_booking_id)
+            self.db_driver.room_queries.set_room_status(booking_room_number, 'available')
+
+            self.update_bookings_table_view()
+
+            self.feedback_dialog = FeedbackDialog("Success!", f"{selected_booking_id} has checked out successfully")
+            self.feedback_dialog.exec()
 
     def set_models(self):
         bookings_initial_data = self.db_driver.booked_room_queries.get_all_bookings()
@@ -73,8 +54,8 @@ class BookingsPageController:
         sort_type_text = self.view.sort_type_combobox.currentText()
         view_type_text = self.view.view_type_combobox.currentText()
 
-        bookings_data_from_db = self.db_driver.booked_room_queries.get_all_reservations(sort_by=sort_by_text,
-                                                                                          sort_type=sort_type_text,
-                                                                                          view_type=view_type_text)
+        bookings_data_from_db = self.db_driver.booked_room_queries.get_all_bookings(sort_by=sort_by_text,
+                                                                                    sort_type=sort_type_text,
+                                                                                    view_type=view_type_text)
 
         self.booking_table_model.update_data(bookings_data_from_db)

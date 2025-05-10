@@ -1,9 +1,17 @@
+from datetime import datetime
 
 
 class BookedRoomQueries:
     def __init__(self, db, cursor):
         self.db = db
         self.cursor = cursor
+
+    def set_check_out_booking(self, booking_id):
+        sql = "UPDATE bookedrooms SET check_in_status=%s, actual_check_out_date=%s WHERE booking_id=%s"
+        values = ('checked out', datetime.now(), booking_id)
+
+        self.cursor.execute(sql, values)
+        self.db.commit()
 
     def get_all_bookings(self, sort_by="Booking ID", sort_type="Ascending", view_type="Bookings"):
 
@@ -16,8 +24,8 @@ class BookedRoomQueries:
 
         sort_type_dict = {"Ascending": "ASC", "Descending": "DESC"}
 
-        view_type_dict = {"Bookings": "bookedrooms.check_out_date >= CURDATE() AND",
-                          "Past Bookings": "bookedrooms.check_out_date < CURDATE() AND",
+        view_type_dict = {"Bookings": "WHERE bookedrooms.check_in_status = 'in progress'",
+                          "Past Bookings": "WHERE bookedrooms.check_in_status = 'checked out'",
                           "All": ""}
 
         sql = f"""SELECT bookedrooms.booking_id, guests.name, rooms.room_number, rooms.room_type, 
@@ -25,7 +33,7 @@ class BookedRoomQueries:
                         FROM bookedrooms
                         JOIN guests ON bookedrooms.guest_id = guests.guest_id
                         JOIN rooms ON bookedrooms.room_number = rooms.room_number
-                        WHERE {view_type_dict[view_type]} bookedrooms.check_in_status='in progress'
+                        {view_type_dict[view_type]}
                         ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]};"""
 
         self.cursor.execute(sql)

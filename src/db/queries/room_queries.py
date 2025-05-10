@@ -5,10 +5,10 @@ class RoomQueries:
         self.db = db
         self.cursor = cursor
 
-    def set_reserved_room(self, room_number):
+    def set_room_status(self, room_number, room_status):
 
-        sql = """UPDATE rooms SET rooms.availability_status='reserved' WHERE rooms.room_number=%s;"""
-        values = (room_number,)
+        sql = """UPDATE rooms SET rooms.availability_status=%s WHERE rooms.room_number=%s;"""
+        values = (room_status, room_number)
 
         self.cursor.execute(sql, values)
 
