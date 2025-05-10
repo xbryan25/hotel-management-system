@@ -29,7 +29,7 @@ class BookedRoomQueries:
                           "All": ""}
 
         sql = f"""SELECT bookedrooms.booking_id, guests.name, rooms.room_number, rooms.room_type, 
-                        bookedrooms.actual_check_in_date, bookedrooms.check_out_date
+                        bookedrooms.actual_check_in_date, bookedrooms.check_out_date, bookedrooms.check_in_status
                         FROM bookedrooms
                         JOIN guests ON bookedrooms.guest_id = guests.guest_id
                         JOIN rooms ON bookedrooms.room_number = rooms.room_number

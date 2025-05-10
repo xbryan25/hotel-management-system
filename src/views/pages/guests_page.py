@@ -68,7 +68,9 @@ class GuestsPage(QWidget, GuestsPageUI):
     def set_table_views_button_delegate(self):
         button_delegate_icon_path = "../resources/icons/guests_page/info_icon.svg"
 
-        self.button_delegate = ButtonDelegate(button_delegate_icon_path, self.guest_table_view)
+        self.button_delegate = ButtonDelegate(icon_path=button_delegate_icon_path,
+                                              can_be_disabled=False,
+                                              parent=self.guest_table_view)
 
         self.button_delegate.clicked.connect(self.clicked_info_button.emit)
 

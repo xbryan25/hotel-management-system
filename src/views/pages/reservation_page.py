@@ -86,13 +86,17 @@ class ReservationPage(QWidget, ReservationPageUI):
 
     def set_table_views_button_delegate(self):
         info_button_delegate_icon_path = "../resources/icons/reservation_page/info_icon.svg"
-        self.info_button_delegate = ButtonDelegate(info_button_delegate_icon_path, self.reservations_table_view)
+        self.info_button_delegate = ButtonDelegate(icon_path=info_button_delegate_icon_path,
+                                                   can_be_disabled=False,
+                                                   parent=self.reservations_table_view)
 
         self.info_button_delegate.clicked.connect(self.clicked_info_button.emit)
         self.reservations_table_view.setItemDelegateForColumn(6, self.info_button_delegate)
 
         check_in_button_delegate_icon_path = "../resources/icons/reservation_page/check_in_icon.svg"
-        self.check_in_button_delegate = ButtonDelegate(check_in_button_delegate_icon_path, self.reservations_table_view)
+        self.check_in_button_delegate = ButtonDelegate(icon_path=check_in_button_delegate_icon_path,
+                                                       can_be_disabled=False,
+                                                       parent=self.reservations_table_view)
 
         self.check_in_button_delegate.clicked.connect(self.clicked_check_in_button.emit)
         self.reservations_table_view.setItemDelegateForColumn(7, self.check_in_button_delegate)

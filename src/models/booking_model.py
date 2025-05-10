@@ -3,20 +3,22 @@ from datetime import datetime
 
 
 class BookingModel(QAbstractTableModel):
-    def __init__(self, _data=None):
+    BUTTON_ENABLED_ROLE = Qt.ItemDataRole.UserRole + 1
+
+    def __init__(self, data=None):
         super().__init__()
 
-        self.data = _data or []
+        self._data = data or []
 
         self.columns = ["Booking ID", "Guest Name", "Room No.", "Room Type", "Check-in & Check-out", "", ""]
 
-    def update_data(self, _data):
+    def update_data(self, data):
         self.beginResetModel()
-        self.data = _data
+        self._data = data
         self.endResetModel()
 
     def rowCount(self, index=None):
-        return len(self.data)
+        return len(self._data)
 
     def columnCount(self, index=None):
         return len(self.columns)
@@ -26,27 +28,32 @@ class BookingModel(QAbstractTableModel):
         if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:
 
             if index.column() == 4:
-                check_in_date = self.data[index.row()][index.column()]
-                check_out_date = self.data[index.row()][index.column() + 1]
+                check_in_date = self._data[index.row()][index.column()]
+                check_out_date = self._data[index.row()][index.column() + 1]
 
                 if isinstance(check_in_date, datetime) and isinstance(check_out_date, datetime):
                     return f"{check_in_date.strftime("%b %d, %Y")} - {check_out_date.strftime("%b %d, %Y")}"
 
                 return None
 
-            elif index.column() == 5 or index.column() == 6:
+            elif index.column() in [5, 6]:
                 return ""
 
-            return self.data[index.row()][index.column()]
+            return self._data[index.row()][index.column()]
 
         if role == Qt.ItemDataRole.TextAlignmentRole:
             return Qt.AlignmentFlag.AlignCenter
 
         if role == Qt.ItemDataRole.ToolTipRole:
-            if index.column() == 5:
+            if index.column() == 6:
                 return "View booking details?"
-            elif index.column() == 6:
+            elif index.column() == 7:
                 return "Check out?"
+
+        if role == self.BUTTON_ENABLED_ROLE and index.column() == 6:
+            check_in_status = self._data[index.row()][6]  # assume column 1 holds status
+
+            return check_in_status == "in progress"
 
         return None
 
