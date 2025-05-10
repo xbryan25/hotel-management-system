@@ -6,3 +6,4 @@ from .recent_stays_model import RecentStaysModel
 from .reservation_model import ReservationModel
 from .rooms_model import RoomsModel
 from .services_model import ServicesModel
+from .booking_model import BookingModel

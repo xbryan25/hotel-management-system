@@ -49,7 +49,7 @@ class ReservationsPageController:
             if self.confirmation_dialog.get_choice():
                 check_in_date, check_out_date = index.sibling(index.row(), 4).data().split("-")
 
-                booking_inputs = {"check_in_status": "checked in",
+                booking_inputs = {"check_in_status": "in progress",
                                   "check_in_date": datetime.strptime(check_in_date.strip(), "%b %d, %Y"),
                                   "check_out_date": datetime.strptime(check_out_date.strip(), "%b %d, %Y"),
                                   "actual_check_in_date": datetime.now(),

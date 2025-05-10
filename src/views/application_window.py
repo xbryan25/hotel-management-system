@@ -163,7 +163,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
         self.guests_page_controller = GuestsPageController(self.guests_page, self.db_driver)
         self.services_page_controller = ServicesPageController(self.services_page, self.db_driver)
         self.reservations_page_controller = ReservationsPageController(self.reservation_page, self.db_driver)
-
+        self.bookings_page_controller = BookingsPageController(self.booking_page, self.db_driver)
 
     def closeEvent(self, event):
         self.db_driver.close_connection()

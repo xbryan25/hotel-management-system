@@ -40,7 +40,7 @@ class CustomTableView(QTableView):
                     QApplication.restoreOverrideCursor()
                     self._hovered = False
 
-        elif self.table_view_mode == "reservations":
+        elif self.table_view_mode == "reservations" or self.table_view_mode == "bookings":
             second_last_column = self.model().columnCount() - 2
 
             if column == last_column or column == second_last_column:
