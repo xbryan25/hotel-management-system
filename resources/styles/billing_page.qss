@@ -1,0 +1,51 @@
+
+QComboBox::drop-down {
+    background: transparent;
+    border: none;
+    width: 20px;
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    margin: 2px 4px 2px 0;
+}
+
+QComboBox::down-arrow {
+    image: url(../resources/icons/rooms_page/arrow_down_icon.svg);
+    width: 15px;
+    height: 15px;
+}
+
+#search_lineedit{
+    background-color: #FFFFFF;
+    border: 1px solid #000000;
+
+    border-radius: 20px;
+    padding-left: 48px;
+
+    background-image: url(../resources/icons/rooms_page/search_icon_big.svg);
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-origin: border;
+
+}
+
+#view_type_combobox, #sort_by_combobox, #sort_type_combobox{
+
+    background-color: #D9D9D9;
+    border: 1px solid #000000;
+    border-radius: 5px;
+
+    padding-left: 10px;
+}
+
+#previous_page_button, #next_page_button{
+    background-color: #D9D9D9;
+    color: black;
+
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+#billings_table_view{
+    border: none;
+    background-color: #FFFFFF;
+}
