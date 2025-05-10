@@ -34,16 +34,17 @@ class ReservedRoomQueries:
 
         sort_type_dict = {"Ascending": "ASC", "Descending": "DESC"}
 
-        view_type_dict = {"Reservations": "reservedrooms.check_in_date >= CURDATE() AND",
-                          "Past Reservations": "reservedrooms.check_in_date < CURDATE() AND",
+        view_type_dict = {"Reservations": "WHERE reservedrooms.reservation_status = 'pending'",
+                          "Past Reservations": "WHERE reservedrooms.reservation_status IN ('confirmed', 'cancelled', 'expired')",
                           "All": ""}
 
         sql = f"""SELECT reservedrooms.reservation_id, guests.name, rooms.room_number, rooms.room_type, 
-                        reservedrooms.check_in_date, reservedrooms.check_out_date, reservedrooms.payment_status
+                        reservedrooms.check_in_date, reservedrooms.check_out_date, reservedrooms.payment_status,
+                        reservedrooms.reservation_status
                         FROM reservedrooms 
                         JOIN guests ON reservedrooms.guest_id = guests.guest_id
                         JOIN rooms ON reservedrooms.room_number = rooms.room_number
-                        WHERE {view_type_dict[view_type]} reservedrooms.reservation_status='pending'
+                        {view_type_dict[view_type]}
                         ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]};"""
 
         self.cursor.execute(sql)

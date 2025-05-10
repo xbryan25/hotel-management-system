@@ -95,7 +95,7 @@ class ReservationPage(QWidget, ReservationPageUI):
 
         check_in_button_delegate_icon_path = "../resources/icons/reservation_page/check_in_icon.svg"
         self.check_in_button_delegate = ButtonDelegate(icon_path=check_in_button_delegate_icon_path,
-                                                       can_be_disabled=False,
+                                                       can_be_disabled=True,
                                                        parent=self.reservations_table_view)
 
         self.check_in_button_delegate.clicked.connect(self.clicked_check_in_button.emit)
