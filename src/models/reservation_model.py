@@ -48,6 +48,12 @@ class ReservationModel(QAbstractTableModel):
         if role == Qt.ItemDataRole.TextAlignmentRole:
             return Qt.AlignmentFlag.AlignCenter
 
+        if role == Qt.ItemDataRole.ToolTipRole:
+            if index.column() == 6:
+                return "View reservation details?"
+            elif index.column() == 7:
+                return "Check in?"
+
         return None
 
     def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole):
