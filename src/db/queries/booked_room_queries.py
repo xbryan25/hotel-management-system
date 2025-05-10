@@ -54,19 +54,22 @@ class BookedRoomQueries:
 
     def add_booked_room(self, booked_room_information):
         sql = """INSERT INTO bookedrooms
-                (booking_id, check_in_status, check_in_date, check_out_date, guest_id, room_number) VALUES
-                (%s, %s, %s, %s, %s, %s)"""
+                (booking_id, check_in_status, check_in_date, check_out_date, actual_check_in_date, 
+                actual_check_out_date, guest_id, room_number) VALUES
+                (%s, %s, %s, %s, %s, %s, %s, %s)"""
 
         latest_booking_id = self.get_latest_booking_id()
 
         new_booking_id = f"book-{int(latest_booking_id[6:]) + 1:06}"
 
         values = (new_booking_id,
-                  booked_room_information[0],
-                  booked_room_information[1],
-                  booked_room_information[2],
-                  booked_room_information[3],
-                  booked_room_information[4])
+                  booked_room_information["check_in_status"],
+                  booked_room_information["check_in_date"],
+                  booked_room_information["check_out_date"],
+                  booked_room_information["actual_check_in_date"],
+                  booked_room_information["actual_check_out_date"],
+                  booked_room_information["guest_id"],
+                  booked_room_information["room_number"])
 
         self.cursor.execute(sql, values)
         self.db.commit()

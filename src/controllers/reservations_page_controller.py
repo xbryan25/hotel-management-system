@@ -1,5 +1,8 @@
+from datetime import datetime
+
 from models import ReservationModel
 from views import NewReservationDialog
+from views.message_dialogs import ConfirmationDialog, FeedbackDialog
 from controllers.new_reservation_dialog_controller import NewReservationDialogController
 
 
@@ -28,6 +31,46 @@ class ReservationsPageController:
         self.view.view_type_combobox.currentTextChanged.connect(self.update_reservations_table_view)
 
         self.view.clicked_add_reservation_button.connect(self.open_new_reservation_dialog)
+
+        self.view.clicked_info_button.connect(lambda: print("clicked info button"))
+        self.view.clicked_check_in_button.connect(self.convert_reservation_to_booking)
+
+    def convert_reservation_to_booking(self, index):
+
+        selected_payment_status = index.sibling(index.row(), 5).data()
+
+        if selected_payment_status == "fully paid":
+            selected_reservation_id = index.sibling(index.row(), 0).data()
+
+            self.confirmation_dialog = ConfirmationDialog(f"Confirm check-in of {selected_reservation_id}?")
+
+            self.confirmation_dialog.exec()
+
+            if self.confirmation_dialog.get_choice():
+                check_in_date, check_out_date = index.sibling(index.row(), 4).data().split("-")
+
+                booking_inputs = {"check_in_status": "checked in",
+                                  "check_in_date": datetime.strptime(check_in_date.strip(), "%b %d, %Y"),
+                                  "check_out_date": datetime.strptime(check_out_date.strip(), "%b %d, %Y"),
+                                  "actual_check_in_date": datetime.now(),
+                                  "actual_check_out_date": None,
+                                  "guest_id": self.db_driver.reserved_room_queries.get_guest_id_from_reservation(selected_reservation_id),
+                                  "room_number": index.sibling(index.row(), 2).data()}
+
+                self.db_driver.booked_room_queries.add_booked_room(booking_inputs)
+                self.db_driver.reserved_room_queries.set_confirmed_reservation(selected_reservation_id)
+
+                self.update_reservations_table_view()
+
+                latest_booking_id = self.db_driver.booked_room_queries.get_latest_booking_id()
+
+                self.feedback_dialog = FeedbackDialog("Reservation converted to booking!",
+                                                      f"The booking id is {latest_booking_id}.")
+                self.feedback_dialog.exec()
+
+        else:
+            self.feedback_dialog = FeedbackDialog("Remaining balance detected.", "Complete payment to proceed.")
+            self.feedback_dialog.exec()
 
     def set_models(self):
         reservations_initial_data = self.db_driver.reserved_room_queries.get_all_reservations()

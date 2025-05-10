@@ -1,13 +1,15 @@
 from PyQt6.QtWidgets import QStyledItemDelegate, QStyleOptionButton, QApplication, QStyle
 from PyQt6.QtCore import Qt, pyqtSignal, QModelIndex, QSize
-from PyQt6.QtGui import QMouseEvent, QCursor, QIcon
+from PyQt6.QtGui import QMouseEvent, QCursor, QIcon, QColor
 
 
 class ButtonDelegate(QStyledItemDelegate):
     clicked = pyqtSignal(QModelIndex)  # Signal when button is clicked
 
-    def __init__(self, parent=None):
+    def __init__(self, icon_path, parent=None):
         super().__init__(parent)
+
+        self.icon_path = icon_path
 
     # Load visual representation
     def paint(self, painter, option, index):
@@ -15,7 +17,7 @@ class ButtonDelegate(QStyledItemDelegate):
         button = QStyleOptionButton()
         button.rect = option.rect
         button.text = ""
-        button.icon = QIcon("../resources/icons/guests_page/info_icon.svg")
+        button.icon = QIcon(self.icon_path)
 
         # button.iconSize = button.rect.size()
 
@@ -40,3 +42,6 @@ class ButtonDelegate(QStyledItemDelegate):
                     return True
 
         return False
+
+    def sizeHint(self, option, index):
+        return QSize(25, option.rect.height())

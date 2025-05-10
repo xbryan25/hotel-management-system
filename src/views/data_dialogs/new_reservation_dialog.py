@@ -174,6 +174,7 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         reservation_inputs.update({"check_out_date": self.check_out_date_time_edit.dateTime().toPyDateTime()})
         reservation_inputs.update({"room_number": self.rooms_combobox.currentText()})
         reservation_inputs.update({"total_reservation_cost": self.total_cost_value_label.text()})
+        reservation_inputs.update({"reservation_status": "pending"})
 
         return reservation_inputs
 
