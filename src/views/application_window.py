@@ -42,12 +42,28 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
 
     def add_signals_to_sidebar_items(self):
         # Connects the index of the list widget to the index of the stacked widget
-        self.expanded_buttons_list_widget.currentRowChanged.connect(self.stacked_widget.setCurrentIndex)
-        self.collapsed_buttons_list_widget.currentRowChanged.connect(self.stacked_widget.setCurrentIndex)
+        self.expanded_buttons_list_widget.currentRowChanged.connect(self.on_page_changed)
+        self.collapsed_buttons_list_widget.currentRowChanged.connect(self.on_page_changed)
 
         # Connects the expanded buttons list widget to the collapsed buttons list widget and vice versa
         self.expanded_buttons_list_widget.currentRowChanged.connect(self.collapsed_buttons_list_widget.setCurrentRow)
         self.collapsed_buttons_list_widget.currentRowChanged.connect(self.expanded_buttons_list_widget.setCurrentRow)
+
+    def on_page_changed(self, index):
+
+        page_update_actions = {
+            3: self.reservations_page_controller.update_reservations_table_view,
+            4: self.bookings_page_controller.update_bookings_table_view,
+            5: self.guests_page_controller.update_guests_table_view,
+            6: self.billings_page_controller.update_billings_table_view,
+            7: self.services_page_controller.update_services_table_view,
+        }
+
+        action = page_update_actions.get(index)
+        if action:
+            action()
+
+        self.stacked_widget.setCurrentIndex(index)
 
     def setup_toggle_sidebar_button(self):
         self.show_icons_only_button.clicked.connect(self.show_collapsed_sidebar_frame)
