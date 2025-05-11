@@ -5,6 +5,19 @@ class RoomQueries:
         self.db = db
         self.cursor = cursor
 
+    def has_available_room(self):
+        sql = f"""SELECT COUNT(*) FROM rooms WHERE rooms.availability_status=%s"""
+        values = ('available',)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()[0]
+
+        if result > 0:
+            return True
+        else:
+            return False
+
     def set_room_status(self, room_number, room_status):
 
         sql = """UPDATE rooms SET rooms.availability_status=%s WHERE rooms.room_number=%s;"""

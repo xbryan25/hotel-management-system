@@ -18,12 +18,18 @@ class ReservationsPageController:
         self.view.set_table_views_column_widths()
 
     def open_new_reservation_dialog(self):
-        self.new_reservation_dialog = NewReservationDialog()
-        self.new_reservation_dialog_controller = NewReservationDialogController(self.new_reservation_dialog, self.db_driver)
 
-        self.new_reservation_dialog.exec()
+        if self.db_driver.room_queries.has_available_room():
+            self.new_reservation_dialog = NewReservationDialog()
+            self.new_reservation_dialog_controller = NewReservationDialogController(self.new_reservation_dialog, self.db_driver)
 
-        self.update_reservations_table_view()
+            self.new_reservation_dialog.exec()
+
+            self.update_reservations_table_view()
+        else:
+            self.no_room_dialog = FeedbackDialog(header_message="No more available rooms.",
+                                                 subheader_message="Please try again later.")
+            self.no_room_dialog.exec()
 
     def connect_signals_to_slots(self):
         self.view.sort_by_combobox.currentTextChanged.connect(self.update_reservations_table_view)

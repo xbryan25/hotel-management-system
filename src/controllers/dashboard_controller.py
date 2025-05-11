@@ -2,6 +2,7 @@ from PyQt6.QtCore import QTime, QDateTime, QTimer
 
 from models import RecentStaysModel, ReservationModel, RoomsModel
 from views import NewReservationDialog
+from views.message_dialogs import FeedbackDialog
 
 from controllers.new_reservation_dialog_controller import NewReservationDialogController
 
@@ -29,10 +30,17 @@ class DashboardController:
         self.view.changed_room_status.connect(self.update_rooms_view)
 
     def open_new_reservation_dialog(self):
-        self.new_reservation_dialog = NewReservationDialog()
-        self.new_reservation_dialog_controller = NewReservationDialogController(self.new_reservation_dialog, self.db_driver)
+        if self.db_driver.room_queries.has_available_room():
+            self.new_reservation_dialog = NewReservationDialog()
+            self.new_reservation_dialog_controller = NewReservationDialogController(self.new_reservation_dialog, self.db_driver)
 
-        self.new_reservation_dialog.exec()
+            self.new_reservation_dialog.exec()
+
+            self.update_reservations_table_view()
+        else:
+            self.no_room_dialog = FeedbackDialog(header_message="No more available rooms.",
+                                                 subheader_message="Please try again later.")
+            self.no_room_dialog.exec()
 
     def update_date_and_time(self):
 
