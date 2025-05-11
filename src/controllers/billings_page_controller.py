@@ -2,6 +2,7 @@ from datetime import datetime
 
 from models import ReservationModel
 from views import ConfirmationDialog, FeedbackDialog, AddPaymentDialog
+from controllers.add_payment_dialog_controller import AddPaymentDialogController
 
 
 class BillingsPageController:
@@ -21,35 +22,18 @@ class BillingsPageController:
         self.view.view_type_combobox.currentTextChanged.connect(self.update_billings_table_view)
 
         # self.view.clicked_info_button.connect(lambda: print("clicked info button"))
-        self.view.clicked_add_payment_button.connect(self.add_payment)
+        self.view.clicked_add_payment_button.connect(self.open_add_payment_dialog)
 
-    def add_payment(self, index):
+    def open_add_payment_dialog(self, index):
+        data_from_row = {"reservation_id": index.sibling(index.row(), 0).data(),
+                         "remaining_balance": index.sibling(index.row(), 4).data()}
 
-        selected_reservation_id = index.sibling(index.row(), 0).data()
-        remaining_balance = index.sibling(index.row(), 4).data()
+        self.add_payment_dialog = AddPaymentDialog()
+        self.add_payment_dialog_controller = AddPaymentDialogController(self.add_payment_dialog, self.db_driver, data_from_row)
 
-        reservation_date = self.db_driver.reserved_room_queries.get_reservation_date_from_reservation(selected_reservation_id)
-        availed_services = self.db_driver.availed_service_queries.get_availed_services_from_avail_date(reservation_date)
-
-        self.add_payment_dialog = AddPaymentDialog(remaining_balance)
         self.add_payment_dialog.exec()
 
-        # selected_booking_id = index.sibling(index.row(), 0).data()
-        # booking_room_number = index.sibling(index.row(), 2).data()
-        #
-        # self.confirmation_dialog = ConfirmationDialog(f"Confirm check-out of {selected_booking_id}?")
-        #
-        # self.confirmation_dialog.exec()
-        #
-        # if self.confirmation_dialog.get_choice():
-        #
-        #     self.db_driver.booked_room_queries.set_check_out_booking(selected_booking_id)
-        #     self.db_driver.room_queries.set_room_status(booking_room_number, 'available')
-        #
-        #     self.update_bookings_table_view()
-        #
-        #     self.feedback_dialog = FeedbackDialog("Success!", f"{selected_booking_id} has checked out successfully")
-        #     self.feedback_dialog.exec()
+        self.update_billings_table_view()
 
     def set_models(self):
         reservations_initial_data = self.db_driver.reserved_room_queries.get_all_reservations(view_type="Billings",

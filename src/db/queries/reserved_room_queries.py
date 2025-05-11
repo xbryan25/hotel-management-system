@@ -12,6 +12,13 @@ class ReservedRoomQueries:
         self.cursor.execute(sql, values)
         self.db.commit()
 
+    def set_payment_status(self, reservation_id, payment_status):
+        sql = "UPDATE reservedrooms SET payment_status=%s WHERE reservation_id=%s"
+        values = (payment_status, reservation_id)
+
+        self.cursor.execute(sql, values)
+        self.db.commit()
+
     def get_guest_id_from_reservation(self, reservation_id):
         sql = "SELECT reservedrooms.guest_id FROM reservedrooms WHERE reservation_id=%s"
         values = (reservation_id,)
@@ -32,6 +39,16 @@ class ReservedRoomQueries:
 
         return result
 
+    def get_room_number_from_reservation(self, reservation_id):
+        sql = "SELECT reservedrooms.room_number FROM reservedrooms WHERE reservation_id=%s"
+        values = (reservation_id,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()[0]
+
+        return result
+
     def get_all_reservations(self, sort_by="Reservation ID", sort_type="Ascending", view_type="Reservations",
                              billing_view_mode=False):
 
@@ -44,7 +61,6 @@ class ReservedRoomQueries:
                         "Status": "payment_status"}
 
         sort_type_dict = {"Ascending": "ASC", "Descending": "DESC"}
-
 
         view_type_dict = {"Reservations": "WHERE reservedrooms.reservation_status = 'pending'",
                           "Past Reservations": "WHERE reservedrooms.reservation_status IN ('confirmed', 'cancelled', 'expired')",
@@ -82,6 +98,8 @@ class ReservedRoomQueries:
 
         return list_result
 
+
+
     def get_latest_reservation_id(self):
 
         self.cursor.execute("""SELECT reservation_id FROM reservedrooms
@@ -94,6 +112,7 @@ class ReservedRoomQueries:
             return "reserve-000000"
         else:
             return result[0]
+
 
     def add_reserved_room(self, reserved_room_information):
         sql = """INSERT INTO reservedrooms

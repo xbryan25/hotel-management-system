@@ -14,5 +14,5 @@ __all__ = [
     "ServicesPageController",
     "ReservationsPageController",
     "BookingsPageController",
-    "BillingsPageController"
+    "BillingsPageController",
 ]

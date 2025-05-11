@@ -28,11 +28,11 @@ class PaidRoomQueries:
         new_payment_id = f"paid-{int(latest_payment_id[9:]) + 1:06}"
 
         values = (new_payment_id,
-                  paid_room_information[0],
-                  paid_room_information[1],
-                  paid_room_information[2],
-                  paid_room_information[3],
-                  paid_room_information[4])
+                  paid_room_information['payment_type'],
+                  paid_room_information['amount'],
+                  paid_room_information['transaction_date'],
+                  paid_room_information['guest_id'],
+                  paid_room_information['room_number'])
 
         self.cursor.execute(sql, values)
         self.db.commit()
