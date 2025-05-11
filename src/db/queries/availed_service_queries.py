@@ -1,10 +1,26 @@
-from datetime import date
+from datetime import datetime
 
 
 class AvailedServiceQueries:
     def __init__(self, db, cursor):
         self.db = db
         self.cursor = cursor
+
+    def get_availed_services_from_avail_date(self, avail_date):
+        sql = f"""SELECT services.service_name, availedservices.quantity
+                                FROM availedservices
+                                LEFT JOIN services ON availedservices.service_id = services.service_id
+                                WHERE avail_date=%s"""
+
+        values = (avail_date,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchall()
+
+        list_result = [list(row) for row in result]
+
+        return list_result
 
     def get_latest_avail_id(self):
 
@@ -32,7 +48,7 @@ class AvailedServiceQueries:
             new_avail_id = f"avail-{int(latest_avail_id[9:]) + 1:06}"
 
             values = (new_avail_id,
-                      date.today(),
+                      datetime.now(),
                       quantity,
                       guest_id,
                       service_id)

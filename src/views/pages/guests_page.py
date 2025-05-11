@@ -33,7 +33,7 @@ class GuestsPage(QWidget, GuestsPageUI):
                 self.gridLayout_2.removeWidget(widget)
                 widget.setParent(None)
 
-        self.guest_table_view = CustomTableView(parent=self.guest_table_view_frame, table_view_mode="guest")
+        self.guest_table_view = CustomTableView(parent=self.guest_table_view_frame, table_view_mode="guests")
 
         self.gridLayout_2.addWidget(self.guest_table_view, 0, 0, 1, 1)
 

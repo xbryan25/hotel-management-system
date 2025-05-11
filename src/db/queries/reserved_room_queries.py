@@ -12,6 +12,13 @@ class ReservedRoomQueries:
         self.cursor.execute(sql, values)
         self.db.commit()
 
+    def set_payment_status(self, reservation_id, payment_status):
+        sql = "UPDATE reservedrooms SET payment_status=%s WHERE reservation_id=%s"
+        values = (payment_status, reservation_id)
+
+        self.cursor.execute(sql, values)
+        self.db.commit()
+
     def get_guest_id_from_reservation(self, reservation_id):
         sql = "SELECT reservedrooms.guest_id FROM reservedrooms WHERE reservation_id=%s"
         values = (reservation_id,)
@@ -22,7 +29,28 @@ class ReservedRoomQueries:
 
         return result
 
-    def get_all_reservations(self, sort_by="Reservation ID", sort_type="Ascending", view_type="Reservations"):
+    def get_reservation_date_from_reservation(self, reservation_id):
+        sql = "SELECT reservedrooms.reservation_date FROM reservedrooms WHERE reservation_id=%s"
+        values = (reservation_id,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()[0]
+
+        return result
+
+    def get_room_number_from_reservation(self, reservation_id):
+        sql = "SELECT reservedrooms.room_number FROM reservedrooms WHERE reservation_id=%s"
+        values = (reservation_id,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()[0]
+
+        return result
+
+    def get_all_reservations(self, sort_by="Reservation ID", sort_type="Ascending", view_type="Reservations",
+                             billing_view_mode=False):
 
         sort_by_dict = {"Reservation ID": "reservedrooms.reservation_id",
                         "Name": "guests.name",
@@ -36,16 +64,31 @@ class ReservedRoomQueries:
 
         view_type_dict = {"Reservations": "WHERE reservedrooms.reservation_status = 'pending'",
                           "Past Reservations": "WHERE reservedrooms.reservation_status IN ('confirmed', 'cancelled', 'expired')",
+                          "Billings": "WHERE r.payment_status IN ('not paid', 'partially paid')",
+                          "Past Billings": "WHERE r.payment_status = 'fully paid'",
                           "All": ""}
 
-        sql = f"""SELECT reservedrooms.reservation_id, guests.name, rooms.room_number, rooms.room_type, 
-                        reservedrooms.check_in_date, reservedrooms.check_out_date, reservedrooms.payment_status,
-                        reservedrooms.reservation_status
-                        FROM reservedrooms 
-                        JOIN guests ON reservedrooms.guest_id = guests.guest_id
-                        JOIN rooms ON reservedrooms.room_number = rooms.room_number
-                        {view_type_dict[view_type]}
-                        ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]};"""
+        if billing_view_mode:
+
+            sql = f"""SELECT r.reservation_id, guests.name, r.room_number, r.total_reservation_cost, 
+                            CAST(r.total_reservation_cost - COALESCE(SUM(p.amount), 0) AS SIGNED) AS remaining_balance,
+                            r.payment_status
+                            FROM reservedrooms r
+                            JOIN guests ON r.guest_id = guests.guest_id
+                            LEFT JOIN paidrooms p ON r.room_number = p.room_number
+                            AND p.transaction_date BETWEEN r.reservation_date AND r.check_out_date
+                            {view_type_dict[view_type]}
+                            GROUP BY r.reservation_id"""
+
+        else:
+            sql = f"""SELECT reservedrooms.reservation_id, guests.name, rooms.room_number, rooms.room_type, 
+                                        reservedrooms.check_in_date, reservedrooms.check_out_date, reservedrooms.payment_status,
+                                        reservedrooms.reservation_status
+                                        FROM reservedrooms 
+                                        JOIN guests ON reservedrooms.guest_id = guests.guest_id
+                                        JOIN rooms ON reservedrooms.room_number = rooms.room_number
+                                        {view_type_dict[view_type]}
+                                        ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]};"""
 
         self.cursor.execute(sql)
 
@@ -54,6 +97,8 @@ class ReservedRoomQueries:
         list_result = [list(row) for row in result]
 
         return list_result
+
+
 
     def get_latest_reservation_id(self):
 
@@ -67,6 +112,7 @@ class ReservedRoomQueries:
             return "reserve-000000"
         else:
             return result[0]
+
 
     def add_reserved_room(self, reserved_room_information):
         sql = """INSERT INTO reservedrooms
