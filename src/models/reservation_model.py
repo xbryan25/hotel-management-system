@@ -68,9 +68,14 @@ class ReservationModel(QAbstractTableModel):
                 return "Check in?"
 
         if role == self.BUTTON_ENABLED_ROLE and index.column() == 7:
-            reservation_status = self._data[index.row()][7]  # assume column 1 holds status
+            reservation_status = self._data[index.row()][7]
 
             return reservation_status == "pending"
+
+        if self.view_mode == "billing_page_view" and role == self.BUTTON_ENABLED_ROLE and index.column() == 5:
+            payment_status = self._data[index.row()][5]
+
+            return payment_status in ["not paid", "partially paid"]
 
         return None
 

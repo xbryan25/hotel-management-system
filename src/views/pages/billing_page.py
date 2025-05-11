@@ -7,7 +7,7 @@ from views.custom_widgets import DayFrame, ButtonDelegate, CustomTableView
 
 
 class BillingPage(QWidget, BillingPageUI):
-    clicked_info_button = pyqtSignal(QModelIndex)
+    clicked_add_payment_button = pyqtSignal(QModelIndex)
     # clicked_check_out_button = pyqtSignal(QModelIndex)
 
     def __init__(self):
@@ -67,10 +67,10 @@ class BillingPage(QWidget, BillingPageUI):
     def set_table_views_button_delegate(self):
         payment_button_delegate_icon_path = "../resources/icons/billing_page/payment_icon.svg"
         self.payment_button_delegate = ButtonDelegate(icon_path=payment_button_delegate_icon_path,
-                                                      can_be_disabled=False,
+                                                      can_be_disabled=True,
                                                       parent=self.billings_table_view)
 
-        self.payment_button_delegate.clicked.connect(self.clicked_info_button.emit)
+        self.payment_button_delegate.clicked.connect(self.clicked_add_payment_button.emit)
         self.billings_table_view.setItemDelegateForColumn(5, self.payment_button_delegate)
 
     def disable_table_views_selection_mode(self):

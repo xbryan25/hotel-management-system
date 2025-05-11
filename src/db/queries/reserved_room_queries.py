@@ -45,7 +45,8 @@ class ReservedRoomQueries:
         if billing_view_mode:
 
             sql = f"""SELECT r.reservation_id, guests.name, r.room_number, r.total_reservation_cost, 
-                            CAST(r.total_reservation_cost - COALESCE(SUM(p.amount), 0) AS SIGNED) AS remaining_balance
+                            CAST(r.total_reservation_cost - COALESCE(SUM(p.amount), 0) AS SIGNED) AS remaining_balance,
+                            r.payment_status
                             FROM reservedrooms r
                             JOIN guests ON r.guest_id = guests.guest_id
                             LEFT JOIN paidrooms p ON r.room_number = p.room_number
