@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from models import ReservationModel
-from views.message_dialogs import ConfirmationDialog, FeedbackDialog
+from views import ConfirmationDialog, FeedbackDialog, AddPaymentDialog
 
 
 class BillingsPageController:
@@ -25,7 +25,14 @@ class BillingsPageController:
 
     def add_payment(self, index):
 
-        print("Add payment")
+        selected_reservation_id = index.sibling(index.row(), 0).data()
+        remaining_balance = index.sibling(index.row(), 4).data()
+
+        reservation_date = self.db_driver.reserved_room_queries.get_reservation_date_from_reservation(selected_reservation_id)
+        availed_services = self.db_driver.availed_service_queries.get_availed_services_from_avail_date(reservation_date)
+
+        self.add_payment_dialog = AddPaymentDialog(remaining_balance)
+        self.add_payment_dialog.exec()
 
         # selected_booking_id = index.sibling(index.row(), 0).data()
         # booking_room_number = index.sibling(index.row(), 2).data()

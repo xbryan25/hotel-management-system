@@ -22,6 +22,16 @@ class ReservedRoomQueries:
 
         return result
 
+    def get_reservation_date_from_reservation(self, reservation_id):
+        sql = "SELECT reservedrooms.reservation_date FROM reservedrooms WHERE reservation_id=%s"
+        values = (reservation_id,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()[0]
+
+        return result
+
     def get_all_reservations(self, sort_by="Reservation ID", sort_type="Ascending", view_type="Reservations",
                              billing_view_mode=False):
 

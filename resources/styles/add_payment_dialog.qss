@@ -1,0 +1,43 @@
+QFrame#outer_frame{
+    background-color: #e0e1e0;
+    border-radius: 5px;
+}
+
+QComboBox::drop-down {
+    background: transparent;
+    border: none;
+    width: 20px;
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    margin: 2px 4px 2px 0;
+}
+
+QComboBox::down-arrow {
+    image: url(../resources/icons/add_payment_dialog/arrow_down_icon.svg);
+    width: 15px;
+    height: 15px;
+}
+
+#cancel_button, #add_payment_button{
+    padding: 5px;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+#cancel_button{
+    background-color: transparent;
+}
+
+#add_payment_button{
+    background-color: #194FCC;
+    color: white;
+}
+
+#payment_type_combobox{
+
+    background-color: #D9D9D9;
+    border: 1px solid #000000;
+    border-radius: 5px;
+
+    padding-left: 10px;
+}
