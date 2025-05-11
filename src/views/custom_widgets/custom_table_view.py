@@ -43,7 +43,7 @@ class CustomTableView(QTableView):
                     super().mouseMoveEvent(event)
                     return
 
-        if self.table_view_mode == "guest":
+        if self.table_view_mode in ("guests", "billings"):
             if column == last_column:
                 if not self._hovered:
                     QApplication.setOverrideCursor(Qt.CursorShape.PointingHandCursor)

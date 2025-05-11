@@ -22,7 +22,8 @@ class ReservedRoomQueries:
 
         return result
 
-    def get_all_reservations(self, sort_by="Reservation ID", sort_type="Ascending", view_type="Reservations"):
+    def get_all_reservations(self, sort_by="Reservation ID", sort_type="Ascending", view_type="Reservations",
+                             billing_view_mode=False):
 
         sort_by_dict = {"Reservation ID": "reservedrooms.reservation_id",
                         "Name": "guests.name",
@@ -34,18 +35,33 @@ class ReservedRoomQueries:
 
         sort_type_dict = {"Ascending": "ASC", "Descending": "DESC"}
 
+
         view_type_dict = {"Reservations": "WHERE reservedrooms.reservation_status = 'pending'",
                           "Past Reservations": "WHERE reservedrooms.reservation_status IN ('confirmed', 'cancelled', 'expired')",
+                          "Billings": "WHERE r.payment_status IN ('not paid', 'partially paid')",
+                          "Past Billings": "WHERE r.payment_status = 'fully paid'",
                           "All": ""}
 
-        sql = f"""SELECT reservedrooms.reservation_id, guests.name, rooms.room_number, rooms.room_type, 
-                        reservedrooms.check_in_date, reservedrooms.check_out_date, reservedrooms.payment_status,
-                        reservedrooms.reservation_status
-                        FROM reservedrooms 
-                        JOIN guests ON reservedrooms.guest_id = guests.guest_id
-                        JOIN rooms ON reservedrooms.room_number = rooms.room_number
-                        {view_type_dict[view_type]}
-                        ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]};"""
+        if billing_view_mode:
+
+            sql = f"""SELECT r.reservation_id, guests.name, r.room_number, r.total_reservation_cost, 
+                            CAST(r.total_reservation_cost - COALESCE(SUM(p.amount), 0) AS SIGNED) AS remaining_balance
+                            FROM reservedrooms r
+                            JOIN guests ON r.guest_id = guests.guest_id
+                            LEFT JOIN paidrooms p ON r.room_number = p.room_number
+                            AND p.transaction_date BETWEEN r.reservation_date AND r.check_out_date
+                            {view_type_dict[view_type]}
+                            GROUP BY r.reservation_id"""
+
+        else:
+            sql = f"""SELECT reservedrooms.reservation_id, guests.name, rooms.room_number, rooms.room_type, 
+                                        reservedrooms.check_in_date, reservedrooms.check_out_date, reservedrooms.payment_status,
+                                        reservedrooms.reservation_status
+                                        FROM reservedrooms 
+                                        JOIN guests ON reservedrooms.guest_id = guests.guest_id
+                                        JOIN rooms ON reservedrooms.room_number = rooms.room_number
+                                        {view_type_dict[view_type]}
+                                        ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]};"""
 
         self.cursor.execute(sql)
 

@@ -7,7 +7,7 @@ from views.custom_widgets import DayFrame, ButtonDelegate, CustomTableView
 
 
 class BillingPage(QWidget, BillingPageUI):
-    # clicked_info_button = pyqtSignal(QModelIndex)
+    clicked_info_button = pyqtSignal(QModelIndex)
     # clicked_check_out_button = pyqtSignal(QModelIndex)
 
     def __init__(self):
@@ -17,32 +17,32 @@ class BillingPage(QWidget, BillingPageUI):
 
         # self.connect_signals_to_slots()
 
-        # self.update_table_view()
+        self.update_table_view()
 
         self.set_external_stylesheet()
         self.load_fonts()
 
-        # self.set_table_views_button_delegate()
-        # self.disable_table_views_selection_mode()
+        self.set_table_views_button_delegate()
+        self.disable_table_views_selection_mode()
 
-    # def update_table_view(self):
-    #     # Remove old table view before adding
-    #
-    #     for i in reversed(range(self.gridLayout_2.count())):
-    #         item = self.gridLayout_2.itemAt(i)
-    #         widget = item.widget()
-    #         if widget and widget.objectName() == "bookings_table_view":
-    #             self.gridLayout_2.removeWidget(widget)
-    #             widget.setParent(None)
-    #
-    #     self.bookings_table_view = CustomTableView(parent=self.bookings_table_view_frame, table_view_mode="billings")
-    #
-    #     self.gridLayout_2.addWidget(self.bookings_table_view, 0, 0, 1, 1)
+    def update_table_view(self):
+        # Remove old table view before adding
+
+        for i in reversed(range(self.gridLayout_2.count())):
+            item = self.gridLayout_2.itemAt(i)
+            widget = item.widget()
+            if widget and widget.objectName() == "billings_table_view":
+                self.gridLayout_2.removeWidget(widget)
+                widget.setParent(None)
+
+        self.billings_table_view = CustomTableView(parent=self.billings_table_view_frame, table_view_mode="billings")
+
+        self.gridLayout_2.addWidget(self.billings_table_view, 0, 0, 1, 1)
 
     def set_table_views_column_widths(self):
-        bookings_table_view_header = self.bookings_table_view.horizontalHeader()
+        billings_table_view_header = self.billings_table_view.horizontalHeader()
 
-        bookings_table_view_header.setStyleSheet("""
+        billings_table_view_header.setStyleSheet("""
             QHeaderView::section {
                 background-color: #FFFFFF;
                 border: none;
@@ -51,41 +51,31 @@ class BillingPage(QWidget, BillingPageUI):
             }
         """)
 
-        bookings_table_view_header.resizeSection(0, 150)
-        bookings_table_view_header.resizeSection(2, 105)
-        bookings_table_view_header.resizeSection(3, 150)
-        bookings_table_view_header.resizeSection(4, 220)
-        bookings_table_view_header.resizeSection(5, 40)
-        bookings_table_view_header.resizeSection(6, 40)
+        billings_table_view_header.resizeSection(0, 150)
+        billings_table_view_header.resizeSection(2, 105)
+        billings_table_view_header.resizeSection(3, 250)
+        billings_table_view_header.resizeSection(4, 100)
+        billings_table_view_header.resizeSection(5, 40)
 
-        bookings_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
-        bookings_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
-        bookings_table_view_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
-        bookings_table_view_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
-        bookings_table_view_header.setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
-        bookings_table_view_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
-        bookings_table_view_header.setSectionResizeMode(6, QHeaderView.ResizeMode.Fixed)
+        billings_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+        billings_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        billings_table_view_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
+        billings_table_view_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
+        billings_table_view_header.setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
+        billings_table_view_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
 
-    # def set_table_views_button_delegate(self):
-    #     info_button_delegate_icon_path = "../resources/icons/booking_page/info_icon.svg"
-    #     self.info_button_delegate = ButtonDelegate(icon_path=info_button_delegate_icon_path,
-    #                                                can_be_disabled=False,
-    #                                                parent=self.bookings_table_view)
-    #
-    #     self.info_button_delegate.clicked.connect(self.clicked_info_button.emit)
-    #     self.bookings_table_view.setItemDelegateForColumn(5, self.info_button_delegate)
-    #
-    #     check_out_button_delegate_icon_path = "../resources/icons/booking_page/check_out_icon.svg"
-    #     self.check_out_button_delegate = ButtonDelegate(icon_path=check_out_button_delegate_icon_path,
-    #                                                     can_be_disabled=True,
-    #                                                     parent=self.bookings_table_view)
-    #
-    #     self.check_out_button_delegate.clicked.connect(self.clicked_check_out_button.emit)
-    #     self.bookings_table_view.setItemDelegateForColumn(6, self.check_out_button_delegate)
+    def set_table_views_button_delegate(self):
+        payment_button_delegate_icon_path = "../resources/icons/billing_page/payment_icon.svg"
+        self.payment_button_delegate = ButtonDelegate(icon_path=payment_button_delegate_icon_path,
+                                                      can_be_disabled=False,
+                                                      parent=self.billings_table_view)
 
-    # def disable_table_views_selection_mode(self):
-    #     self.bookings_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)
-    #     self.bookings_table_view.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.payment_button_delegate.clicked.connect(self.clicked_info_button.emit)
+        self.billings_table_view.setItemDelegateForColumn(5, self.payment_button_delegate)
+
+    def disable_table_views_selection_mode(self):
+        self.billings_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)
+        self.billings_table_view.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
     # def connect_signals_to_slots(self):
     #     pass
