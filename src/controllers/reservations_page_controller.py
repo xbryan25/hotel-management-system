@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from models import ReservationModel
-from views import NewReservationDialog
+from views import NewReservationDialog, ReservationInfoDialog
 from views.message_dialogs import ConfirmationDialog, FeedbackDialog
 from controllers.new_reservation_dialog_controller import NewReservationDialogController
 
@@ -31,6 +31,10 @@ class ReservationsPageController:
                                                  subheader_message="Please try again later.")
             self.no_room_dialog.exec()
 
+    def open_reservation_info_dialog(self):
+        self.reservation_info_dialog = ReservationInfoDialog()
+        self.reservation_info_dialog.exec()
+
     def connect_signals_to_slots(self):
         self.view.sort_by_combobox.currentTextChanged.connect(self.update_reservations_table_view)
         self.view.sort_type_combobox.currentTextChanged.connect(self.update_reservations_table_view)
@@ -38,7 +42,7 @@ class ReservationsPageController:
 
         self.view.clicked_add_reservation_button.connect(self.open_new_reservation_dialog)
 
-        self.view.clicked_info_button.connect(lambda: print("clicked info button"))
+        self.view.clicked_info_button.connect(self.open_reservation_info_dialog)
         self.view.clicked_check_in_button.connect(self.convert_reservation_to_booking)
 
     def convert_reservation_to_booking(self, index):

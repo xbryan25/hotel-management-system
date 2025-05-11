@@ -36,7 +36,6 @@ class DashboardController:
 
             self.new_reservation_dialog.exec()
 
-            self.update_reservations_table_view()
         else:
             self.no_room_dialog = FeedbackDialog(header_message="No more available rooms.",
                                                  subheader_message="Please try again later.")
