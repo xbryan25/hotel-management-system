@@ -19,35 +19,20 @@ class ReservedRoomQueries:
         self.cursor.execute(sql, values)
         self.db.commit()
 
-    def get_guest_id_from_reservation(self, reservation_id):
-        sql = "SELECT reservedrooms.guest_id FROM reservedrooms WHERE reservation_id=%s"
+    def get_reservation_details(self, column, reservation_id):
+        allowed_columns = {'reservation_date', 'check_in_date', 'check_out_date', 'payment_status',
+                           'total_reservation_cost', 'reservation_status', 'guest_id', 'room_number'}
+
+        if column not in allowed_columns:
+            raise ValueError(f"Invalid column name: {column}")
+
+        sql = f"SELECT reservedrooms.{column} FROM reservedrooms WHERE reservation_id = %s"
         values = (reservation_id,)
 
         self.cursor.execute(sql, values)
+        result = self.cursor.fetchone()
 
-        result = self.cursor.fetchone()[0]
-
-        return result
-
-    def get_reservation_date_from_reservation(self, reservation_id):
-        sql = "SELECT reservedrooms.reservation_date FROM reservedrooms WHERE reservation_id=%s"
-        values = (reservation_id,)
-
-        self.cursor.execute(sql, values)
-
-        result = self.cursor.fetchone()[0]
-
-        return result
-
-    def get_room_number_from_reservation(self, reservation_id):
-        sql = "SELECT reservedrooms.room_number FROM reservedrooms WHERE reservation_id=%s"
-        values = (reservation_id,)
-
-        self.cursor.execute(sql, values)
-
-        result = self.cursor.fetchone()[0]
-
-        return result
+        return result[0] if result else None
 
     def get_all_reservations(self, sort_by="Reservation ID", sort_type="Ascending", view_type="Reservations",
                              billing_view_mode=False):
@@ -99,7 +84,6 @@ class ReservedRoomQueries:
         return list_result
 
 
-
     def get_latest_reservation_id(self):
 
         self.cursor.execute("""SELECT reservation_id FROM reservedrooms
@@ -113,12 +97,11 @@ class ReservedRoomQueries:
         else:
             return result[0]
 
-
     def add_reserved_room(self, reserved_room_information):
         sql = """INSERT INTO reservedrooms
-                (reservation_id, reservation_date, check_in_date, check_out_date, payment_status, total_reservation_cost,
-                reservation_status, guest_id, room_number) VALUES
-                (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                (reservation_id, reservation_date, last_modified, check_in_date, check_out_date, payment_status, 
+                total_reservation_cost, reservation_status, guest_id, room_number) VALUES
+                (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
         latest_reservation_id = self.get_latest_reservation_id()
 
@@ -126,6 +109,7 @@ class ReservedRoomQueries:
 
         values = (new_reservation_id,
                   reserved_room_information["reservation_date"],
+                  reserved_room_information["last_modified"],
                   reserved_room_information["check_in_date"],
                   reserved_room_information["check_out_date"],
                   reserved_room_information["payment_status"],
