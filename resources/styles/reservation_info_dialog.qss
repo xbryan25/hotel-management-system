@@ -10,9 +10,9 @@ QDialog{
 }
 
 #left_button{
-    background-color: #194FCC;
+    background-color: #C23D47;
 }
 
 #right_button{
-    background-color: #C23D47;
+    background-color: #194FCC;
 }

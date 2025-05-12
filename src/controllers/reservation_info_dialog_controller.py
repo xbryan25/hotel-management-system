@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import QSizePolicy, QSpacerItem
 from PyQt6.QtCore import QDateTime
 
 from models import AvailableRoomsModel, ServicesModel
-from views import FeedbackDialog
+from views import FeedbackDialog, ConfirmationDialog
 
 
 class ReservationInfoDialogController:
@@ -13,7 +13,7 @@ class ReservationInfoDialogController:
 
         self.service_frames = []
 
-        # self.connect_signals_to_slots()
+        self.connect_signals_to_slots()
 
         self.get_data_from_reservation()
         self.set_room_number_to_available_temporarily()
@@ -23,14 +23,50 @@ class ReservationInfoDialogController:
         self.create_service_frames(self.services_model.get_all())
 
     def connect_signals_to_slots(self):
-        self.view.room_type_changed.connect(self.update_models)
+        # self.view.room_type_changed.connect(self.update_models)
+        #
+        # self.view.room_changed.connect(self.calculate_room_cost)
+        # self.view.date_time_changed.connect(self.calculate_room_cost)
+        #
+        # self.view.spinbox_enabled.connect(lambda: self.update_total_service_cost(self.service_frames))
+        #
+        # self.view.clicked_reservation.connect(self.make_reservation)
 
-        self.view.room_changed.connect(self.calculate_room_cost)
-        self.view.date_time_changed.connect(self.calculate_room_cost)
+        self.view.clicked_edit_button.connect(lambda: self.enable_all_editable_fields(True))
 
-        self.view.spinbox_enabled.connect(lambda: self.update_total_service_cost(self.service_frames))
+        self.view.clicked_cancel_edit_button.connect(lambda: self.enable_all_editable_fields(False))
 
-        self.view.clicked_reservation.connect(self.make_reservation)
+        self.view.clicked_cancel_reservation_button.connect(lambda: self.edit_or_cancel_reservation('cancel'))
+
+        self.view.clicked_confirm_reservation_edit_button.connect(lambda: self.edit_or_cancel_reservation('edit'))
+
+    def edit_or_cancel_reservation(self, state):
+
+        if state == 'cancel':
+            self.confirmation_dialog = ConfirmationDialog(f"Confirm cancellation of {self.selected_reservation_id}?",
+                                                          "This action cannot be undone.")
+
+            self.confirmation_dialog.exec()
+
+            if self.confirmation_dialog.get_choice():
+                self.feedback_dialog = FeedbackDialog("Reservation cancelled successfully.", connected_view=self.view)
+                self.feedback_dialog.exec()
+
+                # Then refresh reservation table
+
+        else:
+            self.confirmation_dialog = ConfirmationDialog(f"Confirm reservation edit of {self.selected_reservation_id}?")
+
+            self.confirmation_dialog.exec()
+
+            if self.confirmation_dialog.get_choice():
+                self.feedback_dialog = FeedbackDialog("Reservation edited successfully.", connected_view=self.view)
+                self.feedback_dialog.exec()
+
+                # Then refresh reservation table
+
+    def enable_all_editable_fields(self, state):
+        self.view.enable_all_editable_fields(self.service_frames, state)
 
     def calculate_room_cost(self, current_room):
         check_in_check_out_date_time = self.view.get_check_in_check_out_date_and_time()

@@ -9,20 +9,18 @@ from views import ConfirmationDialog, FeedbackDialog
 
 
 class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
-    room_type_changed = pyqtSignal(str)
-    room_changed = pyqtSignal(str)
-    date_time_changed = pyqtSignal(str)
-    spinbox_enabled = pyqtSignal()
-    clicked_reservation = pyqtSignal()
+    clicked_edit_button = pyqtSignal()
+    clicked_cancel_edit_button = pyqtSignal()
+    clicked_cancel_reservation_button = pyqtSignal()
+    clicked_confirm_reservation_edit_button = pyqtSignal()
 
     def __init__(self):
         super().__init__()
         self.setupUi(self)
 
+        self.dialog_state = 'not editable'
 
-        # self.update_current_date_and_time()
-        #
-        # self.connect_signals_to_slots()
+        self.connect_signals_to_slots()
 
         self.load_fonts()
         self.set_external_stylesheet()
@@ -31,6 +29,17 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
 
     def show_add_service_button(self, state):
         self.add_service_button.setVisible(state)
+
+    def enable_all_editable_fields(self, service_frames, state):
+        self.check_in_date_time_edit.setEnabled(state)
+        self.check_out_date_time_edit.setEnabled(state)
+
+        self.room_type_combobox.setEnabled(state)
+        self.room_number_combobox.setEnabled(state)
+
+        for service_frame in service_frames:
+            service_frame.spinbox.setEnabled(state)
+            service_frame.delete_push_button.setEnabled(state)
 
     # def get_check_in_check_out_date_and_time(self):
     #     return {"check_in": self.check_in_date_time_edit.dateTime(),
@@ -114,20 +123,45 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
 
         frame.service_id = service[0]
         frame.spinbox = spinbox
+        frame.delete_push_button = delete_push_button
         frame.service = service
 
         return frame
 
-    def enable_spinbox(self, frame):
-        pass
-
+    # This function, while unnecessary, is kept for consistency with other files
     def connect_signals_to_slots(self):
-
-        pass
+        self.change_button_signals()
 
     def change_button_signals(self):
-        pass
+        self.remove_button_signals()
 
+        if self.dialog_state == 'not editable':
+            self.left_button.clicked.connect(self.clicked_cancel_reservation_button.emit)
+            self.right_button.clicked.connect(self.clicked_edit_button.emit)
+            self.right_button.clicked.connect(self.change_dialog_state_and_button_texts)
+            self.right_button.clicked.connect(self.change_button_signals)
+
+        elif self.dialog_state == 'editable':
+            self.left_button.clicked.connect(self.clicked_cancel_edit_button.emit)
+            self.left_button.clicked.connect(self.change_dialog_state_and_button_texts)
+            self.left_button.clicked.connect(self.change_button_signals)
+            self.right_button.clicked.connect(self.clicked_confirm_reservation_edit_button.emit)
+
+    def change_dialog_state_and_button_texts(self):
+        if self.dialog_state == 'not editable':
+            self.dialog_state = 'editable'
+
+            self.left_button.setText("Cancel Edit")
+            self.right_button.setText("Confirm Reservation Edit")
+        else:
+            self.dialog_state = 'not editable'
+
+            self.left_button.setText("Cancel Reservation")
+            self.right_button.setText("Edit Reservation")
+
+    def remove_button_signals(self):
+        self.left_button.disconnect()
+        self.right_button.disconnect()
 
     def set_external_stylesheet(self):
         with open("../resources/styles/reservation_info_dialog.qss", "r") as file:
