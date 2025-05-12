@@ -87,10 +87,11 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
     #
     #     self.total_cost_value_label.setText(f"{room_cost + service_cost}")
 
-    def create_service_frame(self, service):
+    def create_service_frame(self, service, edit_state=False):
         # TODO: Make into another file, I guess?
 
         frame = QFrame(parent=self.availed_services_scroll_area_widget_contents)
+        # frame.setFixedHeight(50)
         frame.setFrameShape(QFrame.Shape.StyledPanel)
         frame.setFrameShadow(QFrame.Shadow.Raised)
         frame.setObjectName(f"{service[1].replace(" ", "_")}_frame")
@@ -109,7 +110,7 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
         spinbox = QSpinBox(parent=frame)
         spinbox.setObjectName(f"{service[1].replace(" ", "_")}_spinbox")
         spinbox.setFixedWidth(60)
-        spinbox.setEnabled(False)
+        spinbox.setEnabled(edit_state)
         spinbox.setMinimum(1)
         spinbox.setMaximum(99)
         spinbox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
@@ -123,7 +124,7 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
         delete_push_button.setMaximumSize(QSize(25, 25))
         delete_push_button.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         delete_push_button.setObjectName(f"{service[1].replace(" ", "_")}pushButton_3")
-        delete_push_button.setEnabled(False)
+        delete_push_button.setEnabled(edit_state)
         h_layout.addWidget(delete_push_button)
 
         frame.service_id = service[0]
@@ -132,6 +133,17 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
         frame.service = service
 
         return frame
+
+    def clear_availed_services_layout(self):
+        layout = self.availed_services_scroll_area_grid_layout
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget:
+                widget.setParent(None)
+                widget.deleteLater()
+            elif item.spacerItem():
+                layout.removeItem(item)
 
     # This function, while unnecessary, is kept for consistency with other files
     def connect_signals_to_slots(self):

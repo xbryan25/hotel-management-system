@@ -12,6 +12,7 @@ class ReservationInfoDialogController:
         self.selected_reservation_id = selected_reservation_id
 
         self.service_frames = []
+        self.edit_state = False
 
         self.get_data_from_reservation()
         self.set_room_number_to_available_temporarily()
@@ -66,6 +67,8 @@ class ReservationInfoDialogController:
     def enable_all_editable_fields(self, state):
         self.view.enable_all_editable_fields(self.service_frames, state)
 
+        self.edit_state = state
+
     def update_total_reservation_cost(self, current_room=None):
 
         # Room section
@@ -106,18 +109,25 @@ class ReservationInfoDialogController:
     #     self.view.update_service_cost_value_label(float(total_services_cost))
 
     def create_service_frames(self, services):
-        for i in range(len(services)):
-            frame = self.view.create_service_frame(services[i])
+        self.view.clear_availed_services_layout()
+        self.service_frames.clear()
 
+        for i, service in enumerate(services):
+            frame = self.view.create_service_frame(service, self.edit_state)
             self.view.availed_services_scroll_area_grid_layout.addWidget(frame, i, 0, 1, 1)
-
             self.service_frames.append(frame)
 
             # lambda is used to not received the value given by valueChanged
             frame.spinbox.valueChanged.connect(lambda _: self.update_total_reservation_cost())
+            frame.delete_push_button.clicked.connect(lambda _, f=frame.service_id: self.delete_service(f))
 
         v_spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-        self.view.availed_services_scroll_area_grid_layout.addItem(v_spacer, len(services), 0, 1, 1)
+        self.view.availed_services_scroll_area_grid_layout.addItem(v_spacer, len(services), 0)
+
+    def delete_service(self, service_id_to_delete):
+        self.services_model.remove_service_by_id(service_id_to_delete)
+        self.create_service_frames(self.services_model.get_all())
+        self.update_total_reservation_cost()
 
     def get_data_from_reservation(self):
         self.data_from_reservation = self.db_driver.reserved_room_queries.get_reservation_details(
