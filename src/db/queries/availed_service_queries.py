@@ -7,7 +7,7 @@ class AvailedServiceQueries:
         self.cursor = cursor
 
     def get_availed_services_from_avail_date(self, avail_date):
-        sql = f"""SELECT services.service_name, availedservices.quantity
+        sql = f"""SELECT services.service_id, services.service_name, availedservices.quantity
                                 FROM availedservices
                                 LEFT JOIN services ON availedservices.service_id = services.service_id
                                 WHERE avail_date=%s"""
@@ -37,6 +37,8 @@ class AvailedServiceQueries:
 
     def add_availed_services(self, availed_service_information, guest_id):
 
+        date_time_now = datetime.now()
+
         for service_id, quantity in availed_service_information.items():
 
             sql = """INSERT INTO availedservices
@@ -48,7 +50,7 @@ class AvailedServiceQueries:
             new_avail_id = f"avail-{int(latest_avail_id[9:]) + 1:06}"
 
             values = (new_avail_id,
-                      datetime.now(),
+                      date_time_now,
                       quantity,
                       guest_id,
                       service_id)

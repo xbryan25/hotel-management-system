@@ -1,6 +1,6 @@
-from PyQt6.QtWidgets import QDialog, QSpacerItem, QFrame, QHBoxLayout, QLabel, QCheckBox, QSizePolicy, QSpinBox
+from PyQt6.QtWidgets import QDialog, QSpacerItem, QFrame, QHBoxLayout, QLabel, QCheckBox, QSizePolicy, QSpinBox, QPushButton
 from PyQt6.QtGui import QCursor, QFont
-from PyQt6.QtCore import pyqtSignal, QDateTime, Qt
+from PyQt6.QtCore import pyqtSignal, QDateTime, Qt, QSize
 
 from datetime import datetime
 
@@ -73,44 +73,50 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
     #
     #     self.total_cost_value_label.setText(f"{room_cost + service_cost}")
 
-    # def create_service_frame(self, service):
-    #
-    #     frame = QFrame(parent=self.services_scroll_area_contents)
-    #     frame.setFrameShape(QFrame.Shape.StyledPanel)
-    #     frame.setFrameShadow(QFrame.Shadow.Raised)
-    #     frame.setObjectName(f"{service[1].replace(" ", "_")}_frame")
-    #
-    #     h_layout = QHBoxLayout(frame)
-    #     h_layout.setObjectName(f"{service[1].replace(" ", "_")}_h_layout")
-    #
-    #     service_name_label = QLabel(parent=frame)
-    #     service_name_label.setObjectName(f"{service[1].replace(" ", "_")}_label")
-    #     service_name_label.setText(service[1])
-    #     service_name_label.setFont(QFont("Inter", 12, QFont.Weight.Normal))
-    #     h_layout.addWidget(service_name_label)
-    #
-    #     checkbox = QCheckBox(parent=frame)
-    #     checkbox.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-    #     checkbox.setText("")
-    #     checkbox.setObjectName(f"{service[1].replace(" ", "_")}_checkbox")
-    #     h_layout.addWidget(checkbox)
-    #
-    #     spinbox = QSpinBox(parent=frame)
-    #     spinbox.setObjectName(f"{service[1].replace(" ", "_")}_spinbox")
-    #     spinbox.setEnabled(False)
-    #     spinbox.setMinimum(1)
-    #     spinbox.setMaximum(99)
-    #     spinbox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
-    #     h_layout.addWidget(spinbox)
-    #
-    #     checkbox.checkStateChanged.connect(lambda _, f=frame: self.enable_spinbox(f))
-    #
-    #     frame.service_id = service[0]
-    #     frame.spinbox = spinbox
-    #     frame.service = service
-    #     frame.is_spinbox_enabled = False
-    #
-    #     return frame
+    def create_service_frame(self, service):
+        # TODO: Make into another file, I guess?
+
+        frame = QFrame(parent=self.availed_services_scroll_area_widget_contents)
+        frame.setFrameShape(QFrame.Shape.StyledPanel)
+        frame.setFrameShadow(QFrame.Shadow.Raised)
+        frame.setObjectName(f"{service[1].replace(" ", "_")}_frame")
+        # frame.setStyleSheet("background-color: blue;")
+        # frame.setMinimumSize(QSize(16777215, 20))
+
+        h_layout = QHBoxLayout(frame)
+        h_layout.setObjectName(f"{service[1].replace(" ", "_")}_h_layout")
+
+        service_name_label = QLabel(parent=frame)
+        service_name_label.setObjectName(f"{service[1].replace(" ", "_")}_label")
+        service_name_label.setText(service[1])
+        service_name_label.setFont(QFont("Inter", 14, QFont.Weight.Normal))
+        h_layout.addWidget(service_name_label)
+
+        spinbox = QSpinBox(parent=frame)
+        spinbox.setObjectName(f"{service[1].replace(" ", "_")}_spinbox")
+        spinbox.setFixedWidth(60)
+        spinbox.setEnabled(False)
+        spinbox.setMinimum(1)
+        spinbox.setMaximum(99)
+        spinbox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+        h_layout.addWidget(spinbox)
+
+        h_spacer = QSpacerItem(20, 20, QSizePolicy.Policy.Fixed,
+                                         QSizePolicy.Policy.Minimum)
+        h_layout.addItem(h_spacer)
+
+        delete_push_button = QPushButton(parent=frame)
+        delete_push_button.setMaximumSize(QSize(25, 25))
+        delete_push_button.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        delete_push_button.setObjectName(f"{service[1].replace(" ", "_")}pushButton_3")
+        delete_push_button.setEnabled(False)
+        h_layout.addWidget(delete_push_button)
+
+        frame.service_id = service[0]
+        frame.spinbox = spinbox
+        frame.service = service
+
+        return frame
 
     def enable_spinbox(self, frame):
         pass

@@ -70,6 +70,8 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         self.total_cost_value_label.setText(f"{room_cost + service_cost}")
 
     def create_service_frame(self, service):
+        # TODO: Make this into a file, I guess?
+
 
         frame = QFrame(parent=self.services_scroll_area_contents)
         frame.setFrameShape(QFrame.Shape.StyledPanel)

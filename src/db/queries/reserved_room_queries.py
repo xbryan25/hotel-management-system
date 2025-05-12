@@ -37,7 +37,7 @@ class ReservedRoomQueries:
     def get_reservation_details(self, reservation_id):
         # TODO: Convert to dictionary soon
 
-        sql = f"""SELECT r.reservation_date, r.check_in_date, r.check_out_date, r.payment_status, 
+        sql = f"""SELECT r.reservation_date, r.last_modified, r.check_in_date, r.check_out_date, r.payment_status, 
                     r.total_reservation_cost, r.reservation_status, r.guest_id, r.room_number,
                     CAST(r.total_reservation_cost - COALESCE(SUM(p.amount), 0) AS SIGNED) AS remaining_balance
                     FROM reservedrooms r

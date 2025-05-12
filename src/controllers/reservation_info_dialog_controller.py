@@ -11,7 +11,7 @@ class ReservationInfoDialogController:
         self.db_driver = db_driver
         self.selected_reservation_id = selected_reservation_id
 
-        # self.service_frames = []
+        self.service_frames = []
 
         # self.connect_signals_to_slots()
 
@@ -20,7 +20,7 @@ class ReservationInfoDialogController:
         self.set_models()
         self.load_data_from_reservation()
 
-        # self.create_service_frames(self.services_model.get_all())
+        self.create_service_frames(self.services_model.get_all())
 
     def connect_signals_to_slots(self):
         self.view.room_type_changed.connect(self.update_models)
@@ -57,47 +57,45 @@ class ReservationInfoDialogController:
 
         self.view.update_service_cost_value_label(float(total_services_cost))
 
-    # def create_service_frames(self, services):
-    #     for i in range(len(services)):
-    #         frame = self.view.create_service_frame(services[i])
-    #
-    #         self.view.services_scroll_area_grid_layout.addWidget(frame, i, 0, 1, 1)
-    #
-    #         self.service_frames.append(frame)
-    #
-    #         frame.spinbox.valueChanged.connect(lambda: self.update_total_service_cost(self.service_frames))
-    #
-    #     v_spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-    #
-    #     self.view.services_scroll_area_grid_layout.addItem(v_spacer, len(services), 0, 1, 1)
+    def create_service_frames(self, services):
+        for i in range(len(services)):
+            frame = self.view.create_service_frame(services[i])
+
+            self.view.availed_services_scroll_area_grid_layout.addWidget(frame, i, 0, 1, 1)
+
+            self.service_frames.append(frame)
+
+            frame.spinbox.valueChanged.connect(lambda: self.update_total_service_cost(self.service_frames))
+
+        v_spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.view.availed_services_scroll_area_grid_layout.addItem(v_spacer, len(services), 0, 1, 1)
 
     def get_data_from_reservation(self):
         self.data_from_reservation = self.db_driver.reserved_room_queries.get_reservation_details(
             self.selected_reservation_id)
 
     def set_room_number_to_available_temporarily(self):
-        self.db_driver.room_queries.set_room_status(self.data_from_reservation[7], "available", set_type="temporary")
+        self.db_driver.room_queries.set_room_status(self.data_from_reservation[8], "available", set_type="temporary")
 
     def load_data_from_reservation(self):
 
-
-        guest_name = self.db_driver.guest_queries.get_name_from_guest_id(self.data_from_reservation[6])
-        room_type = self.db_driver.room_queries.get_room_type(self.data_from_reservation[7])
+        guest_name = self.db_driver.guest_queries.get_name_from_guest_id(self.data_from_reservation[7])
+        room_type = self.db_driver.room_queries.get_room_type(self.data_from_reservation[8])
 
         self.view.reservation_id_value_label.setText(self.selected_reservation_id)
-        self.view.reservation_status_value_label.setText(self.data_from_reservation[5])
-        self.view.payment_status_value_label.setText(self.data_from_reservation[3])
-        self.view.total_reservation_cost_value_label.setText(f"₱{self.data_from_reservation[4]}")
+        self.view.reservation_status_value_label.setText(self.data_from_reservation[6])
+        self.view.payment_status_value_label.setText(self.data_from_reservation[4])
+        self.view.total_reservation_cost_value_label.setText(f"₱{self.data_from_reservation[5]}")
 
-        self.view.guest_id_value_label.setText(self.data_from_reservation[6])
+        self.view.guest_id_value_label.setText(self.data_from_reservation[7])
         self.view.guest_name_value_label.setText(guest_name)
 
-        self.view.check_in_date_time_edit.setDateTime(QDateTime(self.data_from_reservation[1]))
-        self.view.check_out_date_time_edit.setDateTime(QDateTime(self.data_from_reservation[2]))
+        self.view.check_in_date_time_edit.setDateTime(QDateTime(self.data_from_reservation[2]))
+        self.view.check_out_date_time_edit.setDateTime(QDateTime(self.data_from_reservation[3]))
 
-        self.view.remaining_balance_value_label.setText(f"₱{self.data_from_reservation[8]}")
+        self.view.remaining_balance_value_label.setText(f"₱{self.data_from_reservation[9]}")
 
-        self.view.room_number_combobox.setCurrentText(self.data_from_reservation[7])
+        self.view.room_number_combobox.setCurrentText(self.data_from_reservation[8])
         self.view.room_type_combobox.setCurrentText(room_type)
 
     def set_models(self):
@@ -115,8 +113,8 @@ class ReservationInfoDialogController:
         self.view.room_type_combobox.setModel(self.available_room_types_model)
         self.view.room_type_combobox.blockSignals(False)
 
-        # available_services = self.db_driver.service_queries.get_all_services()
-        # self.services_model = ServicesModel(available_services)
+        available_services = self.db_driver.availed_service_queries.get_availed_services_from_avail_date(self.data_from_reservation[1])
+        self.services_model = ServicesModel(available_services)
 
     def update_models(self, room_type):
 
