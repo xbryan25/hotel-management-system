@@ -4,6 +4,7 @@ from models import ReservationModel
 from views import NewReservationDialog, ReservationInfoDialog
 from views.message_dialogs import ConfirmationDialog, FeedbackDialog
 from controllers.new_reservation_dialog_controller import NewReservationDialogController
+from controllers.reservation_info_dialog_controller import ReservationInfoDialogController
 
 
 class ReservationsPageController:
@@ -31,8 +32,14 @@ class ReservationsPageController:
                                                  subheader_message="Please try again later.")
             self.no_room_dialog.exec()
 
-    def open_reservation_info_dialog(self):
+    def open_reservation_info_dialog(self, index):
+        selected_reservation_id = index.sibling(index.row(), 0).data()
+
         self.reservation_info_dialog = ReservationInfoDialog()
+        self.reservation_info_dialog_controller = ReservationInfoDialogController(self.reservation_info_dialog,
+                                                                                  self.db_driver,
+                                                                                  selected_reservation_id)
+
         self.reservation_info_dialog.exec()
 
     def connect_signals_to_slots(self):
@@ -65,7 +72,7 @@ class ReservationsPageController:
                                   "check_out_date": datetime.strptime(check_out_date.strip(), "%b %d, %Y"),
                                   "actual_check_in_date": datetime.now(),
                                   "actual_check_out_date": None,
-                                  "guest_id": self.db_driver.reserved_room_queries.get_guest_id_from_reservation(selected_reservation_id),
+                                  "guest_id": self.db_driver.reserved_room_queries.get_reservation_details('guest_id', selected_reservation_id),
                                   "room_number": reservation_room_number}
 
                 self.db_driver.booked_room_queries.add_booked_room(booking_inputs)

@@ -169,6 +169,7 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         reservation_inputs = {}
 
         reservation_inputs.update({"reservation_date": datetime.now()})
+        reservation_inputs.update({"last_modified": datetime.now()})
         reservation_inputs.update({"payment_status": "not paid"})
         reservation_inputs.update({"check_in_date": self.check_in_date_time_edit.dateTime().toPyDateTime()})
         reservation_inputs.update({"check_out_date": self.check_out_date_time_edit.dateTime().toPyDateTime()})

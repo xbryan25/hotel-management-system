@@ -19,7 +19,7 @@ class ReservedRoomQueries:
         self.cursor.execute(sql, values)
         self.db.commit()
 
-    def get_reservation_details(self, column, reservation_id):
+    def get_specific_reservation_details(self, column, reservation_id):
         allowed_columns = {'reservation_date', 'check_in_date', 'check_out_date', 'payment_status',
                            'total_reservation_cost', 'reservation_status', 'guest_id', 'room_number'}
 
@@ -33,6 +33,26 @@ class ReservedRoomQueries:
         result = self.cursor.fetchone()
 
         return result[0] if result else None
+
+    def get_reservation_details(self, reservation_id):
+        # TODO: Convert to dictionary soon
+
+        sql = f"""SELECT r.reservation_date, r.check_in_date, r.check_out_date, r.payment_status, 
+                    r.total_reservation_cost, r.reservation_status, r.guest_id, r.room_number,
+                    CAST(r.total_reservation_cost - COALESCE(SUM(p.amount), 0) AS SIGNED) AS remaining_balance
+                    FROM reservedrooms r
+                    JOIN guests ON r.guest_id = guests.guest_id
+                    LEFT JOIN paidrooms p ON r.room_number = p.room_number
+                    AND p.transaction_date BETWEEN r.reservation_date AND r.check_in_date
+                    WHERE r.reservation_id = %s
+                    GROUP BY r.reservation_id"""
+
+        values = (reservation_id,)
+
+        self.cursor.execute(sql, values)
+        result = self.cursor.fetchone()
+
+        return result if result else None
 
     def get_all_reservations(self, sort_by="Reservation ID", sort_type="Ascending", view_type="Reservations",
                              billing_view_mode=False):
@@ -61,7 +81,7 @@ class ReservedRoomQueries:
                             FROM reservedrooms r
                             JOIN guests ON r.guest_id = guests.guest_id
                             LEFT JOIN paidrooms p ON r.room_number = p.room_number
-                            AND p.transaction_date BETWEEN r.reservation_date AND r.check_out_date
+                            AND p.transaction_date BETWEEN r.reservation_date AND r.check_in_date
                             {view_type_dict[view_type]}
                             GROUP BY r.reservation_id"""
 

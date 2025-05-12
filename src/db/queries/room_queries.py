@@ -18,14 +18,27 @@ class RoomQueries:
         else:
             return False
 
-    def set_room_status(self, room_number, room_status):
+    def set_room_status(self, room_number, room_status, set_type="final"):
 
         sql = """UPDATE rooms SET rooms.availability_status=%s WHERE rooms.room_number=%s;"""
         values = (room_status, room_number)
 
         self.cursor.execute(sql, values)
 
-        self.db.commit()
+        if set_type == "final":
+            self.db.commit()
+
+        # If set_type == "temporary", don't commit to the database!
+
+    def get_room_type(self, room_number):
+        sql = "SELECT rooms.room_type FROM rooms WHERE rooms.room_number=%s"
+        values = (room_number,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        return result[0] if result else None
 
     def get_latest_room_number(self):
 

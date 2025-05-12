@@ -9,6 +9,11 @@ from views import ConfirmationDialog, FeedbackDialog
 
 
 class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
+    room_type_changed = pyqtSignal(str)
+    room_changed = pyqtSignal(str)
+    date_time_changed = pyqtSignal(str)
+    spinbox_enabled = pyqtSignal()
+    clicked_reservation = pyqtSignal()
 
     def __init__(self):
         super().__init__()
