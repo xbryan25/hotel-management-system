@@ -7,7 +7,7 @@ class AvailedServiceQueries:
         self.cursor = cursor
 
     def get_availed_services_from_avail_date(self, avail_date):
-        sql = f"""SELECT services.service_id, services.service_name, availedservices.quantity
+        sql = f"""SELECT services.service_id, services.service_name, availedservices.quantity, services.rate
                                 FROM availedservices
                                 LEFT JOIN services ON availedservices.service_id = services.service_id
                                 WHERE avail_date=%s"""

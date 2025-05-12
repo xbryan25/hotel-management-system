@@ -14,11 +14,17 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
     clicked_cancel_reservation_button = pyqtSignal()
     clicked_confirm_reservation_edit_button = pyqtSignal()
 
+    room_type_changed = pyqtSignal(str)
+    room_changed = pyqtSignal(str)
+    date_time_changed = pyqtSignal(str)
+
     def __init__(self):
         super().__init__()
         self.setupUi(self)
 
         self.dialog_state = 'not editable'
+
+        self.update_current_date_and_time()
 
         self.connect_signals_to_slots()
 
@@ -41,27 +47,26 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
             service_frame.spinbox.setEnabled(state)
             service_frame.delete_push_button.setEnabled(state)
 
-    # def get_check_in_check_out_date_and_time(self):
-    #     return {"check_in": self.check_in_date_time_edit.dateTime(),
-    #             "check_out": self.check_out_date_time_edit.dateTime()}
+    def get_check_in_check_out_date_and_time(self):
+        return {"check_in": self.check_in_date_time_edit.dateTime(),
+                "check_out": self.check_out_date_time_edit.dateTime()}
 
-    # def update_current_date_and_time(self):
-    #     self.check_in_date_time_edit.setMinimumDateTime(QDateTime.currentDateTime().addDays(1))
-    #     self.check_in_date_time_edit.setDateTime(QDateTime.currentDateTime().addDays(1))
-    #
-    #     self.check_out_date_time_edit.setMinimumDateTime(QDateTime.currentDateTime().addDays(2))
-    #     self.check_out_date_time_edit.setDateTime(QDateTime.currentDateTime().addDays(2))
+    def update_current_date_and_time(self):
+        self.check_in_date_time_edit.setMinimumDateTime(QDateTime.currentDateTime().addDays(1))
+        self.check_in_date_time_edit.setDateTime(QDateTime.currentDateTime().addDays(1))
 
-    # def update_check_out_date_time_edit_min_date(self):
-    #     check_in_date_time_current_value = self.check_in_date_time_edit.dateTime()
-    #
-    #     self.check_out_date_time_edit.setMinimumDateTime(check_in_date_time_current_value.addDays(1))
-    #     self.check_out_date_time_edit.setDateTime(check_in_date_time_current_value.addDays(1))
-    #
-    # def update_room_cost_value_label(self, room_cost):
-    #     self.room_cost_value_label.setText(str(room_cost))
-    #
-    #     self.update_total_cost_value_label()
+        self.check_out_date_time_edit.setMinimumDateTime(QDateTime.currentDateTime().addDays(2))
+        self.check_out_date_time_edit.setDateTime(QDateTime.currentDateTime().addDays(2))
+
+    def update_check_out_date_time_edit_min_date(self):
+        check_in_date_time_current_value = self.check_in_date_time_edit.dateTime()
+
+        self.check_out_date_time_edit.setMinimumDateTime(check_in_date_time_current_value.addDays(1))
+        self.check_out_date_time_edit.setDateTime(check_in_date_time_current_value.addDays(1))
+
+    def update_total_reservation_cost(self, total_reservation_cost):
+        self.total_reservation_cost_value_label.setText(f"₱{int(total_reservation_cost)}")
+
     #
     # def update_service_cost_value_label(self, total_service_cost):
     #
@@ -130,6 +135,17 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
 
     # This function, while unnecessary, is kept for consistency with other files
     def connect_signals_to_slots(self):
+        self.check_in_date_time_edit.dateTimeChanged.connect(self.update_check_out_date_time_edit_min_date)
+
+        self.check_in_date_time_edit.dateTimeChanged.connect(
+            lambda: self.date_time_changed.emit(self.room_number_combobox.currentText()))
+
+        self.check_out_date_time_edit.dateTimeChanged.connect(
+            lambda: self.date_time_changed.emit(self.room_number_combobox.currentText()))
+
+        self.room_type_combobox.currentTextChanged.connect(self.room_type_changed.emit)
+        self.room_number_combobox.currentTextChanged.connect(self.room_changed.emit)
+
         self.change_button_signals()
 
     def change_button_signals(self):

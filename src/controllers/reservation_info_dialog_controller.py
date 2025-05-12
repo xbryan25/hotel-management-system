@@ -13,8 +13,6 @@ class ReservationInfoDialogController:
 
         self.service_frames = []
 
-        self.connect_signals_to_slots()
-
         self.get_data_from_reservation()
         self.set_room_number_to_available_temporarily()
         self.set_models()
@@ -22,15 +20,15 @@ class ReservationInfoDialogController:
 
         self.create_service_frames(self.services_model.get_all())
 
+        self.connect_signals_to_slots()
+
+        self.temp_current_room = self.data_from_reservation[8]
+
     def connect_signals_to_slots(self):
-        # self.view.room_type_changed.connect(self.update_models)
-        #
-        # self.view.room_changed.connect(self.calculate_room_cost)
-        # self.view.date_time_changed.connect(self.calculate_room_cost)
-        #
-        # self.view.spinbox_enabled.connect(lambda: self.update_total_service_cost(self.service_frames))
-        #
-        # self.view.clicked_reservation.connect(self.make_reservation)
+        self.view.room_type_changed.connect(self.update_models)
+
+        self.view.room_changed.connect(lambda current_room: self.update_total_reservation_cost(current_room=current_room))
+        self.view.date_time_changed.connect(lambda current_room: self.update_total_reservation_cost(current_room=current_room))
 
         self.view.clicked_edit_button.connect(lambda: self.enable_all_editable_fields(True))
 
@@ -68,30 +66,44 @@ class ReservationInfoDialogController:
     def enable_all_editable_fields(self, state):
         self.view.enable_all_editable_fields(self.service_frames, state)
 
-    def calculate_room_cost(self, current_room):
+    def update_total_reservation_cost(self, current_room=None):
+
+        # Room section
+        if current_room:
+            self.temp_current_room = current_room
+
         check_in_check_out_date_time = self.view.get_check_in_check_out_date_and_time()
 
         seconds = check_in_check_out_date_time["check_in"].secsTo(check_in_check_out_date_time["check_out"])
 
         hours = seconds / 3600
 
-        current_room_cost = self.available_room_numbers_model.get_cost_of_room(current_room)
+        current_room_cost = self.available_room_numbers_model.get_cost_of_room(self.temp_current_room)
 
         total_room_cost = (((hours-1)//24) + 1) * current_room_cost
 
-        self.view.update_room_cost_value_label(total_room_cost)
-
-    def update_total_service_cost(self, service_frames):
+        # Services section
 
         total_services_cost = 0
 
-        for service_frame in service_frames:
-            if service_frame.is_spinbox_enabled:
-                price = service_frame.service[2]
-                quantity = service_frame.spinbox.value()
-                total_services_cost += price * quantity
+        for service_frame in self.service_frames:
+            price = service_frame.service[3]
+            quantity = service_frame.spinbox.value()
+            total_services_cost += price * quantity
 
-        self.view.update_service_cost_value_label(float(total_services_cost))
+        self.view.update_total_reservation_cost(total_room_cost + total_services_cost)
+
+    # def update_total_service_cost(self, service_frames):
+    #
+    #     total_services_cost = 0
+    #
+    #     for service_frame in service_frames:
+    #         if service_frame.is_spinbox_enabled:
+    #             price = service_frame.service[2]
+    #             quantity = service_frame.spinbox.value()
+    #             total_services_cost += price * quantity
+    #
+    #     self.view.update_service_cost_value_label(float(total_services_cost))
 
     def create_service_frames(self, services):
         for i in range(len(services)):
@@ -101,7 +113,8 @@ class ReservationInfoDialogController:
 
             self.service_frames.append(frame)
 
-            frame.spinbox.valueChanged.connect(lambda: self.update_total_service_cost(self.service_frames))
+            # lambda is used to not received the value given by valueChanged
+            frame.spinbox.valueChanged.connect(lambda _: self.update_total_reservation_cost())
 
         v_spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
         self.view.availed_services_scroll_area_grid_layout.addItem(v_spacer, len(services), 0, 1, 1)
