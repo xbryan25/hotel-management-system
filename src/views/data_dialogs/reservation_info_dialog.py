@@ -40,6 +40,10 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
     def load_proceed_button(self):
         self.left_button.setVisible(False)
 
+    def hide_remaining_balance(self):
+        self.remaining_balance_label.setVisible(False)
+        self.remaining_balance_value_label.setVisible(False)
+
     def show_add_service_button(self, state):
         self.add_service_button.setVisible(state)
 

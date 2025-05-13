@@ -22,7 +22,7 @@ class ReservationInfoDialogController:
         if self.view_type == 'current':
             self.set_room_number_to_available(set_type="temporary")
         else:
-            self.load_proceed_button()
+            self.setup_past_view_mode()
 
         self.set_models()
         self.load_data_from_reservation()
@@ -223,8 +223,9 @@ class ReservationInfoDialogController:
 
         self.edit_state = state
 
-    def load_proceed_button(self):
+    def setup_past_view_mode(self):
         self.view.load_proceed_button()
+        self.view.hide_remaining_balance()
 
     def update_total_reservation_cost(self, current_room=None):
 
