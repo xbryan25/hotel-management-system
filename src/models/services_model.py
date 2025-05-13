@@ -21,8 +21,11 @@ class ServicesModel(QAbstractTableModel):
     def add_service(self, service: dict):
         self._services.append(service)
 
-    def remove_service(self, name: str):
+    def remove_service_by_name(self, name: str):
         self._services = [s for s in self._services if s["name"] != name]
+
+    def remove_service_by_id(self, service_id: str):
+        self._services = [s for s in self._services if s[0] != service_id]
 
     def update_data(self, services):
         self.beginResetModel()

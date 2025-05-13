@@ -62,6 +62,19 @@ class GuestQueries:
 
         return list_result[0]
 
+    def get_name_from_guest_id(self, guest_id):
+        sql = f"""SELECT guests.name
+                            FROM guests
+                            WHERE guests.guest_id=%s;"""
+
+        values = (guest_id,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        return result[0]
+
     def get_guest_id_from_name(self, guest_name):
 
         sql = f"""SELECT guests.guest_id

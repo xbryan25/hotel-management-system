@@ -1,9 +1,10 @@
 from datetime import datetime
 
 from models import ReservationModel
-from views import NewReservationDialog
+from views import NewReservationDialog, ReservationInfoDialog
 from views.message_dialogs import ConfirmationDialog, FeedbackDialog
 from controllers.new_reservation_dialog_controller import NewReservationDialogController
+from controllers.reservation_info_dialog_controller import ReservationInfoDialogController
 
 
 class ReservationsPageController:
@@ -31,6 +32,27 @@ class ReservationsPageController:
                                                  subheader_message="Please try again later.")
             self.no_room_dialog.exec()
 
+    def open_reservation_info_dialog(self, index):
+        selected_reservation_id = index.sibling(index.row(), 0).data()
+
+        selected_reservation_status = self.db_driver.reserved_room_queries.get_specific_reservation_details('reservation_status',
+                                                                                                            selected_reservation_id)
+
+        if selected_reservation_status == 'pending':
+            view_type = 'current'
+        else:
+            view_type = 'past'
+
+        self.reservation_info_dialog = ReservationInfoDialog(view_type)
+        self.reservation_info_dialog_controller = ReservationInfoDialogController(self.reservation_info_dialog,
+                                                                                  self.db_driver,
+                                                                                  selected_reservation_id,
+                                                                                  view_type=view_type)
+
+        self.reservation_info_dialog.exec()
+
+        self.update_reservations_table_view()
+
     def connect_signals_to_slots(self):
         self.view.sort_by_combobox.currentTextChanged.connect(self.update_reservations_table_view)
         self.view.sort_type_combobox.currentTextChanged.connect(self.update_reservations_table_view)
@@ -38,7 +60,7 @@ class ReservationsPageController:
 
         self.view.clicked_add_reservation_button.connect(self.open_new_reservation_dialog)
 
-        self.view.clicked_info_button.connect(lambda: print("clicked info button"))
+        self.view.clicked_info_button.connect(self.open_reservation_info_dialog)
         self.view.clicked_check_in_button.connect(self.convert_reservation_to_booking)
 
     def convert_reservation_to_booking(self, index):
@@ -61,11 +83,11 @@ class ReservationsPageController:
                                   "check_out_date": datetime.strptime(check_out_date.strip(), "%b %d, %Y"),
                                   "actual_check_in_date": datetime.now(),
                                   "actual_check_out_date": None,
-                                  "guest_id": self.db_driver.reserved_room_queries.get_guest_id_from_reservation(selected_reservation_id),
+                                  "guest_id": self.db_driver.reserved_room_queries.get_specific_reservation_details('guest_id', selected_reservation_id),
                                   "room_number": reservation_room_number}
 
                 self.db_driver.booked_room_queries.add_booked_room(booking_inputs)
-                self.db_driver.reserved_room_queries.set_confirmed_reservation(selected_reservation_id)
+                self.db_driver.reserved_room_queries.set_reservation_status('confirmed', selected_reservation_id)
                 self.db_driver.room_queries.set_room_status(reservation_room_number, 'occupied')
 
                 self.update_reservations_table_view()

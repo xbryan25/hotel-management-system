@@ -7,3 +7,4 @@ from .reservation_model import ReservationModel
 from .rooms_model import RoomsModel
 from .services_model import ServicesModel
 from .booking_model import BookingModel
+from .availed_services_model import AvailedServicesModel

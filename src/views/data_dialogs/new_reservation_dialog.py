@@ -70,6 +70,8 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         self.total_cost_value_label.setText(f"{room_cost + service_cost}")
 
     def create_service_frame(self, service):
+        # TODO: Make this into a file, I guess?
+
 
         frame = QFrame(parent=self.services_scroll_area_contents)
         frame.setFrameShape(QFrame.Shape.StyledPanel)
@@ -169,6 +171,7 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         reservation_inputs = {}
 
         reservation_inputs.update({"reservation_date": datetime.now()})
+        reservation_inputs.update({"last_modified": datetime.now()})
         reservation_inputs.update({"payment_status": "not paid"})
         reservation_inputs.update({"check_in_date": self.check_in_date_time_edit.dateTime().toPyDateTime()})
         reservation_inputs.update({"check_out_date": self.check_out_date_time_edit.dateTime().toPyDateTime()})
@@ -183,7 +186,8 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         availed_services_inputs = {}
 
         for frame in service_frames:
-            availed_services_inputs.update({frame.service_id: frame.spinbox.value()})
+            if frame.is_spinbox_enabled:
+                availed_services_inputs.update({frame.service_id: frame.spinbox.value()})
 
         return availed_services_inputs
 
