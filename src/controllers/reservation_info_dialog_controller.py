@@ -17,7 +17,7 @@ class ReservationInfoDialogController:
         self.edit_state = False
 
         self.get_data_from_reservation()
-        self.set_room_number_to_available_temporarily()
+        self.set_room_number_to_available(set_type="temporary")
         self.set_models()
         self.load_data_from_reservation()
 
@@ -112,9 +112,6 @@ class ReservationInfoDialogController:
 
             if self.confirmation_dialog.get_choice():
 
-                # Initially set to partially paid
-                self.db_driver.reserved_room_queries.set_payment_status(self.selected_reservation_id, 'partially paid')
-
                 reservation_inputs = self.view.get_reservation_inputs()
                 modified_availed_services_inputs = self.view.get_modified_availed_services_inputs(self.service_frames)
                 new_availed_services_inputs = self.view.get_new_availed_services_inputs(self.service_frames)
@@ -133,12 +130,16 @@ class ReservationInfoDialogController:
                                                                           reservation_inputs,
                                                                           date_time_now)
 
-                # TODO: Refund
-                # TODO: If different room is chosen, commit temporary available room
-
                 new_total = int(reservation_inputs['total_reservation_cost'])
                 amount_already_paid = self.original_data['total_reservation_cost'] - self.data_from_reservation[9]
 
+                if amount_already_paid > 0:
+                    self.db_driver.reserved_room_queries.set_payment_status(self.selected_reservation_id, 'partially paid')
+                else:
+                    self.db_driver.reserved_room_queries.set_payment_status(self.selected_reservation_id,
+                                                                            'not paid')
+
+                # For refund
                 if new_total < amount_already_paid:
                     amount_to_refund = amount_already_paid - new_total
 
@@ -153,6 +154,13 @@ class ReservationInfoDialogController:
                                                                     'room_number': self.data_from_reservation[8]})
 
                     self.db_driver.reserved_room_queries.set_payment_status(self.selected_reservation_id, 'fully paid')
+
+                if self.original_data['room_number'] != reservation_inputs["room_number"]:
+                    # Set old room number to 'available'
+                    self.set_room_number_to_available()
+
+                    # Set new room number to be 'reserved'
+                    self.db_driver.room_queries.set_room_status(reservation_inputs["room_number"], "reserved")
 
                 self.feedback_dialog = FeedbackDialog("Reservation edited successfully.", connected_view=self.view)
                 self.feedback_dialog.exec()
@@ -239,8 +247,8 @@ class ReservationInfoDialogController:
         self.data_from_reservation = self.db_driver.reserved_room_queries.get_reservation_details(
             self.selected_reservation_id)
 
-    def set_room_number_to_available_temporarily(self):
-        self.db_driver.room_queries.set_room_status(self.data_from_reservation[8], "available", set_type="temporary")
+    def set_room_number_to_available(self, set_type=None):
+        self.db_driver.room_queries.set_room_status(self.data_from_reservation[8], "available", set_type=set_type)
 
     def load_data_from_reservation(self):
 
