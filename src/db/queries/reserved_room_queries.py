@@ -82,7 +82,7 @@ class ReservedRoomQueries:
                             JOIN guests ON r.guest_id = guests.guest_id
                             LEFT JOIN paidrooms p ON r.room_number = p.room_number
                             AND p.transaction_date BETWEEN r.reservation_date AND r.check_in_date
-                            {view_type_dict[view_type]}
+                            {view_type_dict[view_type]}  AND r.reservation_status = 'pending'
                             GROUP BY r.reservation_id"""
 
         else:
