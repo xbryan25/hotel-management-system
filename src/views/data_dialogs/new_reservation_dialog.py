@@ -186,7 +186,8 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         availed_services_inputs = {}
 
         for frame in service_frames:
-            availed_services_inputs.update({frame.service_id: frame.spinbox.value()})
+            if frame.is_spinbox_enabled:
+                availed_services_inputs.update({frame.service_id: frame.spinbox.value()})
 
         return availed_services_inputs
 

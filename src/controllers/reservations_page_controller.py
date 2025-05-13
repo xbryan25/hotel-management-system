@@ -72,7 +72,7 @@ class ReservationsPageController:
                                   "check_out_date": datetime.strptime(check_out_date.strip(), "%b %d, %Y"),
                                   "actual_check_in_date": datetime.now(),
                                   "actual_check_out_date": None,
-                                  "guest_id": self.db_driver.reserved_room_queries.get_reservation_details('guest_id', selected_reservation_id),
+                                  "guest_id": self.db_driver.reserved_room_queries.get_specific_reservation_details('guest_id', selected_reservation_id),
                                   "room_number": reservation_room_number}
 
                 self.db_driver.booked_room_queries.add_booked_room(booking_inputs)
