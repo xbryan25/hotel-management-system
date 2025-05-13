@@ -13,6 +13,7 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
     clicked_cancel_edit_button = pyqtSignal()
     clicked_cancel_reservation_button = pyqtSignal()
     clicked_confirm_reservation_edit_button = pyqtSignal()
+    clicked_proceed_button = pyqtSignal()
 
     spinbox_enabled = pyqtSignal()
 
@@ -20,11 +21,12 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
     room_changed = pyqtSignal(str)
     date_time_changed = pyqtSignal(str)
 
-    def __init__(self):
+    def __init__(self, view_type):
         super().__init__()
         self.setupUi(self)
 
         self.dialog_state = 'not editable'
+        self.view_type = view_type
 
         self.update_current_date_and_time()
 
@@ -34,6 +36,9 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
         self.set_external_stylesheet()
 
         self.show_add_service_button(False)
+
+    def load_proceed_button(self):
+        self.left_button.setVisible(False)
 
     def show_add_service_button(self, state):
         self.add_service_button.setVisible(state)
@@ -166,18 +171,23 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
         self.right_button.setEnabled(state)
 
     def connect_signals_to_slots(self):
-        self.check_in_date_time_edit.dateTimeChanged.connect(self.update_check_out_date_time_edit_min_date)
+        if self.view_type == 'current':
+            self.check_in_date_time_edit.dateTimeChanged.connect(self.update_check_out_date_time_edit_min_date)
 
-        self.check_in_date_time_edit.dateTimeChanged.connect(
-            lambda: self.date_time_changed.emit(self.room_number_combobox.currentText()))
+            self.check_in_date_time_edit.dateTimeChanged.connect(
+                lambda: self.date_time_changed.emit(self.room_number_combobox.currentText()))
 
-        self.check_out_date_time_edit.dateTimeChanged.connect(
-            lambda: self.date_time_changed.emit(self.room_number_combobox.currentText()))
+            self.check_out_date_time_edit.dateTimeChanged.connect(
+                lambda: self.date_time_changed.emit(self.room_number_combobox.currentText()))
 
-        self.room_type_combobox.currentTextChanged.connect(self.room_type_changed.emit)
-        self.room_number_combobox.currentTextChanged.connect(self.room_changed.emit)
+            self.room_type_combobox.currentTextChanged.connect(self.room_type_changed.emit)
+            self.room_number_combobox.currentTextChanged.connect(self.room_changed.emit)
 
-        self.change_button_signals()
+            self.change_button_signals()
+
+        else:
+            self.change_dialog_state_and_button_texts()
+            self.right_button.clicked.connect(self.clicked_proceed_button.emit)
 
     def change_button_signals(self):
         self.remove_button_signals()
@@ -196,16 +206,20 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
             self.right_button.setEnabled(False)
 
     def change_dialog_state_and_button_texts(self):
-        if self.dialog_state == 'not editable':
-            self.dialog_state = 'editable'
 
-            self.left_button.setText("Cancel Edit")
-            self.right_button.setText("Confirm Reservation Edit")
+        if self.view_type == 'current':
+            if self.dialog_state == 'not editable':
+                self.dialog_state = 'editable'
+
+                self.left_button.setText("Cancel Edit")
+                self.right_button.setText("Confirm Reservation Edit")
+            else:
+                self.dialog_state = 'not editable'
+
+                self.left_button.setText("Cancel Reservation")
+                self.right_button.setText("Edit Reservation")
         else:
-            self.dialog_state = 'not editable'
-
-            self.left_button.setText("Cancel Reservation")
-            self.right_button.setText("Edit Reservation")
+            self.right_button.setText("Proceed")
 
     def get_reservation_inputs(self):
         reservation_inputs = {}
@@ -218,14 +232,14 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
         return reservation_inputs
 
     @staticmethod
-    def get_modified_availed_services_inputs(service_frames, set_to_cancelled=False):
+    def get_modified_availed_services_inputs(service_frames):
         availed_services_inputs = {}
 
         for frame in service_frames:
 
             if frame.service_type == 'availed':
 
-                if frame.is_spinbox_enabled and not set_to_cancelled:
+                if frame.is_spinbox_enabled:
                     avail_status = 'active'
                 else:
                     avail_status = 'cancelled'

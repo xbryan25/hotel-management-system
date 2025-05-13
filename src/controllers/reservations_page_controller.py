@@ -35,10 +35,19 @@ class ReservationsPageController:
     def open_reservation_info_dialog(self, index):
         selected_reservation_id = index.sibling(index.row(), 0).data()
 
-        self.reservation_info_dialog = ReservationInfoDialog()
+        selected_reservation_status = self.db_driver.reserved_room_queries.get_specific_reservation_details('reservation_status',
+                                                                                                            selected_reservation_id)
+
+        if selected_reservation_status == 'pending':
+            view_type = 'current'
+        else:
+            view_type = 'past'
+
+        self.reservation_info_dialog = ReservationInfoDialog(view_type)
         self.reservation_info_dialog_controller = ReservationInfoDialogController(self.reservation_info_dialog,
                                                                                   self.db_driver,
-                                                                                  selected_reservation_id)
+                                                                                  selected_reservation_id,
+                                                                                  view_type=view_type)
 
         self.reservation_info_dialog.exec()
 

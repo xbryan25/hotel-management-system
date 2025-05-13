@@ -8,16 +8,22 @@ from datetime import datetime
 
 
 class ReservationInfoDialogController:
-    def __init__(self, dialog, db_driver, selected_reservation_id):
+    def __init__(self, dialog, db_driver, selected_reservation_id, view_type='current'):
         self.view = dialog
         self.db_driver = db_driver
         self.selected_reservation_id = selected_reservation_id
+        self.view_type = view_type
 
         self.service_frames = []
         self.edit_state = False
 
         self.get_data_from_reservation()
-        self.set_room_number_to_available(set_type="temporary")
+
+        if self.view_type == 'current':
+            self.set_room_number_to_available(set_type="temporary")
+        else:
+            self.load_proceed_button()
+
         self.set_models()
         self.load_data_from_reservation()
 
@@ -65,6 +71,8 @@ class ReservationInfoDialogController:
     def compare_current_and_original_availed_services(self, current_availed_services):
         if not current_availed_services and self.availed_services_model.get_all():
             return True
+        elif len(current_availed_services) != len(self.availed_services_model.get_all()):
+            return True
 
         for current_availed_service in current_availed_services:
             availed_service_details = self.availed_services_model.get_availed_service_details(current_availed_service[0])
@@ -87,24 +95,29 @@ class ReservationInfoDialogController:
         return services
 
     def connect_signals_to_slots(self):
-        self.view.room_type_changed.connect(self.update_models)
 
-        self.view.room_changed.connect(lambda current_room: self.update_total_reservation_cost(current_room=current_room))
-        self.view.room_changed.connect(self.has_changes)
+        if self.view_type == 'current':
+            self.view.room_type_changed.connect(self.update_models)
 
-        self.view.date_time_changed.connect(lambda current_room: self.update_total_reservation_cost(current_room=current_room))
-        self.view.date_time_changed.connect(self.has_changes)
+            self.view.room_changed.connect(lambda current_room: self.update_total_reservation_cost(current_room=current_room))
+            self.view.room_changed.connect(self.has_changes)
 
-        self.view.clicked_edit_button.connect(lambda: self.enable_all_editable_fields(True))
+            self.view.date_time_changed.connect(lambda current_room: self.update_total_reservation_cost(current_room=current_room))
+            self.view.date_time_changed.connect(self.has_changes)
 
-        self.view.clicked_cancel_edit_button.connect(lambda: self.enable_all_editable_fields(False))
+            self.view.clicked_edit_button.connect(lambda: self.enable_all_editable_fields(True))
 
-        self.view.clicked_cancel_reservation_button.connect(lambda: self.edit_or_cancel_reservation('cancel'))
+            self.view.clicked_cancel_edit_button.connect(lambda: self.enable_all_editable_fields(False))
 
-        self.view.clicked_confirm_reservation_edit_button.connect(lambda: self.edit_or_cancel_reservation('edit'))
+            self.view.clicked_cancel_reservation_button.connect(lambda: self.edit_or_cancel_reservation('cancel'))
 
-        self.view.spinbox_enabled.connect(self.update_total_reservation_cost)
-        self.view.spinbox_enabled.connect(self.has_changes)
+            self.view.clicked_confirm_reservation_edit_button.connect(lambda: self.edit_or_cancel_reservation('edit'))
+
+            self.view.spinbox_enabled.connect(self.update_total_reservation_cost)
+            self.view.spinbox_enabled.connect(self.has_changes)
+
+        else:
+            self.view.clicked_proceed_button.connect(self.view.close)
 
     def edit_or_cancel_reservation(self, state):
 
@@ -136,11 +149,6 @@ class ReservationInfoDialogController:
                                                                     'transaction_date': datetime.now(),
                                                                     'guest_id': self.data_from_reservation[7],
                                                                     'room_number': self.data_from_reservation[8]})
-
-                modified_availed_services_inputs = self.view.get_modified_availed_services_inputs(self.service_frames,
-                                                                                                  set_to_cancelled=True)
-
-                self.db_driver.availed_service_queries.update_availed_services(modified_availed_services_inputs)
 
                 self.feedback_dialog = FeedbackDialog("Reservation cancelled successfully.", connected_view=self.view)
                 self.feedback_dialog.exec()
@@ -214,6 +222,9 @@ class ReservationInfoDialogController:
         self.view.enable_all_editable_fields(self.service_frames, state)
 
         self.edit_state = state
+
+    def load_proceed_button(self):
+        self.view.load_proceed_button()
 
     def update_total_reservation_cost(self, current_room=None):
 
