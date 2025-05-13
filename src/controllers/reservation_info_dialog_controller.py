@@ -112,6 +112,9 @@ class ReservationInfoDialogController:
 
             if self.confirmation_dialog.get_choice():
 
+                # Initially set to partially paid
+                self.db_driver.reserved_room_queries.set_payment_status(self.selected_reservation_id, 'partially paid')
+
                 reservation_inputs = self.view.get_reservation_inputs()
                 modified_availed_services_inputs = self.view.get_modified_availed_services_inputs(self.service_frames)
                 new_availed_services_inputs = self.view.get_new_availed_services_inputs(self.service_frames)
