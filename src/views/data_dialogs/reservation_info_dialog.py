@@ -128,6 +128,7 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
         h_layout.addWidget(delete_push_button)
 
         frame.service_id = service[0]
+        frame.service_name = service[1]
         frame.spinbox = spinbox
         frame.delete_push_button = delete_push_button
         frame.service = service

@@ -119,15 +119,25 @@ class ReservationInfoDialogController:
 
             # lambda is used to not received the value given by valueChanged
             frame.spinbox.valueChanged.connect(lambda _: self.update_total_reservation_cost())
-            frame.delete_push_button.clicked.connect(lambda _, f=frame.service_id: self.delete_service(f))
+            frame.delete_push_button.clicked.connect(lambda _, f_id=frame.service_id,
+                                                     f_name=frame.service_name: self.delete_service(f_id, f_name))
 
         v_spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
         self.view.availed_services_scroll_area_grid_layout.addItem(v_spacer, len(services), 0)
 
-    def delete_service(self, service_id_to_delete):
-        self.services_model.remove_service_by_id(service_id_to_delete)
-        self.create_service_frames(self.services_model.get_all())
-        self.update_total_reservation_cost()
+    def delete_service(self, service_id_to_delete, service_name_to_delete):
+        self.confirmation_dialog = ConfirmationDialog(f"Confirm removal of {service_name_to_delete}?",
+                                                      "This action cannot be undone.")
+
+        self.confirmation_dialog.exec()
+
+        if self.confirmation_dialog.get_choice():
+            self.services_model.remove_service_by_id(service_id_to_delete)
+            self.create_service_frames(self.services_model.get_all())
+            self.update_total_reservation_cost()
+
+            self.success_dialog = FeedbackDialog("Service removed successfully.")
+            self.success_dialog.exec()
 
     def get_data_from_reservation(self):
         self.data_from_reservation = self.db_driver.reserved_room_queries.get_reservation_details(
