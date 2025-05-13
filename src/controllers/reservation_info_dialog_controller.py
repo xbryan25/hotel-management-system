@@ -31,7 +31,7 @@ class ReservationInfoDialogController:
             'check_in_date': self.view.check_in_date_time_edit.dateTime(),
             'check_out_date': self.view.check_out_date_time_edit.dateTime(),
             'room_number': self.view.room_number_combobox.currentText(),
-            'availed_services': self.services_model.get_all(),
+            'availed_services': self.availed_services_model.get_all(),
             'total_reservation_cost': self.data_from_reservation[5]
         }
 
@@ -56,19 +56,33 @@ class ReservationInfoDialogController:
             self.view.enable_edit_reservation_button(True)
             return
 
-        # Compare availed services (you may need to sort or convert to set/dict)
-        if current_data['availed_services'] != self.original_data['availed_services']:
+        if self.compare_current_and_original_availed_services(current_data['availed_services']):
             self.view.enable_edit_reservation_button(True)
             return
 
         self.view.enable_edit_reservation_button(False)
 
+    def compare_current_and_original_availed_services(self, current_availed_services):
+        if not current_availed_services and self.availed_services_model.get_all():
+            return True
+
+        for current_availed_service in current_availed_services:
+            availed_service_details = self.availed_services_model.get_availed_service_details(current_availed_service[0])
+
+            if not availed_service_details:
+                return True
+            elif availed_service_details[2] != current_availed_service[2]:
+                return True
+
+        return False
+
     def get_services_from_frames(self):
         services = []
 
         for service_frame in self.service_frames:
-            services.append([service_frame.service_id, service_frame.service_name,
-                             service_frame.spinbox.value(), service_frame.service_rate])
+            if service_frame.is_spinbox_enabled:
+                services.append([service_frame.service_id, service_frame.service_name,
+                                 service_frame.spinbox.value(), service_frame.service_rate])
 
         return services
 
@@ -90,6 +104,7 @@ class ReservationInfoDialogController:
         self.view.clicked_confirm_reservation_edit_button.connect(lambda: self.edit_or_cancel_reservation('edit'))
 
         self.view.spinbox_enabled.connect(self.update_total_reservation_cost)
+        self.view.spinbox_enabled.connect(self.has_changes)
 
     def edit_or_cancel_reservation(self, state):
 
@@ -102,8 +117,6 @@ class ReservationInfoDialogController:
             if self.confirmation_dialog.get_choice():
                 self.feedback_dialog = FeedbackDialog("Reservation cancelled successfully.", connected_view=self.view)
                 self.feedback_dialog.exec()
-
-                # Then refresh reservation table
 
         else:
             self.confirmation_dialog = ConfirmationDialog(f"Confirm reservation edit of {self.selected_reservation_id}?")
@@ -220,8 +233,6 @@ class ReservationInfoDialogController:
             frame.spinbox.valueChanged.connect(lambda _: self.update_total_reservation_cost())
             frame.spinbox.valueChanged.connect(lambda _: self.has_changes())
 
-            frame.checkbox.clicked.connect(lambda: print("clicked checkbox"))
-
             # frame.delete_push_button.clicked.connect(lambda _, f_id=frame.service_id,
             #                                          f_name=frame.service_name: self.delete_service(f_id, f_name))
 
@@ -272,8 +283,6 @@ class ReservationInfoDialogController:
         self.view.room_type_combobox.setCurrentText(room_type)
 
     def set_models(self):
-        # TODO: Set current room to be temporarily 'available' for it to get caught by query
-
         available_rooms = self.db_driver.room_queries.get_available_rooms()
 
         # list(available_rooms) makes a copy of available_rooms so that it won't be affected
@@ -300,23 +309,3 @@ class ReservationInfoDialogController:
             available_rooms_from_room_type = self.db_driver.room_queries.get_available_rooms(room_type)
 
         self.available_room_numbers_model.set_rooms(available_rooms_from_room_type)
-
-    # def make_reservation(self):
-    #     guest_inputs = self.view.get_guest_inputs()
-    #     reservation_inputs = self.view.get_reservation_inputs()
-    #     availed_services_inputs = self.view.get_availed_services_inputs(self.service_frames)
-    #
-    #     room_number = reservation_inputs["room_number"]
-    #
-    #     self.db_driver.guest_queries.add_guest(guest_inputs)
-    #
-    #     guest_id = self.db_driver.guest_queries.get_guest_id_from_name(guest_inputs["name"])
-    #     reservation_inputs.update({"guest_id": guest_id})
-    #
-    #     self.db_driver.reserved_room_queries.add_reserved_room(reservation_inputs)
-    #     self.db_driver.availed_service_queries.add_availed_services(availed_services_inputs, guest_id)
-    #
-    #     self.db_driver.room_queries.set_room_status(room_number, 'reserved')
-    #
-    #     self.success_dialog = FeedbackDialog("Reservation added successfully.", connected_view=self.view)
-    #     self.success_dialog.exec()
