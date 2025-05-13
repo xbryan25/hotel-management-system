@@ -67,26 +67,6 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
     def update_total_reservation_cost(self, total_reservation_cost):
         self.total_reservation_cost_value_label.setText(f"₱{int(total_reservation_cost)}")
 
-    #
-    # def update_service_cost_value_label(self, total_service_cost):
-    #
-    #     if total_service_cost == 0:
-    #         self.service_cost_value_label.setText("-")
-    #     else:
-    #         self.service_cost_value_label.setText(str(total_service_cost))
-    #
-    #     self.update_total_cost_value_label()
-    #
-    # def update_total_cost_value_label(self):
-    #     room_cost = float(self.room_cost_value_label.text())
-    #
-    #     try:
-    #         service_cost = float(self.service_cost_value_label.text())
-    #     except ValueError:
-    #         service_cost = 0
-    #
-    #     self.total_cost_value_label.setText(f"{room_cost + service_cost}")
-
     def create_service_frame(self, service, edit_state=False):
         # TODO: Make into another file, I guess?
 
@@ -129,6 +109,7 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
 
         frame.service_id = service[0]
         frame.service_name = service[1]
+        frame.service_rate = service[3]
         frame.spinbox = spinbox
         frame.delete_push_button = delete_push_button
         frame.service = service
@@ -146,7 +127,9 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
             elif item.spacerItem():
                 layout.removeItem(item)
 
-    # This function, while unnecessary, is kept for consistency with other files
+    def enable_edit_reservation_button(self, state):
+        self.right_button.setEnabled(state)
+
     def connect_signals_to_slots(self):
         self.check_in_date_time_edit.dateTimeChanged.connect(self.update_check_out_date_time_edit_min_date)
 
@@ -175,6 +158,7 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
             self.left_button.clicked.connect(self.change_dialog_state_and_button_texts)
             self.left_button.clicked.connect(self.change_button_signals)
             self.right_button.clicked.connect(self.clicked_confirm_reservation_edit_button.emit)
+            self.right_button.setEnabled(False)
 
     def change_dialog_state_and_button_texts(self):
         if self.dialog_state == 'not editable':

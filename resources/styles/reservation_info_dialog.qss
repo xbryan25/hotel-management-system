@@ -16,3 +16,7 @@ QDialog{
 #right_button{
     background-color: #194FCC;
 }
+
+#right_button:disabled {
+    background-color: #5182F5;
+}

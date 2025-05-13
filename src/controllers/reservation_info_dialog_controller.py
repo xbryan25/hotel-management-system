@@ -25,11 +25,58 @@ class ReservationInfoDialogController:
 
         self.temp_current_room = self.data_from_reservation[8]
 
+        self.original_data = {
+            'check_in_date': self.view.check_in_date_time_edit.dateTime(),
+            'check_out_date': self.view.check_out_date_time_edit.dateTime(),
+            'room_number': self.view.room_number_combobox.currentText(),
+            'availed_services': self.services_model.get_all()
+        }
+
+    def has_changes(self):
+        current_data = {
+            'check_in_date': self.view.check_in_date_time_edit.dateTime(),
+            'check_out_date': self.view.check_out_date_time_edit.dateTime(),
+            'room_number': self.view.room_number_combobox.currentText(),
+            'availed_services': self.get_services_from_frames()
+        }
+
+        # Compare datetime
+        if current_data['check_in_date'] != self.original_data['check_in_date']:
+            self.view.enable_edit_reservation_button(True)
+            return
+        if current_data['check_out_date'] != self.original_data['check_out_date']:
+            self.view.enable_edit_reservation_button(True)
+            return
+
+        # Compare selected room
+        if current_data['room_number'] != self.original_data['room_number']:
+            self.view.enable_edit_reservation_button(True)
+            return
+
+        # Compare availed services (you may need to sort or convert to set/dict)
+        if current_data['availed_services'] != self.original_data['availed_services']:
+            self.view.enable_edit_reservation_button(True)
+            return
+
+        self.view.enable_edit_reservation_button(False)
+
+    def get_services_from_frames(self):
+        services = []
+
+        for service_frame in self.service_frames:
+            services.append([service_frame.service_id, service_frame.service_name,
+                             service_frame.spinbox.value(), service_frame.service_rate])
+
+        return services
+
     def connect_signals_to_slots(self):
         self.view.room_type_changed.connect(self.update_models)
 
         self.view.room_changed.connect(lambda current_room: self.update_total_reservation_cost(current_room=current_room))
+        self.view.room_changed.connect(self.has_changes)
+
         self.view.date_time_changed.connect(lambda current_room: self.update_total_reservation_cost(current_room=current_room))
+        self.view.date_time_changed.connect(self.has_changes)
 
         self.view.clicked_edit_button.connect(lambda: self.enable_all_editable_fields(True))
 
@@ -96,18 +143,6 @@ class ReservationInfoDialogController:
 
         self.view.update_total_reservation_cost(total_room_cost + total_services_cost)
 
-    # def update_total_service_cost(self, service_frames):
-    #
-    #     total_services_cost = 0
-    #
-    #     for service_frame in service_frames:
-    #         if service_frame.is_spinbox_enabled:
-    #             price = service_frame.service[2]
-    #             quantity = service_frame.spinbox.value()
-    #             total_services_cost += price * quantity
-    #
-    #     self.view.update_service_cost_value_label(float(total_services_cost))
-
     def create_service_frames(self, services):
         self.view.clear_availed_services_layout()
         self.service_frames.clear()
@@ -119,6 +154,8 @@ class ReservationInfoDialogController:
 
             # lambda is used to not received the value given by valueChanged
             frame.spinbox.valueChanged.connect(lambda _: self.update_total_reservation_cost())
+            frame.spinbox.valueChanged.connect(lambda _: self.has_changes())
+
             frame.delete_push_button.clicked.connect(lambda _, f_id=frame.service_id,
                                                      f_name=frame.service_name: self.delete_service(f_id, f_name))
 
@@ -135,6 +172,7 @@ class ReservationInfoDialogController:
             self.services_model.remove_service_by_id(service_id_to_delete)
             self.create_service_frames(self.services_model.get_all())
             self.update_total_reservation_cost()
+            self.has_changes()
 
             self.success_dialog = FeedbackDialog("Service removed successfully.")
             self.success_dialog.exec()
