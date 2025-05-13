@@ -42,6 +42,8 @@ class ReservationsPageController:
 
         self.reservation_info_dialog.exec()
 
+        self.update_reservations_table_view()
+
     def connect_signals_to_slots(self):
         self.view.sort_by_combobox.currentTextChanged.connect(self.update_reservations_table_view)
         self.view.sort_type_combobox.currentTextChanged.connect(self.update_reservations_table_view)

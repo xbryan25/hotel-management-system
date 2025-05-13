@@ -6,6 +6,7 @@ from views import FeedbackDialog, ConfirmationDialog
 
 from datetime import datetime
 
+
 class ReservationInfoDialogController:
     def __init__(self, dialog, db_driver, selected_reservation_id):
         self.view = dialog
@@ -110,6 +111,7 @@ class ReservationInfoDialogController:
             self.confirmation_dialog.exec()
 
             if self.confirmation_dialog.get_choice():
+
                 reservation_inputs = self.view.get_reservation_inputs()
                 modified_availed_services_inputs = self.view.get_modified_availed_services_inputs(self.service_frames)
                 new_availed_services_inputs = self.view.get_new_availed_services_inputs(self.service_frames)
@@ -129,8 +131,25 @@ class ReservationInfoDialogController:
                                                                           date_time_now)
 
                 # TODO: Refund
-                # TODO: If different room is chosen, commit temporary available roo
+                # TODO: If different room is chosen, commit temporary available room
 
+                new_total = int(reservation_inputs['total_reservation_cost'])
+                amount_already_paid = self.original_data['total_reservation_cost'] - self.data_from_reservation[9]
+
+                if new_total < amount_already_paid:
+                    amount_to_refund = amount_already_paid - new_total
+
+                    self.feedback_dialog = FeedbackDialog("Total amount paid is greater than new total.",
+                                                          f"The refund will be ₱{amount_to_refund}.")
+                    self.feedback_dialog.exec()
+
+                    self.db_driver.paid_room_queries.add_paid_room({'payment_type': 'Cash',
+                                                                    'amount': amount_to_refund * -1,
+                                                                    'transaction_date': date_time_now,
+                                                                    'guest_id': self.data_from_reservation[7],
+                                                                    'room_number': self.data_from_reservation[8]})
+
+                    self.db_driver.reserved_room_queries.set_payment_status(self.selected_reservation_id, 'fully paid')
 
                 self.feedback_dialog = FeedbackDialog("Reservation edited successfully.", connected_view=self.view)
                 self.feedback_dialog.exec()
