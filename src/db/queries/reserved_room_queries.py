@@ -5,9 +5,9 @@ class ReservedRoomQueries:
         self.db = db
         self.cursor = cursor
 
-    def set_confirmed_reservation(self, reservation_id):
+    def set_reservation_status(self, reservation_status, reservation_id):
         sql = "UPDATE reservedrooms SET reservation_status=%s WHERE reservation_id=%s"
-        values = ('confirmed', reservation_id)
+        values = (reservation_status, reservation_id)
 
         self.cursor.execute(sql, values)
         self.db.commit()

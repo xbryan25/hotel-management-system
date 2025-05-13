@@ -218,14 +218,14 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
         return reservation_inputs
 
     @staticmethod
-    def get_modified_availed_services_inputs(service_frames):
+    def get_modified_availed_services_inputs(service_frames, set_to_cancelled=False):
         availed_services_inputs = {}
 
         for frame in service_frames:
 
             if frame.service_type == 'availed':
 
-                if frame.is_spinbox_enabled:
+                if frame.is_spinbox_enabled and not set_to_cancelled:
                     avail_status = 'active'
                 else:
                     avail_status = 'cancelled'

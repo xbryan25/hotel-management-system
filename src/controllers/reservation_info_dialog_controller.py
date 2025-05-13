@@ -108,17 +108,47 @@ class ReservationInfoDialogController:
 
     def edit_or_cancel_reservation(self, state):
 
+        # TODO: Cancel reservation
+
         if state == 'cancel':
+
+            # Cancel reservation
+
             self.confirmation_dialog = ConfirmationDialog(f"Confirm cancellation of {self.selected_reservation_id}?",
                                                           "This action cannot be undone.")
 
             self.confirmation_dialog.exec()
 
             if self.confirmation_dialog.get_choice():
+
+                self.db_driver.reserved_room_queries.set_reservation_status('cancelled', self.selected_reservation_id)
+                self.db_driver.room_queries.set_room_status(self.original_data["room_number"], "available")
+
+                amount_already_paid = self.original_data['total_reservation_cost'] - self.data_from_reservation[9]
+
+                if amount_already_paid > 0:
+                    self.feedback_dialog = FeedbackDialog("Since partial payments have been done,",
+                                                          f"the refund will be ₱{amount_already_paid}.")
+                    self.feedback_dialog.exec()
+
+                    self.db_driver.paid_room_queries.add_paid_room({'payment_type': 'Cash',
+                                                                    'amount': amount_already_paid * -1,
+                                                                    'transaction_date': datetime.now(),
+                                                                    'guest_id': self.data_from_reservation[7],
+                                                                    'room_number': self.data_from_reservation[8]})
+
+                modified_availed_services_inputs = self.view.get_modified_availed_services_inputs(self.service_frames,
+                                                                                                  set_to_cancelled=True)
+
+                self.db_driver.availed_service_queries.update_availed_services(modified_availed_services_inputs)
+
                 self.feedback_dialog = FeedbackDialog("Reservation cancelled successfully.", connected_view=self.view)
                 self.feedback_dialog.exec()
 
         else:
+
+            # Edit reservation
+
             self.confirmation_dialog = ConfirmationDialog(f"Confirm reservation edit of {self.selected_reservation_id}?")
 
             self.confirmation_dialog.exec()
