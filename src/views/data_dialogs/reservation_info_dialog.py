@@ -126,6 +126,9 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
         if service_type == 'availed':
             frame.service_rate = service[3]
             frame.is_spinbox_enabled = True
+            frame.avail_id = service[4]
+
+            spinbox.setValue(service[2])
 
             checkbox.blockSignals(True)
             checkbox.setCheckState(Qt.CheckState.Checked)
@@ -134,6 +137,7 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
         elif service_type == 'not availed':
             frame.service_rate = service[2]
             frame.is_spinbox_enabled = False
+            frame.avail_id = None
 
         return frame
 
@@ -202,6 +206,44 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
 
             self.left_button.setText("Cancel Reservation")
             self.right_button.setText("Edit Reservation")
+
+    def get_reservation_inputs(self):
+        reservation_inputs = {}
+
+        reservation_inputs.update({"check_in_date": self.check_in_date_time_edit.dateTime().toPyDateTime()})
+        reservation_inputs.update({"check_out_date": self.check_out_date_time_edit.dateTime().toPyDateTime()})
+        reservation_inputs.update({"room_number": self.room_number_combobox.currentText()})
+        reservation_inputs.update({"total_reservation_cost": self.total_reservation_cost_value_label.text()[1:]})
+
+        return reservation_inputs
+
+    @staticmethod
+    def get_modified_availed_services_inputs(service_frames):
+        availed_services_inputs = {}
+
+        for frame in service_frames:
+
+            if frame.service_type == 'availed':
+
+                if frame.is_spinbox_enabled:
+                    avail_status = 'active'
+                else:
+                    avail_status = 'cancelled'
+
+                availed_services_inputs.update({frame.avail_id: {'quantity': frame.spinbox.value(),
+                                                                 'avail_status': avail_status}})
+
+        return availed_services_inputs
+
+    @staticmethod
+    def get_new_availed_services_inputs(service_frames):
+        availed_services_inputs = {}
+
+        for frame in service_frames:
+            if frame.is_spinbox_enabled and frame.service_type == 'not availed':
+                availed_services_inputs.update({frame.service_id: frame.spinbox.value()})
+
+        return availed_services_inputs
 
     def remove_button_signals(self):
         self.left_button.disconnect()

@@ -1,4 +1,4 @@
-
+from datetime import datetime
 
 class ReservedRoomQueries:
     def __init__(self, db, cursor):
@@ -141,19 +141,21 @@ class ReservedRoomQueries:
         self.cursor.execute(sql, values)
         self.db.commit()
 
-    def update_reserved_room(self, old_reservation_id, reserved_room_information):
-        sql = """UPDATE reservedrooms SET reservation_id=%s, reservation_date=%s, check_in_date=%s, check_out_date=%s, 
-        payment_status=%s, guest_id=%s, room_number=%s
-        WHERE reservation_id=%s;"""
+    def update_reserved_room(self, reservation_id, reserved_room_information, date_time_now=None):
 
-        values = (reserved_room_information[0],
-                  reserved_room_information[1],
-                  reserved_room_information[2],
-                  reserved_room_information[3],
-                  reserved_room_information[4],
-                  reserved_room_information[5],
-                  reserved_room_information[6],
-                  old_reservation_id)
+        if not date_time_now:
+            date_time_now = datetime.now()
+
+        sql = """UPDATE reservedrooms SET last_modified=%s, check_in_date=%s, check_out_date=%s, 
+                    total_reservation_cost=%s, room_number=%s
+                    WHERE reservation_id=%s;"""
+
+        values = (date_time_now,
+                  reserved_room_information['check_in_date'],
+                  reserved_room_information['check_out_date'],
+                  reserved_room_information['total_reservation_cost'],
+                  reserved_room_information['room_number'],
+                  reservation_id)
 
         self.cursor.execute(sql, values)
         self.db.commit()

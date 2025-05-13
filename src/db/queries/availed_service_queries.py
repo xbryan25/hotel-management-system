@@ -7,10 +7,11 @@ class AvailedServiceQueries:
         self.cursor = cursor
 
     def get_availed_services_from_avail_date(self, avail_date):
-        sql = f"""SELECT services.service_id, services.service_name, availedservices.quantity, services.rate
-                                FROM availedservices
-                                LEFT JOIN services ON availedservices.service_id = services.service_id
-                                WHERE avail_date=%s"""
+        sql = f"""SELECT services.service_id, services.service_name, availedservices.quantity, services.rate, 
+                    availedservices.avail_id
+                    FROM availedservices
+                    LEFT JOIN services ON availedservices.service_id = services.service_id
+                    WHERE avail_date=%s"""
 
         values = (avail_date,)
 
@@ -35,15 +36,16 @@ class AvailedServiceQueries:
         else:
             return result[0]
 
-    def add_availed_services(self, availed_service_information, guest_id):
+    def add_availed_services(self, availed_service_information, guest_id, date_time_now=None):
 
-        date_time_now = datetime.now()
+        if not date_time_now:
+            date_time_now = datetime.now()
 
         for service_id, quantity in availed_service_information.items():
 
             sql = """INSERT INTO availedservices
-                    (avail_id, avail_date, quantity, guest_id, service_id) VALUES
-                    (%s, %s, %s, %s, %s)"""
+                    (avail_id, avail_date, avail_status, quantity, guest_id, service_id) VALUES
+                    (%s, %s, %s, %s, %s, %s)"""
 
             latest_avail_id = self.get_latest_avail_id()
 
@@ -51,9 +53,24 @@ class AvailedServiceQueries:
 
             values = (new_avail_id,
                       date_time_now,
+                      'active',
                       quantity,
                       guest_id,
                       service_id)
+
+            self.cursor.execute(sql, values)
+            self.db.commit()
+
+    def update_availed_services(self, availed_service_information, date_time_now=None):
+
+        if not date_time_now:
+            date_time_now = datetime.now()
+
+        for avail_id, avail_information in availed_service_information.items():
+
+            sql = """UPDATE availedservices SET avail_date=%s, quantity=%s, avail_status=%s WHERE avail_id=%s"""
+
+            values = (date_time_now, avail_information['quantity'], avail_information['avail_status'], avail_id)
 
             self.cursor.execute(sql, values)
             self.db.commit()

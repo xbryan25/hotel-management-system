@@ -4,6 +4,7 @@ from PyQt6.QtCore import QDateTime
 from models import AvailableRoomsModel, ServicesModel, AvailedServicesModel
 from views import FeedbackDialog, ConfirmationDialog
 
+from datetime import datetime
 
 class ReservationInfoDialogController:
     def __init__(self, dialog, db_driver, selected_reservation_id):
@@ -109,6 +110,28 @@ class ReservationInfoDialogController:
             self.confirmation_dialog.exec()
 
             if self.confirmation_dialog.get_choice():
+                reservation_inputs = self.view.get_reservation_inputs()
+                modified_availed_services_inputs = self.view.get_modified_availed_services_inputs(self.service_frames)
+                new_availed_services_inputs = self.view.get_new_availed_services_inputs(self.service_frames)
+
+                date_time_now = datetime.now()
+
+                # self.db_driver.reserved_room_queries.update_reserved_room(reservation_inputs)
+                #
+                self.db_driver.availed_service_queries.update_availed_services(modified_availed_services_inputs,
+                                                                               date_time_now)
+
+                self.db_driver.availed_service_queries.add_availed_services(new_availed_services_inputs,
+                                                                            self.data_from_reservation[7])
+
+                self.db_driver.reserved_room_queries.update_reserved_room(self.selected_reservation_id,
+                                                                          reservation_inputs,
+                                                                          date_time_now)
+
+                # TODO: Refund
+                # TODO: If different room is chosen, commit temporary available roo
+
+
                 self.feedback_dialog = FeedbackDialog("Reservation edited successfully.", connected_view=self.view)
                 self.feedback_dialog.exec()
 
