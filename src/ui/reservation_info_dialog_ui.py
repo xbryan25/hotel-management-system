@@ -127,7 +127,7 @@ class Ui_Dialog(object):
         self.availed_services_scroll_area.setWidget(self.availed_services_scroll_area_widget_contents)
         self.gridLayout.addWidget(self.availed_services_scroll_area, 14, 0, 1, 4)
         self.availed_services_label = QtWidgets.QLabel(parent=Dialog)
-        self.availed_services_label.setMinimumSize(QtCore.QSize(0, 30))
+        self.availed_services_label.setMinimumSize(QtCore.QSize(0, 35))
         self.availed_services_label.setObjectName("availed_services_label")
         self.gridLayout.addWidget(self.availed_services_label, 13, 0, 1, 2)
         self.add_service_button = QtWidgets.QPushButton(parent=Dialog)

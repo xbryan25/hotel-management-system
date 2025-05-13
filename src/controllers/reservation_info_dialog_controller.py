@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QSizePolicy, QSpacerItem
 from PyQt6.QtCore import QDateTime
 
-from models import AvailableRoomsModel, ServicesModel
+from models import AvailableRoomsModel, ServicesModel, AvailedServicesModel
 from views import FeedbackDialog, ConfirmationDialog
 
 
@@ -29,7 +29,8 @@ class ReservationInfoDialogController:
             'check_in_date': self.view.check_in_date_time_edit.dateTime(),
             'check_out_date': self.view.check_out_date_time_edit.dateTime(),
             'room_number': self.view.room_number_combobox.currentText(),
-            'availed_services': self.services_model.get_all()
+            'availed_services': self.services_model.get_all(),
+            'total_reservation_cost': self.data_from_reservation[5]
         }
 
     def has_changes(self):
@@ -86,6 +87,8 @@ class ReservationInfoDialogController:
 
         self.view.clicked_confirm_reservation_edit_button.connect(lambda: self.edit_or_cancel_reservation('edit'))
 
+        self.view.spinbox_enabled.connect(self.update_total_reservation_cost)
+
     def edit_or_cancel_reservation(self, state):
 
         if state == 'cancel':
@@ -137,9 +140,10 @@ class ReservationInfoDialogController:
         total_services_cost = 0
 
         for service_frame in self.service_frames:
-            price = service_frame.service[3]
-            quantity = service_frame.spinbox.value()
-            total_services_cost += price * quantity
+            if service_frame.is_spinbox_enabled:
+                price = service_frame.service_rate
+                quantity = service_frame.spinbox.value()
+                total_services_cost += price * quantity
 
         self.view.update_total_reservation_cost(total_room_cost + total_services_cost)
 
@@ -148,7 +152,14 @@ class ReservationInfoDialogController:
         self.service_frames.clear()
 
         for i, service in enumerate(services):
-            frame = self.view.create_service_frame(service, self.edit_state)
+
+            if self.availed_services_model.is_service_availed(service[0]):
+                frame = self.view.create_service_frame(self.availed_services_model.get_availed_service_details(service[0]),
+                                                       self.edit_state,
+                                                       service_type='availed')
+            else:
+                frame = self.view.create_service_frame(service, self.edit_state)
+
             self.view.availed_services_scroll_area_grid_layout.addWidget(frame, i, 0, 1, 1)
             self.service_frames.append(frame)
 
@@ -156,8 +167,10 @@ class ReservationInfoDialogController:
             frame.spinbox.valueChanged.connect(lambda _: self.update_total_reservation_cost())
             frame.spinbox.valueChanged.connect(lambda _: self.has_changes())
 
-            frame.delete_push_button.clicked.connect(lambda _, f_id=frame.service_id,
-                                                     f_name=frame.service_name: self.delete_service(f_id, f_name))
+            frame.checkbox.clicked.connect(lambda: print("clicked checkbox"))
+
+            # frame.delete_push_button.clicked.connect(lambda _, f_id=frame.service_id,
+            #                                          f_name=frame.service_name: self.delete_service(f_id, f_name))
 
         v_spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
         self.view.availed_services_scroll_area_grid_layout.addItem(v_spacer, len(services), 0)
@@ -220,7 +233,10 @@ class ReservationInfoDialogController:
         self.view.room_type_combobox.setModel(self.available_room_types_model)
         self.view.room_type_combobox.blockSignals(False)
 
-        available_services = self.db_driver.availed_service_queries.get_availed_services_from_avail_date(self.data_from_reservation[1])
+        availed_services = self.db_driver.availed_service_queries.get_availed_services_from_avail_date(self.data_from_reservation[1])
+        self.availed_services_model = AvailedServicesModel(availed_services)
+
+        available_services = self.db_driver.service_queries.get_all_services()
         self.services_model = ServicesModel(available_services)
 
     def update_models(self, room_type):

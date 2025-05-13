@@ -14,6 +14,8 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
     clicked_cancel_reservation_button = pyqtSignal()
     clicked_confirm_reservation_edit_button = pyqtSignal()
 
+    spinbox_enabled = pyqtSignal()
+
     room_type_changed = pyqtSignal(str)
     room_changed = pyqtSignal(str)
     date_time_changed = pyqtSignal(str)
@@ -44,8 +46,15 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
         self.room_number_combobox.setEnabled(state)
 
         for service_frame in service_frames:
-            service_frame.spinbox.setEnabled(state)
-            service_frame.delete_push_button.setEnabled(state)
+            service_frame.checkbox.setEnabled(state)
+
+            if service_frame.checkbox.isChecked() and state:
+                service_frame.spinbox.setEnabled(True)
+            else:
+                service_frame.spinbox.setEnabled(False)
+
+        if not state:
+            self.right_button.setEnabled(True)
 
     def get_check_in_check_out_date_and_time(self):
         return {"check_in": self.check_in_date_time_edit.dateTime(),
@@ -67,16 +76,13 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
     def update_total_reservation_cost(self, total_reservation_cost):
         self.total_reservation_cost_value_label.setText(f"₱{int(total_reservation_cost)}")
 
-    def create_service_frame(self, service, edit_state=False):
+    def create_service_frame(self, service, edit_state=False, service_type='not availed'):
         # TODO: Make into another file, I guess?
 
         frame = QFrame(parent=self.availed_services_scroll_area_widget_contents)
-        # frame.setFixedHeight(50)
         frame.setFrameShape(QFrame.Shape.StyledPanel)
         frame.setFrameShadow(QFrame.Shadow.Raised)
         frame.setObjectName(f"{service[1].replace(" ", "_")}_frame")
-        # frame.setStyleSheet("background-color: blue;")
-        # frame.setMinimumSize(QSize(16777215, 20))
 
         h_layout = QHBoxLayout(frame)
         h_layout.setObjectName(f"{service[1].replace(" ", "_")}_h_layout")
@@ -86,6 +92,14 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
         service_name_label.setText(service[1])
         service_name_label.setFont(QFont("Inter", 14, QFont.Weight.Normal))
         h_layout.addWidget(service_name_label)
+
+        checkbox = QCheckBox(parent=frame)
+        checkbox.setFixedWidth(30)
+        checkbox.setEnabled(edit_state)
+        checkbox.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        checkbox.setText("")
+        checkbox.setObjectName(f"{service[1].replace(" ", "_")}_checkbox")
+        h_layout.addWidget(checkbox)
 
         spinbox = QSpinBox(parent=frame)
         spinbox.setObjectName(f"{service[1].replace(" ", "_")}_spinbox")
@@ -100,21 +114,38 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
                                          QSizePolicy.Policy.Minimum)
         h_layout.addItem(h_spacer)
 
-        delete_push_button = QPushButton(parent=frame)
-        delete_push_button.setMaximumSize(QSize(25, 25))
-        delete_push_button.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        delete_push_button.setObjectName(f"{service[1].replace(" ", "_")}pushButton_3")
-        delete_push_button.setEnabled(edit_state)
-        h_layout.addWidget(delete_push_button)
+        checkbox.checkStateChanged.connect(lambda _, f=frame: self.enable_spinbox(f))
 
         frame.service_id = service[0]
         frame.service_name = service[1]
-        frame.service_rate = service[3]
+        frame.checkbox = checkbox
         frame.spinbox = spinbox
-        frame.delete_push_button = delete_push_button
         frame.service = service
+        frame.service_type = service_type
+
+        if service_type == 'availed':
+            frame.service_rate = service[3]
+            frame.is_spinbox_enabled = True
+
+            checkbox.blockSignals(True)
+            checkbox.setCheckState(Qt.CheckState.Checked)
+            checkbox.blockSignals(False)
+
+        elif service_type == 'not availed':
+            frame.service_rate = service[2]
+            frame.is_spinbox_enabled = False
 
         return frame
+
+    def enable_spinbox(self, frame):
+        if frame.spinbox.isEnabled():
+            frame.spinbox.setEnabled(False)
+            frame.is_spinbox_enabled = False
+        else:
+            frame.spinbox.setEnabled(True)
+            frame.is_spinbox_enabled = True
+
+        self.spinbox_enabled.emit()
 
     def clear_availed_services_layout(self):
         layout = self.availed_services_scroll_area_grid_layout
