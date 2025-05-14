@@ -1,6 +1,8 @@
 from PyQt6.QtCore import QTimer
 
 from models import RoomsModel
+from views import AddRoomDialog
+from controllers.add_room_dialog_controller import AddRoomDialogController
 
 
 class RoomsPageController:
@@ -37,6 +39,12 @@ class RoomsPageController:
         else:
             self.view.update_grid_view_frames_contents(self.rooms_model.get_rooms_from_current_page(self.view_mode))
 
+    def open_add_room_dialog(self):
+        self.add_room_dialog = AddRoomDialog()
+        self.add_room_dialog_controller = AddRoomDialogController(self.add_room_dialog, self.db_driver)
+
+        self.add_room_dialog.exec()
+
     def connect_signals_to_slots(self):
 
         self.view.window_resized.connect(self.update_frame_count)
@@ -46,6 +54,8 @@ class RoomsPageController:
         self.view.next_page_button_pressed.connect(self.go_to_next_page)
 
         self.view.previous_page_button_pressed.connect(self.go_to_previous_page)
+
+        self.view.clicked_add_room_button.connect(self.open_add_room_dialog)
 
     def go_to_next_page(self):
         if self.rooms_model.set_next_page(self.view_mode):

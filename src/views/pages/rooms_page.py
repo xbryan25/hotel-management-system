@@ -15,6 +15,7 @@ class RoomsPage(QWidget, RoomsPageUI):
     next_page_button_pressed = pyqtSignal()
     previous_page_button_pressed = pyqtSignal()
     change_view_mode = pyqtSignal(str)
+    clicked_add_room_button = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -31,7 +32,7 @@ class RoomsPage(QWidget, RoomsPageUI):
 
         self.rooms_view_stacked_widget.setCurrentWidget(self.list_view_widget)
 
-        self.add_signals()
+        self.connect_signals_to_slots()
 
         self.set_external_stylesheet()
 
@@ -39,18 +40,14 @@ class RoomsPage(QWidget, RoomsPageUI):
 
         self.set_icons()
 
-    def add_signals(self):
+    def connect_signals_to_slots(self):
         self.grid_view_button.clicked.connect(self.switch_to_grid_view)
         self.list_view_button.clicked.connect(self.switch_to_list_view)
 
-        self.next_page_button.clicked.connect(self.emit_next_page)
-        self.previous_page_button.clicked.connect(self.emit_previous_page)
+        self.next_page_button.clicked.connect(self.next_page_button_pressed.emit)
+        self.previous_page_button.clicked.connect(self.previous_page_button_pressed.emit)
 
-    def emit_next_page(self):
-        self.next_page_button_pressed.emit()
-
-    def emit_previous_page(self):
-        self.previous_page_button_pressed.emit()
+        self.add_room_button.clicked.connect(self.clicked_add_room_button.emit)
 
     def switch_to_list_view(self):
         self.rooms_view_stacked_widget.setCurrentWidget(self.list_view_widget)

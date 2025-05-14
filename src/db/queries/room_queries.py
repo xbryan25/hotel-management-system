@@ -55,7 +55,7 @@ class RoomQueries:
 
     def get_available_rooms(self, room_type=None):
         if not room_type:
-            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.price, rooms.availability_status, 
+            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.daily_rate, rooms.availability_status, 
                             rooms.capacity
                             FROM rooms
                             WHERE rooms.availability_status="available"
@@ -63,7 +63,7 @@ class RoomQueries:
 
             self.cursor.execute(sql)
         else:
-            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.price, rooms.availability_status, 
+            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.daily_rate, rooms.availability_status, 
                             rooms.capacity
                             FROM rooms
                             WHERE rooms.room_type=%s
@@ -87,13 +87,13 @@ class RoomQueries:
             room_status = None
 
         if not room_status or room_status == "All status":
-            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.price, rooms.availability_status, 
+            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.daily_rate, rooms.availability_status, 
                     rooms.capacity
                     FROM rooms
                     ORDER BY rooms.room_number ASC;"""
 
         else:
-            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.price, rooms.availability_status, 
+            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.daily_rate, rooms.availability_status, 
                                 rooms.capacity
                                 FROM rooms
                                 WHERE rooms.availability_status='{room_status.lower()}'
