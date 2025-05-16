@@ -92,7 +92,7 @@
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
         <property name="text">
-         <string>Add room</string>
+         <string>Add Room</string>
         </property>
        </widget>
       </item>

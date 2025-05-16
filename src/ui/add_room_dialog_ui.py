@@ -103,7 +103,7 @@ class Ui_Dialog(object):
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.add_new_room_label.setText(_translate("Dialog", "Add New Room"))
         self.cancel_button.setText(_translate("Dialog", "Cancel"))
-        self.add_room_button.setText(_translate("Dialog", "Add room"))
+        self.add_room_button.setText(_translate("Dialog", "Add Room"))
         self.room_image_label.setText(_translate("Dialog", "Room Image"))
         self.browse_image_button.setText(_translate("Dialog", "Browse"))
         self.room_daily_rate_label.setText(_translate("Dialog", "Room Daily Rate"))

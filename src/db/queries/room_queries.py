@@ -122,18 +122,20 @@ class RoomQueries:
 
     def add_room(self, room_information):
         sql = """INSERT INTO rooms
-                (room_number, room_type, price, availability_status, capacity) VALUES
-                (%s, %s, %s, %s, %s)"""
+                (room_number, room_type, daily_rate, availability_status, capacity, is_active, image_file_name) VALUES
+                (%s, %s, %s, %s, %s, %s, %s)"""
 
         latest_room_number = self.get_latest_room_number()
 
         new_room_number = f"room-{int(latest_room_number[6:]) + 1:04}"
 
         values = (new_room_number,
-                  room_information[0],
-                  room_information[1],
-                  room_information[2],
-                  room_information[3])
+                  room_information['room_type'],
+                  room_information['daily_rate'],
+                  'available',
+                  room_information['capacity'],
+                  True,
+                  room_information['image_file_name'])
 
         self.cursor.execute(sql, values)
         self.db.commit()
