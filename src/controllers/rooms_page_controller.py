@@ -47,6 +47,7 @@ class RoomsPageController:
 
         self.set_models()
         self.load_frames()
+        self.load_data()
 
     def connect_signals_to_slots(self):
 

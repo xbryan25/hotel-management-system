@@ -4,11 +4,6 @@ QPushButton:pressed {
     border: none;
 }
 
-#image_frame{
-    background-color: #D9D9D9;
-    border-radius: 10px;
-}
-
 #capacity_icon_label{
 
     background-image: url(../resources/icons/custom_widgets/capacity_icon.svg);
@@ -18,4 +13,10 @@ QPushButton:pressed {
 
 #rate_label, #status_label, #actions_label{
     color: #5B5B5B;
+}
+
+#room_image_label{
+    padding: 2px;
+    border: 1px solid black;
+    border-radius: 5px;
 }

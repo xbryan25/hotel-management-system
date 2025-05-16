@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QWidget, QSpacerItem, QSizePolicy, QFrame
-from PyQt6.QtGui import QIcon, QFontDatabase, QFont
+from PyQt6.QtGui import QIcon, QFontDatabase, QFont, QPixmap
 from PyQt6.QtCore import QSize, pyqtSignal, Qt, QTimer
 
 from views.custom_widgets import ListRoomsFrame, GridRoomsFrame
@@ -118,6 +118,11 @@ class RoomsPage(QWidget, RoomsPageUI):
                     list_rooms_frame.rate_value_label.setText(f"P{data_from_model[row][2]}/day")
                     list_rooms_frame.status_value_label.setText(data_from_model[row][3].capitalize())
                     list_rooms_frame.capacity_value_label.setText(str(data_from_model[row][4]))
+
+                    relative_file_path = "../resources/icons/rooms_page/room_images/"
+
+                    list_rooms_frame.room_image_label.setPixmap(QPixmap(relative_file_path + data_from_model[row][5]))
+
                     list_rooms_frame.set_status_value_label_stylesheet()
 
     # List view end ------------------------------------------------------------------------------------------------
@@ -294,6 +299,12 @@ class RoomsPage(QWidget, RoomsPageUI):
                         grid_rooms_frame.rate_value_label.setText(f"P{data_from_model[counter][2]}/day")
                         grid_rooms_frame.status_value_label.setText(data_from_model[counter][3].capitalize())
                         grid_rooms_frame.capacity_label.setText(str(data_from_model[counter][4]))
+
+                        relative_file_path = "../resources/icons/rooms_page/room_images/"
+
+                        grid_rooms_frame.room_image_label.setPixmap(
+                            QPixmap(relative_file_path + data_from_model[counter][5]))
+
                         grid_rooms_frame.set_status_value_label_stylesheet()
 
                         counter += 1

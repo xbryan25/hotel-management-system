@@ -88,13 +88,13 @@ class RoomQueries:
 
         if not room_status or room_status == "All status":
             sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.daily_rate, rooms.availability_status, 
-                    rooms.capacity
+                    rooms.capacity, rooms.image_file_name
                     FROM rooms
                     ORDER BY rooms.room_number ASC;"""
 
         else:
             sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.daily_rate, rooms.availability_status, 
-                                rooms.capacity
+                                rooms.capacity, rooms.image_file_name
                                 FROM rooms
                                 WHERE rooms.availability_status='{room_status.lower()}'
                                 ORDER BY rooms.room_number ASC;"""
