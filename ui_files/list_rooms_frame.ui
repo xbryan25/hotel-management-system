@@ -88,14 +88,23 @@
           <height>60</height>
          </size>
         </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>83</height>
+         </size>
+        </property>
         <property name="styleSheet">
-         <string notr="true">background-color: gray;</string>
+         <string notr="true"/>
         </property>
         <property name="lineWidth">
          <number>0</number>
         </property>
         <property name="text">
          <string/>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>

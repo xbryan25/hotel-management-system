@@ -10,3 +10,4 @@ __pycache__/
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/vcs.xml
 .env
+resources/icons/rooms_page/room_images

@@ -55,7 +55,7 @@ class RoomQueries:
 
     def get_available_rooms(self, room_type=None):
         if not room_type:
-            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.price, rooms.availability_status, 
+            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.daily_rate, rooms.availability_status, 
                             rooms.capacity
                             FROM rooms
                             WHERE rooms.availability_status="available"
@@ -63,7 +63,7 @@ class RoomQueries:
 
             self.cursor.execute(sql)
         else:
-            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.price, rooms.availability_status, 
+            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.daily_rate, rooms.availability_status, 
                             rooms.capacity
                             FROM rooms
                             WHERE rooms.room_type=%s
@@ -87,14 +87,14 @@ class RoomQueries:
             room_status = None
 
         if not room_status or room_status == "All status":
-            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.price, rooms.availability_status, 
-                    rooms.capacity
+            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.daily_rate, rooms.availability_status, 
+                    rooms.capacity, rooms.image_file_name
                     FROM rooms
                     ORDER BY rooms.room_number ASC;"""
 
         else:
-            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.price, rooms.availability_status, 
-                                rooms.capacity
+            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.daily_rate, rooms.availability_status, 
+                                rooms.capacity, rooms.image_file_name
                                 FROM rooms
                                 WHERE rooms.availability_status='{room_status.lower()}'
                                 ORDER BY rooms.room_number ASC;"""
@@ -122,18 +122,20 @@ class RoomQueries:
 
     def add_room(self, room_information):
         sql = """INSERT INTO rooms
-                (room_number, room_type, price, availability_status, capacity) VALUES
-                (%s, %s, %s, %s, %s)"""
+                (room_number, room_type, daily_rate, availability_status, capacity, is_active, image_file_name) VALUES
+                (%s, %s, %s, %s, %s, %s, %s)"""
 
         latest_room_number = self.get_latest_room_number()
 
         new_room_number = f"room-{int(latest_room_number[6:]) + 1:04}"
 
         values = (new_room_number,
-                  room_information[0],
-                  room_information[1],
-                  room_information[2],
-                  room_information[3])
+                  room_information['room_type'],
+                  room_information['daily_rate'],
+                  'available',
+                  room_information['capacity'],
+                  True,
+                  room_information['image_file_name'])
 
         self.cursor.execute(sql, values)
         self.db.commit()

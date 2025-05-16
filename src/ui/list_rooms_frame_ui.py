@@ -12,8 +12,8 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_Frame(object):
     def setupUi(self, Frame):
         Frame.setObjectName("Frame")
-        Frame.resize(1092, 90)
-        Frame.setMinimumSize(QtCore.QSize(0, 90))
+        Frame.resize(1094, 93)
+        Frame.setMinimumSize(QtCore.QSize(0, 80))
         Frame.setLineWidth(0)
         self.gridLayout = QtWidgets.QGridLayout(Frame)
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
@@ -33,9 +33,11 @@ class Ui_Frame(object):
         self.gridLayout_12.setObjectName("gridLayout_12")
         self.room_image_label = QtWidgets.QLabel(parent=self.room_image_and_room_no_frame)
         self.room_image_label.setMinimumSize(QtCore.QSize(120, 60))
-        self.room_image_label.setStyleSheet("background-color: gray;")
+        self.room_image_label.setMaximumSize(QtCore.QSize(16777215, 83))
+        self.room_image_label.setStyleSheet("")
         self.room_image_label.setLineWidth(0)
         self.room_image_label.setText("")
+        self.room_image_label.setScaledContents(True)
         self.room_image_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.room_image_label.setObjectName("room_image_label")
         self.gridLayout_12.addWidget(self.room_image_label, 0, 1, 1, 1)

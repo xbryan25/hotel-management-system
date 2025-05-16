@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QWidget, QSpacerItem, QSizePolicy, QFrame
-from PyQt6.QtGui import QIcon, QFontDatabase, QFont
+from PyQt6.QtGui import QIcon, QFontDatabase, QFont, QPixmap
 from PyQt6.QtCore import QSize, pyqtSignal, Qt, QTimer
 
 from views.custom_widgets import ListRoomsFrame, GridRoomsFrame
@@ -15,6 +15,7 @@ class RoomsPage(QWidget, RoomsPageUI):
     next_page_button_pressed = pyqtSignal()
     previous_page_button_pressed = pyqtSignal()
     change_view_mode = pyqtSignal(str)
+    clicked_add_room_button = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -31,7 +32,7 @@ class RoomsPage(QWidget, RoomsPageUI):
 
         self.rooms_view_stacked_widget.setCurrentWidget(self.list_view_widget)
 
-        self.add_signals()
+        self.connect_signals_to_slots()
 
         self.set_external_stylesheet()
 
@@ -39,18 +40,14 @@ class RoomsPage(QWidget, RoomsPageUI):
 
         self.set_icons()
 
-    def add_signals(self):
+    def connect_signals_to_slots(self):
         self.grid_view_button.clicked.connect(self.switch_to_grid_view)
         self.list_view_button.clicked.connect(self.switch_to_list_view)
 
-        self.next_page_button.clicked.connect(self.emit_next_page)
-        self.previous_page_button.clicked.connect(self.emit_previous_page)
+        self.next_page_button.clicked.connect(self.next_page_button_pressed.emit)
+        self.previous_page_button.clicked.connect(self.previous_page_button_pressed.emit)
 
-    def emit_next_page(self):
-        self.next_page_button_pressed.emit()
-
-    def emit_previous_page(self):
-        self.previous_page_button_pressed.emit()
+        self.add_room_button.clicked.connect(self.clicked_add_room_button.emit)
 
     def switch_to_list_view(self):
         self.rooms_view_stacked_widget.setCurrentWidget(self.list_view_widget)
@@ -121,6 +118,11 @@ class RoomsPage(QWidget, RoomsPageUI):
                     list_rooms_frame.rate_value_label.setText(f"P{data_from_model[row][2]}/day")
                     list_rooms_frame.status_value_label.setText(data_from_model[row][3].capitalize())
                     list_rooms_frame.capacity_value_label.setText(str(data_from_model[row][4]))
+
+                    relative_file_path = "../resources/icons/rooms_page/room_images/"
+
+                    list_rooms_frame.room_image_label.setPixmap(QPixmap(relative_file_path + data_from_model[row][5]))
+
                     list_rooms_frame.set_status_value_label_stylesheet()
 
     # List view end ------------------------------------------------------------------------------------------------
@@ -297,6 +299,12 @@ class RoomsPage(QWidget, RoomsPageUI):
                         grid_rooms_frame.rate_value_label.setText(f"P{data_from_model[counter][2]}/day")
                         grid_rooms_frame.status_value_label.setText(data_from_model[counter][3].capitalize())
                         grid_rooms_frame.capacity_label.setText(str(data_from_model[counter][4]))
+
+                        relative_file_path = "../resources/icons/rooms_page/room_images/"
+
+                        grid_rooms_frame.room_image_label.setPixmap(
+                            QPixmap(relative_file_path + data_from_model[counter][5]))
+
                         grid_rooms_frame.set_status_value_label_stylesheet()
 
                         counter += 1

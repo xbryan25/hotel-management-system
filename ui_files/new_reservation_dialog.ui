@@ -365,8 +365,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>500</width>
-            <height>364</height>
+            <width>493</width>
+            <height>367</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="services_scroll_area_grid_layout"/>
