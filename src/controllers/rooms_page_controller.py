@@ -45,6 +45,9 @@ class RoomsPageController:
 
         self.add_room_dialog.exec()
 
+        self.set_models()
+        self.load_frames()
+
     def connect_signals_to_slots(self):
 
         self.view.window_resized.connect(self.update_frame_count)
