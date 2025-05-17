@@ -2,12 +2,12 @@ from PyQt6.QtCore import QAbstractListModel, Qt
 
 
 class AvailableRoomsModel(QAbstractListModel):
-    def __init__(self, rooms, field_index):
+    def __init__(self, rooms, field_index, model_type="reservation"):
         super().__init__()
         self._rooms = rooms
         self._field_index = field_index
 
-        if self._field_index == 1:
+        if self._field_index == 1 and self._rooms:
             unique_rooms = []
 
             seen = set()
@@ -18,7 +18,8 @@ class AvailableRoomsModel(QAbstractListModel):
                     unique_rooms.append(room)
                     seen.add(value)
 
-            unique_rooms.insert(0, [None, "-"])
+            if model_type == "reservation":
+                unique_rooms.insert(0, [None, "-"])
 
             self._rooms = unique_rooms
 
@@ -31,7 +32,7 @@ class AvailableRoomsModel(QAbstractListModel):
         return len(self._rooms)
 
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
-        if role == Qt.ItemDataRole.DisplayRole:
+        if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:
 
             return self._rooms[index.row()][self._field_index]
 

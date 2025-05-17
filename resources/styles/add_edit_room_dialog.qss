@@ -13,18 +13,17 @@ QComboBox::down-arrow {
     height: 15px;
 }
 
-
-#cancel_button, #add_room_button{
+#left_button, #right_button{
     padding: 5px;
     border: 2px solid black;
     border-radius: 5px;
 }
 
-#cancel_button{
+#left_button{
     background-color: transparent;
 }
 
-#add_room_button{
+#right_button{
     background-color: #194FCC;
     color: white;
 }

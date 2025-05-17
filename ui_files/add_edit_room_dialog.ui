@@ -27,7 +27,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <widget class="QLabel" name="add_new_room_label">
+    <widget class="QLabel" name="room_label">
      <property name="minimumSize">
       <size>
        <width>0</width>
@@ -65,7 +65,7 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QPushButton" name="cancel_button">
+       <widget class="QPushButton" name="left_button">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -81,7 +81,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="add_room_button">
+       <widget class="QPushButton" name="right_button">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -252,6 +252,9 @@
        <widget class="QComboBox" name="room_type_value_combobox">
         <property name="editable">
          <bool>true</bool>
+        </property>
+        <property name="insertPolicy">
+         <enum>QComboBox::NoInsert</enum>
         </property>
        </widget>
       </item>
