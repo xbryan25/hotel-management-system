@@ -4,11 +4,11 @@ from PyQt6.QtCore import pyqtSignal, QDateTime, Qt
 
 from datetime import datetime
 
-from ui import AddRoomDialogUI
+from ui import AddEditRoomDialogUI
 from views import ConfirmationDialog, FeedbackDialog
 
 
-class AddRoomDialog(QDialog, AddRoomDialogUI):
+class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
     clicked_add_room_button = pyqtSignal()
     clicked_browse_image_button = pyqtSignal()
 
@@ -20,6 +20,10 @@ class AddRoomDialog(QDialog, AddRoomDialogUI):
 
         self.load_fonts()
         self.set_external_stylesheet()
+
+    def load_edit_room_view(self, room_number):
+        self.room_label.setText(f"Edit {room_number}")
+        self.right_button.setText("Edit room")
 
     def update_chosen_image_label(self, filename):
         self.chosen_image_label.setText(filename)
@@ -59,21 +63,21 @@ class AddRoomDialog(QDialog, AddRoomDialogUI):
         return room_detail_inputs
 
     def connect_signals_to_slots(self):
-        self.cancel_button.clicked.connect(self.close)
-        self.add_room_button.clicked.connect(self.validate_form_completion)
+        self.left_button.clicked.connect(self.close)
+        self.right_button.clicked.connect(self.validate_form_completion)
         self.browse_image_button.clicked.connect(self.clicked_browse_image_button.emit)
 
     def set_external_stylesheet(self):
-        with open("../resources/styles/add_room_dialog.qss", "r") as file:
+        with open("../resources/styles/add_edit_room_dialog.qss", "r") as file:
             self.setStyleSheet(file.read())
 
     def load_fonts(self):
-        self.add_new_room_label.setFont(QFont("Inter", 20, QFont.Weight.Bold))
+        self.room_label.setFont(QFont("Inter", 20, QFont.Weight.Bold))
 
         self.room_details_label.setFont(QFont("Inter", 18, QFont.Weight.Bold))
 
-        self.cancel_button.setFont(QFont("Inter", 15, QFont.Weight.Bold))
-        self.add_room_button.setFont(QFont("Inter", 15, QFont.Weight.Bold))
+        self.left_button.setFont(QFont("Inter", 15, QFont.Weight.Bold))
+        self.right_button.setFont(QFont("Inter", 15, QFont.Weight.Bold))
 
         self.room_type_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
         self.room_type_value_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))

@@ -1,8 +1,8 @@
 from PyQt6.QtCore import QTimer
 
 from models import RoomsModel
-from views import AddRoomDialog
-from controllers.add_room_dialog_controller import AddRoomDialogController
+from views import AddEditRoomDialog
+from controllers.add_edit_room_dialog_controller import AddEditRoomDialogController
 
 
 class RoomsPageController:
@@ -35,19 +35,23 @@ class RoomsPageController:
 
     def load_data(self):
         if self.view_mode == "list_view":
-            self.view.update_list_view_frames_contents(self.rooms_model.get_rooms_from_current_page(self.view_mode))
+            self.view.update_list_view_frames_contents(self.rooms_model.get_rooms_from_current_page(self.view_mode),
+                                                       self.open_add_edit_room_dialog)
         else:
-            self.view.update_grid_view_frames_contents(self.rooms_model.get_rooms_from_current_page(self.view_mode))
+            self.view.update_grid_view_frames_contents(self.rooms_model.get_rooms_from_current_page(self.view_mode),
+                                                       self.open_add_edit_room_dialog)
 
-    def open_add_room_dialog(self):
-        self.add_room_dialog = AddRoomDialog()
-        self.add_room_dialog_controller = AddRoomDialogController(self.add_room_dialog, self.db_driver)
+    def open_add_edit_room_dialog(self, dialog_type, room_number=None):
+        self.add_edit_room_dialog = AddEditRoomDialog()
+        self.add_edit_room_dialog_controller = AddEditRoomDialogController(self.add_edit_room_dialog, self.db_driver,
+                                                                           dialog_type, room_number)
 
-        self.add_room_dialog.exec()
+        self.add_edit_room_dialog.exec()
 
-        self.set_models()
-        self.load_frames()
-        self.load_data()
+        if dialog_type == "add_room":
+            self.set_models()
+            self.load_frames()
+            self.load_data()
 
     def connect_signals_to_slots(self):
 
@@ -59,7 +63,7 @@ class RoomsPageController:
 
         self.view.previous_page_button_pressed.connect(self.go_to_previous_page)
 
-        self.view.clicked_add_room_button.connect(self.open_add_room_dialog)
+        self.view.clicked_add_room_button.connect(lambda: self.open_add_edit_room_dialog("add_room"))
 
     def go_to_next_page(self):
         if self.rooms_model.set_next_page(self.view_mode):

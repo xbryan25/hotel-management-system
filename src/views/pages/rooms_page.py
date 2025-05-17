@@ -106,18 +106,29 @@ class RoomsPage(QWidget, RoomsPageUI):
 
             # If item is a QSpacerItem, Python's GC will collect item, since it has no more reference
 
-    def update_list_view_frames_contents(self, data_from_model):
+    def update_list_view_frames_contents(self, data_from_model, open_add_edit_room_dialog_func):
         for row in range(self.list_view_grid_layout.count()):
 
             item = self.list_view_grid_layout.itemAtPosition(row, 0)
             if item:
                 list_rooms_frame = item.widget()
                 if list_rooms_frame:
-                    list_rooms_frame.room_num_label.setText(data_from_model[row][0].replace("room-", "#"))
+                    room_number = data_from_model[row][0]
+
+                    list_rooms_frame.room_num_label.setText(room_number.replace("room-", "#"))
                     list_rooms_frame.room_type_value_label.setText(data_from_model[row][1].capitalize())
                     list_rooms_frame.rate_value_label.setText(f"P{data_from_model[row][2]}/day")
                     list_rooms_frame.status_value_label.setText(data_from_model[row][3].capitalize())
                     list_rooms_frame.capacity_value_label.setText(str(data_from_model[row][4]))
+
+                    try:
+                        list_rooms_frame.edit_button.clicked.disconnect()
+                    except TypeError:
+                        pass
+
+                    list_rooms_frame.edit_button.clicked.connect(lambda _, mode="edit_room", rn=room_number:
+                                                                 open_add_edit_room_dialog_func(mode,
+                                                                                                room_number=rn))
 
                     relative_file_path = "../resources/icons/rooms_page/room_images/"
 
@@ -278,7 +289,7 @@ class RoomsPage(QWidget, RoomsPageUI):
 
     # Grid view end ------------------------------------------------------------------------------------------------
 
-    def update_grid_view_frames_contents(self, data_from_model):
+    def update_grid_view_frames_contents(self, data_from_model, open_add_edit_room_dialog_func):
 
         max_row, max_column = self.get_current_rows_and_columns_in_grid_layout("grid_view")
         counter = 0
@@ -294,11 +305,22 @@ class RoomsPage(QWidget, RoomsPageUI):
                     if grid_rooms_frame.objectName().startswith("dummy_frame_"):
                         continue
                     else:
+                        room_number = data_from_model[counter][0]
+
                         grid_rooms_frame.room_num_and_title_label.setText(
-                            f"{data_from_model[counter][0].replace("room-", "#")} - {data_from_model[counter][1].capitalize()}")
+                            f"{room_number.replace("room-", "#")} - {data_from_model[counter][1].capitalize()}")
                         grid_rooms_frame.rate_value_label.setText(f"P{data_from_model[counter][2]}/day")
                         grid_rooms_frame.status_value_label.setText(data_from_model[counter][3].capitalize())
                         grid_rooms_frame.capacity_label.setText(str(data_from_model[counter][4]))
+
+                        try:
+                            grid_rooms_frame.edit_button.clicked.disconnect()
+                        except TypeError:
+                            pass
+
+                        grid_rooms_frame.edit_button.clicked.connect(lambda _, mode="edit_room", rn=room_number:
+                                                                     open_add_edit_room_dialog_func(mode,
+                                                                                                    room_number=rn))
 
                         relative_file_path = "../resources/icons/rooms_page/room_images/"
 

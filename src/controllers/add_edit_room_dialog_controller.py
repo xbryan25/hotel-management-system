@@ -7,14 +7,23 @@ from views import FeedbackDialog
 from models import AvailableRoomsModel
 
 
-class AddRoomDialogController:
-    def __init__(self, dialog, db_driver):
+class AddEditRoomDialogController:
+    def __init__(self, dialog, db_driver, dialog_type, room_number):
         self.view = dialog
         self.db_driver = db_driver
+
+        self.dialog_type = dialog_type
+        self.room_number = room_number
 
         self.set_models()
 
         self.connect_signals_to_slots()
+
+        self.load_details_from_dialog_type()
+
+    def load_details_from_dialog_type(self):
+        if self.dialog_type == "edit_room":
+            self.view.load_edit_room_view(self.room_number)
 
     def connect_signals_to_slots(self):
         self.view.clicked_add_room_button.connect(self.add_room)
