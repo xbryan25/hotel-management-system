@@ -5,6 +5,16 @@ class RoomQueries:
         self.db = db
         self.cursor = cursor
 
+    def get_room_image(self, room_number):
+        sql = "SELECT rooms.image_file_name FROM rooms WHERE rooms.room_number=%s"
+        values = (room_number,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        return result[0] if result else None
+
     def has_available_room(self):
         sql = f"""SELECT COUNT(*) FROM rooms WHERE rooms.availability_status=%s"""
         values = ('available',)

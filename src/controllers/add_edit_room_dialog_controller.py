@@ -25,6 +25,9 @@ class AddEditRoomDialogController:
         if self.dialog_type == "edit_room":
             self.view.load_edit_room_view(self.room_number)
 
+            filename = self.db_driver.room_queries.get_room_image(self.room_number)
+            self.view.update_chosen_image_label(filename)
+
     def connect_signals_to_slots(self):
         self.view.clicked_add_edit_room_button.connect(self.add_or_edit_room)
         self.view.clicked_browse_image_button.connect(self.choose_image)

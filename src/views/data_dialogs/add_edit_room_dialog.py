@@ -3,6 +3,7 @@ from PyQt6.QtGui import QCursor, QFont
 from PyQt6.QtCore import pyqtSignal, QDateTime, Qt
 
 from datetime import datetime
+import os
 
 from ui import AddEditRoomDialogUI
 from views import ConfirmationDialog, FeedbackDialog
@@ -26,7 +27,15 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
         self.right_button.setText("Edit room")
 
     def update_chosen_image_label(self, filename):
-        self.chosen_image_label.setText(filename)
+        self.chosen_image_label.setText(self.truncate_filename_preserving_ext(filename))
+        self.chosen_image_label.setToolTip(filename)
+
+    @staticmethod
+    def truncate_filename_preserving_ext(filename, max_length=20):
+        name, ext = os.path.splitext(filename)
+        if len(filename) <= max_length:
+            return filename
+        return name[:max_length - len(ext) - 3] + "..." + ext
 
     def confirm_room_addition(self):
         header_message = "Are you sure you to add this room?"
