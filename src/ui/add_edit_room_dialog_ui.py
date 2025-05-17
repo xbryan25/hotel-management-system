@@ -91,6 +91,7 @@ class Ui_Dialog(object):
         self.gridLayout_2.addItem(spacerItem2, 7, 0, 1, 1)
         self.room_type_value_combobox = QtWidgets.QComboBox(parent=self.contents_frame)
         self.room_type_value_combobox.setEditable(True)
+        self.room_type_value_combobox.setInsertPolicy(QtWidgets.QComboBox.InsertPolicy.NoInsert)
         self.room_type_value_combobox.setObjectName("room_type_value_combobox")
         self.gridLayout_2.addWidget(self.room_type_value_combobox, 3, 0, 1, 2)
         self.gridLayout.addWidget(self.contents_frame, 2, 0, 1, 1)

@@ -43,7 +43,7 @@ class AddEditRoomDialogController:
 
     def set_models(self):
         available_rooms = self.db_driver.room_queries.get_available_rooms()
-        self.available_room_numbers_model = AvailableRoomsModel(available_rooms, 1)
+        self.available_room_numbers_model = AvailableRoomsModel(available_rooms, 1, model_type="rooms")
         self.view.room_type_value_combobox.setModel(self.available_room_numbers_model)
 
     def add_or_edit_room(self):
