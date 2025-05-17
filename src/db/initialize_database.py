@@ -28,19 +28,24 @@ class InitializeDatabase:
 
         self.cursor.execute(f"""CREATE TABLE IF NOT EXISTS rooms(
         room_number VARCHAR(9) NOT NULL,
-        room_type VARCHAR(25) NOT NULL, 
-        price INT NOT NULL, 
+        room_type VARCHAR(25) NOT NULL,
+        daily_rate INT NOT NULL, 
         availability_status ENUM('available', 'reserved', 'occupied') NOT NULL, 
-        capacity SMALLINT NOT NULL, 
+        capacity SMALLINT NOT NULL,
+        is_active TINYINT NOT NULL,
+        image_file_name VARCHAR(200), 
         PRIMARY KEY (room_number)
         )""")
 
         self.cursor.execute("""CREATE TABLE IF NOT EXISTS reservedRooms(
         reservation_id VARCHAR(14) NOT NULL,
-        reservation_date DATETIME NOT NULL, 
+        reservation_date DATETIME NOT NULL,
+        last_modified DATETIME NOT NULL, 
         check_in_date DATETIME NOT NULL, 
         check_out_date DATETIME NOT NULL, 
-        payment_status ENUM('not paid', 'partially paid', 'fully paid') NOT NULL, 
+        payment_status ENUM('not paid', 'partially paid', 'fully paid') NOT NULL,
+        total_reservation_cost INT NOT NULL,
+        reservation_status ENUM('pending', 'confirmed', 'cancelled', 'expired') NOT NULL,
         guest_id VARCHAR(12) NOT NULL, 
         room_number VARCHAR(9) NOT NULL, 
         FOREIGN KEY(guest_id) REFERENCES Guests(guest_id),
@@ -51,9 +56,11 @@ class InitializeDatabase:
 
         self.cursor.execute(f"""CREATE TABLE IF NOT EXISTS bookedRooms(
         booking_id VARCHAR(11) NOT NULL,
-        check_in_status ENUM('checked in', 'checked out') NOT NULL, 
+        check_in_status ENUM('in progress', 'checked out') NOT NULL, 
         check_in_date DATETIME NOT NULL, 
         check_out_date DATETIME NOT NULL, 
+        actual_check_in_date DATETIME NOT NULL,
+        actual_check_out_date DATETIME,
         guest_id VARCHAR(12) NOT NULL, 
         room_number VARCHAR(9) NOT NULL, 
         FOREIGN KEY(guest_id) REFERENCES guests(guest_id),
@@ -63,9 +70,9 @@ class InitializeDatabase:
 
         self.cursor.execute(f"""CREATE TABLE IF NOT EXISTS paidRooms(
         payment_id VARCHAR(12) NOT NULL,
-        payment_type VARCHAR(20) NOT NULL, 
+        payment_type ENUM('Cash', 'GCash', 'Maya', 'Bank Transfer', 'Others') NOT NULL, 
         amount INT NOT NULL, 
-        transaction_date DATE NOT NULL, 
+        transaction_date DATETIME NOT NULL, 
         guest_id VARCHAR(12) NOT NULL, 
         room_number VARCHAR(9) NOT NULL, 
         FOREIGN KEY(guest_id) REFERENCES guests(guest_id),
@@ -85,7 +92,9 @@ class InitializeDatabase:
 
         self.cursor.execute(f"""CREATE TABLE IF NOT EXISTS availedServices(
         avail_id VARCHAR(12) NOT NULL,
-        avail_date DATE NOT NULL, 
+        avail_date DATETIME NOT NULL,
+        avail_status ENUM('active', 'cancelled') NOT NULL,
+        quantity INT NOT NULL,
         guest_id VARCHAR(12) NOT NULL, 
         service_id VARCHAR(11) NOT NULL, 
         FOREIGN KEY(guest_id) REFERENCES guests(guest_id),
