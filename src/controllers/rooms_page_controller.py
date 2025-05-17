@@ -10,6 +10,8 @@ class RoomsPageController:
         self.view = page_widget
         self.db_driver = db_driver
 
+        self.rooms_model = None
+
         self.view_mode = "list_view"
 
         self.set_models()
@@ -20,12 +22,15 @@ class RoomsPageController:
         self.load_data()
 
     def set_models(self):
-        rooms_initial_data = self.db_driver.room_queries.get_all_rooms()
+        rooms_data = self.db_driver.room_queries.get_all_rooms()
 
         # Only for list view
         initial_rows = self.view.get_list_view_current_max_rows()
 
-        self.rooms_model = RoomsModel(rooms_initial_data, initial_rows, -1)
+        if not self.rooms_model:
+            self.rooms_model = RoomsModel(rooms_data, initial_rows, -1)
+        else:
+            self.rooms_model.update_data(rooms_data)
 
     def load_frames(self):
         if self.view_mode == "list_view":
@@ -48,10 +53,9 @@ class RoomsPageController:
 
         self.add_edit_room_dialog.exec()
 
-        if dialog_type == "add_room":
-            self.set_models()
-            self.load_frames()
-            self.load_data()
+        self.set_models()
+        self.load_frames()
+        self.load_data()
 
     def connect_signals_to_slots(self):
 
