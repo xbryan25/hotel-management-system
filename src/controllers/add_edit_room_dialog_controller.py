@@ -26,7 +26,7 @@ class AddEditRoomDialogController:
             self.view.load_edit_room_view(self.room_number)
 
     def connect_signals_to_slots(self):
-        self.view.clicked_add_room_button.connect(self.add_room)
+        self.view.clicked_add_edit_room_button.connect(self.add_or_edit_room)
         self.view.clicked_browse_image_button.connect(self.choose_image)
 
     def choose_image(self):
@@ -46,7 +46,7 @@ class AddEditRoomDialogController:
         self.available_room_numbers_model = AvailableRoomsModel(available_rooms, 1)
         self.view.room_type_value_combobox.setModel(self.available_room_numbers_model)
 
-    def add_room(self):
+    def add_or_edit_room(self):
         room_detail_inputs = self.view.get_room_detail_inputs()
 
         # Create target directory if it doesn't exist
@@ -60,7 +60,12 @@ class AddEditRoomDialogController:
         shutil.copy(self.image_file_path, dest_path)
 
         room_detail_inputs.update({'image_file_name': filename})
-        self.db_driver.room_queries.add_room(room_detail_inputs)
 
-        self.success_dialog = FeedbackDialog("Room added successfully.", connected_view=self.view)
+        if self.dialog_type == "add_room":
+            self.db_driver.room_queries.add_room(room_detail_inputs)
+        else:
+            room_detail_inputs.update({'image_file_name': filename})
+            self.db_driver.room_queries.update_room(self.room_number, room_detail_inputs)
+
+        self.success_dialog = FeedbackDialog("Room edited successfully.", connected_view=self.view)
         self.success_dialog.exec()

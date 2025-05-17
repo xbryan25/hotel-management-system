@@ -9,7 +9,7 @@ from views import ConfirmationDialog, FeedbackDialog
 
 
 class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
-    clicked_add_room_button = pyqtSignal()
+    clicked_add_edit_room_button = pyqtSignal()
     clicked_browse_image_button = pyqtSignal()
 
     def __init__(self):
@@ -36,7 +36,7 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
         self.confirmation_dialog.exec()
 
         if self.confirmation_dialog.get_choice():
-            self.clicked_add_room_button.emit()
+            self.clicked_add_edit_room_button.emit()
 
     def validate_form_completion(self):
         is_valid = True

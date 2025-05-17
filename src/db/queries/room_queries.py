@@ -141,14 +141,13 @@ class RoomQueries:
         self.db.commit()
 
     def update_room(self, old_room_number, room_information):
-        sql = """UPDATE rooms SET room_number=%s, room_type=%s, price=%s, 
-        availability_status=%s, capacity=%s WHERE room_number=%s"""
+        sql = """UPDATE rooms SET room_type=%s, daily_rate=%s,
+        capacity=%s, image_file_name=%s WHERE room_number=%s"""
 
-        values = (room_information[0],
-                  room_information[1],
-                  room_information[2],
-                  room_information[3],
-                  room_information[4],
+        values = (room_information['room_type'],
+                  room_information['daily_rate'],
+                  room_information['capacity'],
+                  room_information['image_file_name'],
                   old_room_number)
 
         self.cursor.execute(sql, values)
