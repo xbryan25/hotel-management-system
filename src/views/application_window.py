@@ -1,6 +1,6 @@
 from PyQt6.QtGui import QIcon, QFont, QFontDatabase
 from PyQt6.QtWidgets import QMainWindow, QListWidgetItem
-from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtCore import Qt, QSize, QSignalBlocker
 
 from ui import ApplicationWindowUI
 from utils import SidebarCursorChanger
@@ -42,16 +42,27 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
 
     def add_signals_to_sidebar_items(self):
         # Connects the index of the list widget to the index of the stacked widget
-        self.expanded_buttons_list_widget.currentRowChanged.connect(self.on_page_changed)
-        self.collapsed_buttons_list_widget.currentRowChanged.connect(self.on_page_changed)
+        self.expanded_buttons_list_widget.currentRowChanged.connect(self.handle_expanded_change)
+        self.collapsed_buttons_list_widget.currentRowChanged.connect(self.handle_collapsed_change)
 
         # Connects the expanded buttons list widget to the collapsed buttons list widget and vice versa
         self.expanded_buttons_list_widget.currentRowChanged.connect(self.collapsed_buttons_list_widget.setCurrentRow)
         self.collapsed_buttons_list_widget.currentRowChanged.connect(self.expanded_buttons_list_widget.setCurrentRow)
 
+    def handle_expanded_change(self, index):
+        with QSignalBlocker(self.collapsed_buttons_list_widget):
+            self.collapsed_buttons_list_widget.setCurrentRow(index)
+        self.on_page_changed(index)
+
+    def handle_collapsed_change(self, index):
+        with QSignalBlocker(self.expanded_buttons_list_widget):
+            self.expanded_buttons_list_widget.setCurrentRow(index)
+        self.on_page_changed(index)
+
     def on_page_changed(self, index):
 
         page_update_actions = {
+            1: self.rooms_page_controller.refresh_rooms_data,
             3: self.reservations_page_controller.update_reservations_table_view,
             4: self.bookings_page_controller.update_bookings_table_view,
             5: self.guests_page_controller.update_guests_table_view,
@@ -61,6 +72,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
 
         action = page_update_actions.get(index)
         if action:
+            print("Yo")
             action()
 
         self.stacked_widget.setCurrentIndex(index)
