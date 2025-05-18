@@ -24,13 +24,14 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
 
         self.set_room_number_lineedit_validator()
 
-    def load_edit_room_view(self, room_number):
+    def load_edit_room_view(self, room_number, room_details):
         self.room_label.setText(f"Edit {room_number}")
         self.right_button.setText("Edit room")
 
-        self.room_number_label.setVisible(False)
-        self.room_leading_text_label.setVisible(False)
-        self.room_number_lineedit.setVisible(False)
+        self.room_daily_rate_spinbox.setValue(room_details[2])
+        self.room_capacity_spinbox.setValue(room_details[4])
+        self.room_type_value_combobox.setCurrentText(room_details[1])
+        self.room_number_lineedit.setText(room_number.replace("room-", ""))
 
     def update_chosen_image_label(self, filename):
         self.chosen_image_label.setText(self.truncate_filename_preserving_ext(filename))

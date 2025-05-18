@@ -25,7 +25,9 @@ class AddEditRoomDialogController:
     def load_details_from_dialog_type(self):
         if self.dialog_type == "edit_room":
 
-            self.view.load_edit_room_view(self.room_number)
+            room_details = self.db_driver.room_queries.get_room_details(self.room_number)
+
+            self.view.load_edit_room_view(self.room_number, room_details)
 
             filename = self.db_driver.room_queries.get_room_image(self.room_number)
             self.image_file_path = "../resources/icons/rooms_page/room_images/" + filename
@@ -55,7 +57,7 @@ class AddEditRoomDialogController:
 
     def add_or_edit_room(self, room_number):
 
-        if self.dialog_type == "add_room" and self.db_driver.room_queries.check_if_room_number_exists(room_number):
+        if self.db_driver.room_queries.check_if_room_number_exists(room_number) and self.room_number != room_number:
             self.feedback_dialog = FeedbackDialog(f"{room_number} already exists. Try again.")
             self.feedback_dialog.exec()
             return
