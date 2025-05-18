@@ -14,15 +14,17 @@ class RoomsPageController:
 
         self.view_mode = "list_view"
 
-        self.set_models()
-
         self.connect_signals_to_slots()
 
-        self.load_frames()
-        self.load_data()
+        self.is_load_contents = False
 
-    def set_models(self):
-        rooms_data = self.db_driver.room_queries.get_all_rooms()
+        # self.set_models()
+        #
+        # self.load_frames()
+        # self.load_data()
+
+    def set_models(self, search_input=None):
+        rooms_data = self.db_driver.room_queries.get_all_rooms(search_input=search_input)
 
         # Only for list view
         initial_rows = self.view.get_list_view_current_max_rows()
@@ -99,6 +101,8 @@ class RoomsPageController:
 
         self.view.clicked_add_room_button.connect(lambda: self.open_add_edit_room_dialog("add_room"))
 
+        self.view.search_text_changed.connect(self.refresh_rooms_data)
+
     def go_to_next_page(self):
         if self.rooms_model.set_next_page(self.view_mode):
             self.load_frames()
@@ -131,10 +135,16 @@ class RoomsPageController:
         self.load_frames()
         self.load_data()
 
-    def refresh_rooms_data(self):
-        self.set_models()
+    def refresh_rooms_data(self, update_type=None, search_input=None):
+
+        self.set_models(search_input)
         self.load_frames()
-        self.load_data(update_type="status_update")
+
+        if update_type == "status_update" and self.is_load_contents:
+            self.load_data(update_type)
+        else:
+            self.load_data()
+            self.is_load_contents = True
 
     def update_frame_count(self):
 
