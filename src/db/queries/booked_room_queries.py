@@ -6,6 +6,18 @@ class BookedRoomQueries:
         self.db = db
         self.cursor = cursor
 
+    def get_num_of_bookings_from_room(self, room_number):
+        sql = """SELECT COUNT(*) FROM bookedrooms WHERE bookedrooms.room_number=%s AND 
+                    bookedrooms.check_in_status=%s"""
+
+        values = (room_number, 'in progress')
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        return result[0] if result else None
+
     def set_check_out_booking(self, booking_id):
         sql = "UPDATE bookedrooms SET check_in_status=%s, actual_check_out_date=%s WHERE booking_id=%s"
         values = ('checked out', datetime.now(), booking_id)

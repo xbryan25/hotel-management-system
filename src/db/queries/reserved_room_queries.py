@@ -1,9 +1,22 @@
 from datetime import datetime
 
+
 class ReservedRoomQueries:
     def __init__(self, db, cursor):
         self.db = db
         self.cursor = cursor
+
+    def get_num_of_reservations_from_room(self, room_number):
+        sql = """SELECT COUNT(*) FROM reservedrooms WHERE reservedrooms.room_number=%s AND 
+                    reservedrooms.reservation_status=%s"""
+
+        values = (room_number, 'pending')
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        return result[0] if result else None
 
     def set_reservation_status(self, reservation_status, reservation_id):
         sql = "UPDATE reservedrooms SET reservation_status=%s WHERE reservation_id=%s"

@@ -100,13 +100,14 @@ class RoomQueries:
             sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.daily_rate, rooms.availability_status, 
                     rooms.capacity, rooms.image_file_name
                     FROM rooms
+                    WHERE is_active=1
                     ORDER BY rooms.room_number ASC;"""
 
         else:
             sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.daily_rate, rooms.availability_status, 
                                 rooms.capacity, rooms.image_file_name
                                 FROM rooms
-                                WHERE rooms.availability_status='{room_status.lower()}'
+                                WHERE rooms.availability_status='{room_status.lower()}' AND is_active=1
                                 ORDER BY rooms.room_number ASC;"""
 
         self.cursor.execute(sql)
@@ -163,10 +164,10 @@ class RoomQueries:
         self.cursor.execute(sql, values)
         self.db.commit()
 
-    def delete_room(self, identifier):
+    def soft_delete_room(self, room_number):
 
-        sql = "DELETE FROM rooms WHERE room_number=%s"
-        values = (identifier.strip(),)
+        sql = "UPDATE rooms SET is_active=%s WHERE room_number=%s"
+        values = (False, room_number)
 
         self.cursor.execute(sql, values)
         self.db.commit()

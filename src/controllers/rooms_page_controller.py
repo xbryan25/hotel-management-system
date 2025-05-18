@@ -1,7 +1,7 @@
 from PyQt6.QtCore import QTimer
 
 from models import RoomsModel
-from views import AddEditRoomDialog
+from views import AddEditRoomDialog, ConfirmationDialog, FeedbackDialog
 from controllers.add_edit_room_dialog_controller import AddEditRoomDialogController
 
 
@@ -41,10 +41,10 @@ class RoomsPageController:
     def load_data(self):
         if self.view_mode == "list_view":
             self.view.update_list_view_frames_contents(self.rooms_model.get_rooms_from_current_page(self.view_mode),
-                                                       self.open_add_edit_room_dialog)
+                                                       self.open_add_edit_room_dialog, self.delete_room)
         else:
             self.view.update_grid_view_frames_contents(self.rooms_model.get_rooms_from_current_page(self.view_mode),
-                                                       self.open_add_edit_room_dialog)
+                                                       self.open_add_edit_room_dialog, self.delete_room)
 
     def open_add_edit_room_dialog(self, dialog_type, room_number=None):
         self.add_edit_room_dialog = AddEditRoomDialog()
@@ -56,6 +56,38 @@ class RoomsPageController:
         self.set_models()
         self.load_frames()
         self.load_data()
+
+    def delete_room(self, room_number):
+        num_of_reservations = self.db_driver.reserved_room_queries.get_num_of_reservations_from_room(room_number)
+        num_of_bookings = self.db_driver.booked_room_queries.get_num_of_bookings_from_room(room_number)
+
+        if num_of_reservations == 0 and num_of_bookings == 0:
+            header_message = "Are you sure you want to delete this room?"
+            subheader_message = "Double check all input fields before proceeding."
+            self.confirmation_dialog = ConfirmationDialog(header_message, subheader_message)
+
+            self.confirmation_dialog.exec()
+
+            if self.confirmation_dialog.get_choice():
+                self.db_driver.room_queries.soft_delete_room(room_number)
+
+            self.success_dialog = FeedbackDialog(f"{room_number} deleted successfully.")
+            self.success_dialog.exec()
+
+            self.set_models()
+            self.load_frames()
+            self.load_data()
+
+        else:
+
+            if num_of_bookings == 0:
+                subheader_message = f"It currently has a reservation."
+            else:
+                subheader_message = f"It currently has a booking."
+
+            self.feedback_dialog = FeedbackDialog("Room can't be deleted.", subheader_message)
+
+            self.feedback_dialog.exec()
 
     def connect_signals_to_slots(self):
 

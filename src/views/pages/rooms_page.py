@@ -106,7 +106,7 @@ class RoomsPage(QWidget, RoomsPageUI):
 
             # If item is a QSpacerItem, Python's GC will collect item, since it has no more reference
 
-    def update_list_view_frames_contents(self, data_from_model, open_add_edit_room_dialog_func):
+    def update_list_view_frames_contents(self, data_from_model, open_add_edit_room_dialog_func, delete_room_func):
         for row in range(self.list_view_grid_layout.count()):
 
             item = self.list_view_grid_layout.itemAtPosition(row, 0)
@@ -123,12 +123,15 @@ class RoomsPage(QWidget, RoomsPageUI):
 
                     try:
                         list_rooms_frame.edit_button.clicked.disconnect()
+                        list_rooms_frame.delete_button.clicked.disconnect()
                     except TypeError:
                         pass
 
                     list_rooms_frame.edit_button.clicked.connect(lambda _, mode="edit_room", rn=room_number:
                                                                  open_add_edit_room_dialog_func(mode,
                                                                                                 room_number=rn))
+
+                    list_rooms_frame.delete_button.clicked.connect(lambda _, rn=room_number: delete_room_func(rn))
 
                     relative_file_path = "../resources/icons/rooms_page/room_images/"
 
@@ -315,12 +318,15 @@ class RoomsPage(QWidget, RoomsPageUI):
 
                         try:
                             grid_rooms_frame.edit_button.clicked.disconnect()
+                            grid_rooms_frame.delete_button.clicked.disconnect()
                         except TypeError:
                             pass
 
                         grid_rooms_frame.edit_button.clicked.connect(lambda _, mode="edit_room", rn=room_number:
                                                                      open_add_edit_room_dialog_func(mode,
                                                                                                     room_number=rn))
+
+                        grid_rooms_frame.delete_button.clicked.connect(lambda _, rn=room_number: delete_room_func(rn))
 
                         relative_file_path = "../resources/icons/rooms_page/room_images/"
 
