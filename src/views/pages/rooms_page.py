@@ -410,8 +410,8 @@ class RoomsPage(QWidget, RoomsPageUI):
 
         self.search_lineedit.setFont(QFont("Inter", 16, QFont.Weight.Normal))
 
-        self.room_types_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
-        self.room_status_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+        self.sort_by_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+        self.sort_type_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.add_room_button.setFont(QFont("Inter", 12, QFont.Weight.Normal))
 
         self.previous_page_button.setFont(QFont("Inter", 11, QFont.Weight.Normal))

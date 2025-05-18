@@ -110,7 +110,7 @@ class RoomQueries:
 
         return list_result
 
-    def get_all_rooms(self, room_status=None, search_input=None):
+    def get_all_rooms(self, room_status=None, sort_by="room_number", sort_type="ASC", search_input=None):
 
         if search_input:
             search_input_query = """ AND (
@@ -136,14 +136,14 @@ class RoomQueries:
                     rooms.capacity, rooms.image_file_name
                     FROM rooms
                     WHERE is_active=1 {search_input_query}
-                    ORDER BY rooms.room_number ASC;"""
+                    ORDER BY rooms.{sort_by} {sort_type};"""
 
         else:
             sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.daily_rate, rooms.availability_status, 
                                 rooms.capacity, rooms.image_file_name
                                 FROM rooms
                                 WHERE rooms.availability_status='{room_status.lower()}' AND is_active=1 {search_input_query}
-                                ORDER BY rooms.room_number ASC;"""
+                                ORDER BY rooms.{sort_by} {sort_type};"""
 
         self.cursor.execute(sql, values)
 

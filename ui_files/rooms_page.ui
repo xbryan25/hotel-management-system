@@ -179,7 +179,7 @@
        <number>0</number>
       </property>
       <item row="2" column="0">
-       <widget class="QComboBox" name="room_types_combobox">
+       <widget class="QComboBox" name="sort_by_combobox">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -191,7 +191,27 @@
         </property>
         <item>
          <property name="text">
-          <string>All Room Types</string>
+          <string>Sort by Room Number</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Sort by Room Type</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Sort by Capacity</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Sort by Rate</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Sort by Status</string>
          </property>
         </item>
        </widget>
@@ -213,7 +233,7 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QComboBox" name="room_status_combobox">
+       <widget class="QComboBox" name="sort_type_combobox">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -225,7 +245,12 @@
         </property>
         <item>
          <property name="text">
-          <string>Any Room Status</string>
+          <string>Ascending</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Descending</string>
          </property>
         </item>
        </widget>

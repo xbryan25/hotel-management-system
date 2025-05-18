@@ -23,8 +23,9 @@ class RoomsPageController:
         # self.load_frames()
         # self.load_data()
 
-    def set_models(self, search_input=None):
-        rooms_data = self.db_driver.room_queries.get_all_rooms(search_input=search_input)
+    def set_models(self, sort_by, sort_type, search_input=None):
+        rooms_data = self.db_driver.room_queries.get_all_rooms(sort_by=sort_by, sort_type=sort_type,
+                                                               search_input=search_input)
 
         # Only for list view
         initial_rows = self.view.get_list_view_current_max_rows()
@@ -91,6 +92,9 @@ class RoomsPageController:
 
     def connect_signals_to_slots(self):
 
+        self.view.sort_by_combobox.currentTextChanged.connect(self.refresh_rooms_data)
+        self.view.sort_type_combobox.currentTextChanged.connect(self.refresh_rooms_data)
+
         self.view.window_resized.connect(self.update_frame_count)
 
         self.view.change_view_mode.connect(self.change_view_mode)
@@ -137,7 +141,11 @@ class RoomsPageController:
 
     def refresh_rooms_data(self, update_type=None, search_input=None):
 
-        self.set_models(search_input)
+        sort_by = self.view.sort_by_combobox.currentText().replace("Sort by ", "").lower().replace(" ", "_")
+        sort_type = "ASC" if self.view.sort_type_combobox.currentText() == "Ascending" else "DESC"
+
+
+        self.set_models(sort_by, sort_type, search_input)
         self.load_frames()
 
         if update_type == "status_update" and self.is_load_contents:
