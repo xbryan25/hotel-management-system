@@ -38,13 +38,13 @@ class RoomsPageController:
         else:
             self.view.make_grid_view_rooms_frame(self.rooms_model.get_per_page(self.view_mode))
 
-    def load_data(self):
+    def load_data(self, update_type="rooms_update"):
         if self.view_mode == "list_view":
             self.view.update_list_view_frames_contents(self.rooms_model.get_rooms_from_current_page(self.view_mode),
-                                                       self.open_add_edit_room_dialog, self.delete_room)
+                                                       self.open_add_edit_room_dialog, self.delete_room, update_type)
         else:
             self.view.update_grid_view_frames_contents(self.rooms_model.get_rooms_from_current_page(self.view_mode),
-                                                       self.open_add_edit_room_dialog, self.delete_room)
+                                                       self.open_add_edit_room_dialog, self.delete_room, update_type)
 
     def open_add_edit_room_dialog(self, dialog_type, room_number=None):
         self.add_edit_room_dialog = AddEditRoomDialog()
@@ -53,9 +53,7 @@ class RoomsPageController:
 
         self.add_edit_room_dialog.exec()
 
-        self.set_models()
-        self.load_frames()
-        self.load_data()
+        self.refresh_rooms_data()
 
     def delete_room(self, room_number):
         num_of_reservations = self.db_driver.reserved_room_queries.get_num_of_reservations_from_room(room_number)
@@ -133,17 +131,22 @@ class RoomsPageController:
         self.load_frames()
         self.load_data()
 
-    def update_frame_count(self, widget):
+    def refresh_rooms_data(self):
+        self.set_models()
+        self.load_frames()
+        self.load_data(update_type="status_update")
 
-        if widget == self.view.list_view_widget:
+    def update_frame_count(self):
+
+        if self.view_mode == "list_view":
             self.update_list_view_contents()
 
-        elif widget == self.view.grid_view_widget:
+        elif self.view_mode == "grid_view":
             self.update_grid_view_contents()
 
     def update_list_view_contents(self):
         new_rows = self.view.get_list_view_current_max_rows()
-        print(new_rows)
+        # print(new_rows)
 
         if new_rows != self.rooms_model.get_max_rows_per_page():
             self.rooms_model.set_max_rows_per_page(new_rows)
