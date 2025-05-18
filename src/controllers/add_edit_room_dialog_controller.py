@@ -24,6 +24,7 @@ class AddEditRoomDialogController:
 
     def load_details_from_dialog_type(self):
         if self.dialog_type == "edit_room":
+
             self.view.load_edit_room_view(self.room_number)
 
             filename = self.db_driver.room_queries.get_room_image(self.room_number)
@@ -81,7 +82,7 @@ class AddEditRoomDialogController:
 
             header_message = "Room added successfully."
         else:
-            room_detail_inputs.update({'image_file_name': filename})
+            # room_detail_inputs.update({'image_file_name': filename})
             self.db_driver.room_queries.update_room(self.room_number, room_detail_inputs)
 
             header_message = "Room edited successfully."

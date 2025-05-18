@@ -146,11 +146,11 @@ class RoomQueries:
                 (room_number, room_type, daily_rate, availability_status, capacity, is_active, image_file_name) VALUES
                 (%s, %s, %s, %s, %s, %s, %s)"""
 
-        latest_room_number = self.get_latest_room_number()
+        # latest_room_number = self.get_latest_room_number()
+        #
+        # new_room_number = f"room-{int(latest_room_number[6:]) + 1:04}"
 
-        new_room_number = f"room-{int(latest_room_number[6:]) + 1:04}"
-
-        values = (new_room_number,
+        values = (room_information['room_number'],
                   room_information['room_type'],
                   room_information['daily_rate'],
                   'available',
@@ -162,10 +162,11 @@ class RoomQueries:
         self.db.commit()
 
     def update_room(self, old_room_number, room_information):
-        sql = """UPDATE rooms SET room_type=%s, daily_rate=%s,
+        sql = """UPDATE rooms SET room_number=%s, room_type=%s, daily_rate=%s,
         capacity=%s, image_file_name=%s WHERE room_number=%s"""
 
-        values = (room_information['room_type'],
+        values = (room_information['room_number'],
+                  room_information['room_type'],
                   room_information['daily_rate'],
                   room_information['capacity'],
                   room_information['image_file_name'],

@@ -57,7 +57,7 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
         self.confirmation_dialog.exec()
 
         if self.confirmation_dialog.get_choice():
-            self.clicked_add_edit_room_button.emit(room_number)
+            self.clicked_add_edit_room_button.emit("room-" + room_number)
 
     def validate_form_completion(self):
         has_chosen_image = True
@@ -107,6 +107,7 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
     def get_room_detail_inputs(self):
         room_detail_inputs = {}
 
+        room_detail_inputs.update({"room_number": "room-" + self.room_number_lineedit.text()})
         room_detail_inputs.update({"room_type": self.room_type_value_combobox.currentText()})
         room_detail_inputs.update({"daily_rate": self.room_daily_rate_spinbox.value()})
         room_detail_inputs.update({"capacity": self.room_capacity_spinbox.value()})
