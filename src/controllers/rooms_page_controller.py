@@ -18,6 +18,8 @@ class RoomsPageController:
 
         self.is_load_contents = False
 
+        self.prev_search_input = None
+
         # self.set_models()
         #
         # self.load_frames()
@@ -105,7 +107,11 @@ class RoomsPageController:
 
         self.view.clicked_add_room_button.connect(lambda: self.open_add_edit_room_dialog("add_room"))
 
-        self.view.search_text_changed.connect(self.refresh_rooms_data)
+        self.view.search_text_changed.connect(self.update_prev_search_input)
+        self.view.search_text_changed.connect(lambda _: self.refresh_rooms_data())
+
+    def update_prev_search_input(self, search_input):
+        self.prev_search_input = search_input
 
     def go_to_next_page(self):
         if self.rooms_model.set_next_page(self.view_mode):
@@ -145,7 +151,7 @@ class RoomsPageController:
         sort_type = "ASC" if self.view.sort_type_combobox.currentText() == "Ascending" else "DESC"
 
 
-        self.set_models(sort_by, sort_type, search_input)
+        self.set_models(sort_by, sort_type, self.prev_search_input)
         self.load_frames()
 
         if update_type == "status_update" and self.is_load_contents:
