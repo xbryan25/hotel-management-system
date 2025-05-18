@@ -62,7 +62,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
     def on_page_changed(self, index):
 
         page_update_actions = {
-            1: self.rooms_page_controller.refresh_rooms_data,
+            1: lambda: self.rooms_page_controller.refresh_rooms_data(update_type="status_update"),
             3: self.reservations_page_controller.update_reservations_table_view,
             4: self.bookings_page_controller.update_bookings_table_view,
             5: self.guests_page_controller.update_guests_table_view,
@@ -72,7 +72,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
 
         action = page_update_actions.get(index)
         if action:
-            print("Yo")
             action()
 
         self.stacked_widget.setCurrentIndex(index)

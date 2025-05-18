@@ -16,6 +16,7 @@ class RoomsPage(QWidget, RoomsPageUI):
     previous_page_button_pressed = pyqtSignal()
     change_view_mode = pyqtSignal(str)
     clicked_add_room_button = pyqtSignal()
+    search_text_changed = pyqtSignal(str)
 
     def __init__(self):
         super().__init__()
@@ -32,6 +33,8 @@ class RoomsPage(QWidget, RoomsPageUI):
 
         self.rooms_view_stacked_widget.setCurrentWidget(self.list_view_widget)
 
+        self.add_timer_to_search_lineedit()
+
         self.connect_signals_to_slots()
 
         self.set_external_stylesheet()
@@ -39,6 +42,18 @@ class RoomsPage(QWidget, RoomsPageUI):
         self.load_fonts()
 
         self.set_icons()
+
+    def add_timer_to_search_lineedit(self):
+        self.timer = QTimer()
+
+        self.timer.setInterval(300)
+        self.timer.setSingleShot(True)
+
+    def start_debounce_timer(self):
+        self.timer.start()
+
+    def on_debounced_text_changed(self):
+        self.search_text_changed.emit(self.search_lineedit.text())
 
     def connect_signals_to_slots(self):
         self.grid_view_button.clicked.connect(self.switch_to_grid_view)
@@ -48,6 +63,9 @@ class RoomsPage(QWidget, RoomsPageUI):
         self.previous_page_button.clicked.connect(self.previous_page_button_pressed.emit)
 
         self.add_room_button.clicked.connect(self.clicked_add_room_button.emit)
+
+        self.search_lineedit.textChanged.connect(self.start_debounce_timer)
+        self.timer.timeout.connect(self.on_debounced_text_changed)
 
     def switch_to_list_view(self):
         self.rooms_view_stacked_widget.setCurrentWidget(self.list_view_widget)
@@ -392,8 +410,8 @@ class RoomsPage(QWidget, RoomsPageUI):
 
         self.search_lineedit.setFont(QFont("Inter", 16, QFont.Weight.Normal))
 
-        self.room_types_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
-        self.room_status_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+        self.sort_by_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+        self.sort_type_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.add_room_button.setFont(QFont("Inter", 12, QFont.Weight.Normal))
 
         self.previous_page_button.setFont(QFont("Inter", 11, QFont.Weight.Normal))

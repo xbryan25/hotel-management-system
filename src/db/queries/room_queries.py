@@ -110,7 +110,22 @@ class RoomQueries:
 
         return list_result
 
-    def get_all_rooms(self, room_status=None):
+    def get_all_rooms(self, room_status=None, sort_by="room_number", sort_type="ASC", search_input=None):
+
+        if search_input:
+            search_input_query = """ AND (
+                      rooms.room_number LIKE %s OR
+                      rooms.room_type LIKE %s OR
+                      CAST(rooms.daily_rate AS CHAR) LIKE %s OR
+                      rooms.availability_status LIKE %s OR
+                      CAST(rooms.capacity AS CHAR) LIKE %s
+                    )"""
+
+            search_input = f"%{search_input}%"
+            values = (search_input, search_input, search_input, search_input, search_input)
+        else:
+            search_input_query = ""
+            values = ()
 
         # Maintenance still not in DB, configure later
         if room_status == "Maintenance":
@@ -120,17 +135,17 @@ class RoomQueries:
             sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.daily_rate, rooms.availability_status, 
                     rooms.capacity, rooms.image_file_name
                     FROM rooms
-                    WHERE is_active=1
-                    ORDER BY rooms.room_number ASC;"""
+                    WHERE is_active=1 {search_input_query}
+                    ORDER BY rooms.{sort_by} {sort_type};"""
 
         else:
             sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.daily_rate, rooms.availability_status, 
                                 rooms.capacity, rooms.image_file_name
                                 FROM rooms
-                                WHERE rooms.availability_status='{room_status.lower()}' AND is_active=1
-                                ORDER BY rooms.room_number ASC;"""
+                                WHERE rooms.availability_status='{room_status.lower()}' AND is_active=1 {search_input_query}
+                                ORDER BY rooms.{sort_by} {sort_type};"""
 
-        self.cursor.execute(sql)
+        self.cursor.execute(sql, values)
 
         result = self.cursor.fetchall()
 
