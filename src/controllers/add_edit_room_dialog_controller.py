@@ -14,6 +14,7 @@ class AddEditRoomDialogController:
 
         self.dialog_type = dialog_type
         self.room_number = room_number
+        self.image_file_path = None
 
         self.set_models()
 
@@ -26,6 +27,8 @@ class AddEditRoomDialogController:
             self.view.load_edit_room_view(self.room_number)
 
             filename = self.db_driver.room_queries.get_room_image(self.room_number)
+            self.image_file_path = "../resources/icons/rooms_page/room_images/" + filename
+
             self.view.update_chosen_image_label(filename)
 
     def connect_signals_to_slots(self):
@@ -49,26 +52,40 @@ class AddEditRoomDialogController:
         self.available_room_numbers_model = AvailableRoomsModel(available_rooms, 1, model_type="rooms")
         self.view.room_type_value_combobox.setModel(self.available_room_numbers_model)
 
-    def add_or_edit_room(self):
+    def add_or_edit_room(self, room_number):
+
+        if self.dialog_type == "add_room" and self.db_driver.room_queries.check_if_room_number_exists(room_number):
+            self.feedback_dialog = FeedbackDialog(f"{room_number} already exists. Try again.")
+            self.feedback_dialog.exec()
+            return
+
         room_detail_inputs = self.view.get_room_detail_inputs()
 
         # Create target directory if it doesn't exist
-        target_dir = os.path.join(os.getcwd(), "../resources/icons/rooms_page/room_images")
+        room_images_dir = "../resources/icons/rooms_page/room_images"
+        target_dir = os.path.join(os.getcwd(), room_images_dir)
         os.makedirs(target_dir, exist_ok=True)
 
         filename = os.path.basename(self.image_file_path)
         dest_path = os.path.join(target_dir, filename)
 
-        # Copy the file
-        shutil.copy(self.image_file_path, dest_path)
+        # Check if they both lead to the same file
+        if os.path.abspath(os.path.normpath(self.image_file_path)) != os.path.abspath(os.path.normpath(dest_path)):
+            # Copy the file
+            shutil.copy(self.image_file_path, dest_path)
 
         room_detail_inputs.update({'image_file_name': filename})
 
         if self.dialog_type == "add_room":
             self.db_driver.room_queries.add_room(room_detail_inputs)
+
+            header_message = "Room added successfully."
         else:
             room_detail_inputs.update({'image_file_name': filename})
             self.db_driver.room_queries.update_room(self.room_number, room_detail_inputs)
 
-        self.success_dialog = FeedbackDialog("Room edited successfully.", connected_view=self.view)
+            header_message = "Room edited successfully."
+
+
+        self.success_dialog = FeedbackDialog(header_message, connected_view=self.view)
         self.success_dialog.exec()
