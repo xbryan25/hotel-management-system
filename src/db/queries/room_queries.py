@@ -185,10 +185,10 @@ class RoomQueries:
         self.cursor.execute(sql, values)
         self.db.commit()
 
-    def soft_delete_room(self, room_number):
+    def delete_room(self, room_number):
 
-        sql = "UPDATE rooms SET is_active=%s WHERE room_number=%s"
-        values = (False, room_number)
+        sql = "DELETE FROM rooms WHERE room_number=%s"
+        values = (room_number)
 
         self.cursor.execute(sql, values)
         self.db.commit()

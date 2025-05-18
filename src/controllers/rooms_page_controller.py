@@ -63,20 +63,20 @@ class RoomsPageController:
 
         if num_of_reservations == 0 and num_of_bookings == 0:
             header_message = "Are you sure you want to delete this room?"
-            subheader_message = "Double check all input fields before proceeding."
+            subheader_message = "Connected reservations and bookings will also be removed."
             self.confirmation_dialog = ConfirmationDialog(header_message, subheader_message)
 
             self.confirmation_dialog.exec()
 
             if self.confirmation_dialog.get_choice():
-                self.db_driver.room_queries.soft_delete_room(room_number)
+                self.db_driver.room_queries.delete_room(room_number)
 
-            self.success_dialog = FeedbackDialog(f"{room_number} deleted successfully.")
-            self.success_dialog.exec()
+                self.set_models()
+                self.load_frames()
+                self.load_data()
 
-            self.set_models()
-            self.load_frames()
-            self.load_data()
+                self.success_dialog = FeedbackDialog(f"{room_number} deleted successfully.")
+                self.success_dialog.exec()
 
         else:
 
