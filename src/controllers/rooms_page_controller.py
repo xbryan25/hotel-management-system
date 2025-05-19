@@ -49,14 +49,14 @@ class RoomsPageController:
         else:
             self.view.make_grid_view_rooms_frame(self.rooms_model.get_len_of_data())
 
-    def load_data(self, update_type="rooms_update"):
+    def load_data(self):
 
         if self.view_mode == "list_view":
             self.view.update_list_view_frames_contents(self.rooms_model.get_contents(),
-                                                       self.open_add_edit_room_dialog, self.delete_room, update_type)
+                                                       self.open_add_edit_room_dialog, self.delete_room)
         else:
             self.view.update_grid_view_frames_contents(self.rooms_model.get_contents(),
-                                                       self.open_add_edit_room_dialog, self.delete_room, update_type)
+                                                       self.open_add_edit_room_dialog, self.delete_room)
 
     def open_add_edit_room_dialog(self, dialog_type, room_number=None):
         self.add_edit_room_dialog = AddEditRoomDialog()
@@ -125,9 +125,9 @@ class RoomsPageController:
             self.current_page += 1
 
             self.refresh_rooms_data()
-            print()
-            print(self.rooms_model.get_len_of_data())
-            print(self.rooms_model.get_contents())
+            # print()
+            # print(self.rooms_model.get_len_of_data())
+            # print(self.rooms_model.get_contents())
 
     def go_to_previous_page(self):
 
@@ -163,7 +163,7 @@ class RoomsPageController:
 
         self.refresh_rooms_data()
 
-    def refresh_rooms_data(self, update_type=None):
+    def refresh_rooms_data(self):
 
         self.prev_sort_by = self.view.sort_by_combobox.currentText().replace("Sort by ", "").lower().replace(" ", "_")
         self.prev_sort_type = "ASC" if self.view.sort_type_combobox.currentText() == "Ascending" else "DESC"
@@ -186,12 +186,7 @@ class RoomsPageController:
             return
         else:
             self.load_frames()
-
-            if update_type == "status_update" and self.is_load_contents:
-                self.load_data(update_type)
-            else:
-                self.load_data()
-                self.is_load_contents = True
+            self.load_data()
 
     def check_if_underflow_contents(self):
         if self.rooms_model.get_len_of_data() == 0:

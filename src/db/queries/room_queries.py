@@ -113,6 +113,9 @@ class RoomQueries:
     def get_all_rooms(self, room_status=None, max_room_per_page=5, current_page_number=1,
                       sort_by="room_number", sort_type="ASC", search_input=None):
 
+        if sort_by == "status":
+            sort_by = "availability_status"
+
         if search_input:
             search_input_query = """ AND (
                       rooms.room_number LIKE %s OR
