@@ -429,7 +429,6 @@ class RoomsPage(QWidget, RoomsPageUI):
         if width_diff >= self.size_change_threshold or height_diff >= self.size_change_threshold:
 
             self.window_resized.emit()
-            print("activate")
 
             self.previous_width = current_width
             self.previous_height = current_height
