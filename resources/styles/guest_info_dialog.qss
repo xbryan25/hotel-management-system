@@ -1,0 +1,35 @@
+QFrame{
+    border: none;
+}
+
+QLabel{
+    color: #000000;
+}
+
+QPushButton{
+    border-radius: 10px;
+}
+
+QPushButton#right_button{
+    border: 1px solid #D11A2A;
+    background-color: #FFFFFF;
+    color: #D11A2A;
+}
+
+QPushButton#left_button{
+    border: 1px solid #000000;
+    background-color: #FFFFFF;
+    color: #000000;
+}
+
+#right_button::hover{
+    border: none;
+    background-color: #D11A2A;
+    color: white;
+}
+
+#left_button::hover{
+    border: none;
+    background-color: #000000;
+    color: white;
+}

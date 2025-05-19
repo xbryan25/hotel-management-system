@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtGui import QFont
 
 from ui import GuestInfoDialogUI
 
@@ -15,6 +16,9 @@ class GuestInfoDialog(QDialog, GuestInfoDialogUI):
         self.setupUi(self)
 
         self.connect_default_signals_to_slots()
+
+        self.set_external_stylesheet()
+        self.load_fonts()
 
         self.information_mode = "view"
 
@@ -72,10 +76,38 @@ class GuestInfoDialog(QDialog, GuestInfoDialogUI):
         self.right_button.clicked.connect(self.reconnect_to_default_signals)
 
     def load_fonts(self):
-        pass
+        self.guest_details_label.setFont(QFont("Inter", 20, QFont.Weight.Bold))
+
+        self.guest_id_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
+        self.name_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
+        self.sex_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
+        self.home_address_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
+        self.email_address_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
+        self.phone_number_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
+        self.birth_date_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
+        self.government_id_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
+        self.last_visit_date_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
+        self.total_visit_count_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
+        self.total_amount_due_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
+        
+        self.guest_id_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.name_value_label.setFont(QFont("Inter", 10, QFont.Weight.Normal))
+        self.sex_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.home_address_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.email_address_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.phone_number_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.birth_date_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.government_id_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.last_visit_date_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.total_visit_count_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.total_amount_due_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+
+        self.left_button.setFont(QFont("Inter", 10, QFont.Weight.Bold))
+        self.right_button.setFont(QFont("Inter", 10, QFont.Weight.Bold))
 
     def set_external_stylesheet(self):
-        pass
+        with open("../resources/styles/guest_info_dialog.qss", "r") as file:
+            self.setStyleSheet(file.read())
 
     def connect_default_signals_to_slots(self):
         # Add signal to call controller that mode is changed, to call set_guest_info_again

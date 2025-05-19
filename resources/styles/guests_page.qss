@@ -32,7 +32,7 @@ QComboBox::down-arrow {
 
 }
 
-search_lineedit::placeholder{
+#search_lineedit::placeholder{
     color: black;
 }
 
@@ -56,12 +56,7 @@ search_lineedit::placeholder{
     border-radius: 5px;
 }
 
-#guest_table_view{
-    border: none;
+QTableView{
     background-color: #FFFFFF;
-    color: black;
-}
-
-#guest_table_view QHeaderView::section{
-    color: black;
+    color: #000000;
 }

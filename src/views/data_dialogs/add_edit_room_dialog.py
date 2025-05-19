@@ -147,4 +147,4 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
 
         self.room_image_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
         self.chosen_image_label.setFont(QFont("Inter", 12, QFont.Weight.Normal))
-        self.browse_image_button.setFont(QFont("Inter", 12, QFont.Weight.Bold))
+        self.browse_image_button.setFont(QFont("Inter", 12, QFont.Weight.Normal))
