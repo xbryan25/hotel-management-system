@@ -18,6 +18,8 @@ class RoomsPageController:
 
         self.is_load_contents = False
 
+        self.prev_sort_by = None
+        self.prev_sort_type = None
         self.prev_search_input = None
 
         self.current_page = 1
@@ -122,18 +124,7 @@ class RoomsPageController:
         if self.current_page + 1 <= self.total_pages(room_count):
             self.current_page += 1
 
-            if self.view_mode == "list_view":
-                self.set_models(max_room_per_page=self.max_rows_per_page, current_page_number=self.current_page,
-                                search_input=self.prev_search_input)
-
-            elif self.view_mode == "grid_view":
-                self.set_models(max_room_per_page=self.max_rows_per_page*self.max_columns_per_page,
-                                current_page_number=self.current_page,
-                                search_input=self.prev_search_input)
-
-            self.load_frames()
-            self.load_data()
-
+            self.refresh_rooms_data()
             print()
             print(self.rooms_model.get_len_of_data())
             print(self.rooms_model.get_contents())
@@ -164,38 +155,30 @@ class RoomsPageController:
             self.max_rows_per_page = self.view.get_list_view_current_max_rows()
             self.max_columns_per_page = -1
 
-            self.set_models(max_room_per_page=self.max_rows_per_page, current_page_number=self.current_page,
-                            search_input=self.prev_search_input)
-
         elif new_view_mode == "grid_view":
             self.view_mode = "grid_view"
 
             self.max_rows_per_page = self.view.get_grid_view_current_max_rows()
             self.max_columns_per_page = self.view.get_grid_view_current_max_columns()
 
-            self.set_models(max_room_per_page=self.max_rows_per_page*self.max_columns_per_page,
-                            current_page_number=self.current_page,
-                            search_input=self.prev_search_input)
-
-        self.load_frames()
-        self.load_data()
+        self.refresh_rooms_data()
 
     def refresh_rooms_data(self, update_type=None):
 
-        sort_by = self.view.sort_by_combobox.currentText().replace("Sort by ", "").lower().replace(" ", "_")
-        sort_type = "ASC" if self.view.sort_type_combobox.currentText() == "Ascending" else "DESC"
+        self.prev_sort_by = self.view.sort_by_combobox.currentText().replace("Sort by ", "").lower().replace(" ", "_")
+        self.prev_sort_type = "ASC" if self.view.sort_type_combobox.currentText() == "Ascending" else "DESC"
 
         if self.view_mode == "list_view":
             self.set_models(max_room_per_page=self.max_rows_per_page,
                             current_page_number=self.current_page,
-                            sort_by=sort_by,
-                            sort_type=sort_type,
+                            sort_by=self.prev_sort_by,
+                            sort_type=self.prev_sort_type,
                             search_input=self.prev_search_input)
         else:
             self.set_models(max_room_per_page=self.max_rows_per_page * self.max_columns_per_page,
                             current_page_number=self.current_page,
-                            sort_by=sort_by,
-                            sort_type=sort_type,
+                            sort_by=self.prev_sort_by,
+                            sort_type=self.prev_sort_type,
                             search_input=self.prev_search_input)
 
         if self.check_if_underflow_contents():
@@ -231,13 +214,7 @@ class RoomsPageController:
         if new_rows != self.max_rows_per_page:
             self.max_rows_per_page = new_rows
 
-            self.set_models(max_room_per_page=self.max_rows_per_page,
-                            current_page_number=self.current_page,
-                            search_input=self.prev_search_input)
-
-            if not self.check_if_underflow_contents():
-                self.load_frames()
-                self.load_data()
+            self.refresh_rooms_data()
 
     def update_grid_view_contents(self):
         new_rows = self.view.get_grid_view_current_max_rows()
@@ -247,11 +224,4 @@ class RoomsPageController:
             self.max_rows_per_page = new_rows
             self.max_columns_per_page = new_columns
 
-            self.set_models(max_room_per_page=self.max_rows_per_page * self.max_columns_per_page,
-                            current_page_number=self.current_page,
-                            search_input=self.prev_search_input)
-
-            if not self.check_if_underflow_contents():
-
-                self.load_frames()
-                self.load_data()
+            self.refresh_rooms_data()
