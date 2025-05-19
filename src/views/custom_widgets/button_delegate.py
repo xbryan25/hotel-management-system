@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QStyledItemDelegate, QStyleOptionButton, QApplication, QStyle
 from PyQt6.QtCore import Qt, pyqtSignal, QModelIndex, QSize
-from PyQt6.QtGui import QMouseEvent, QCursor, QIcon, QColor
+from PyQt6.QtGui import QMouseEvent, QCursor, QIcon, QColor, QBrush
 
 
 class ButtonDelegate(QStyledItemDelegate):
@@ -15,6 +15,10 @@ class ButtonDelegate(QStyledItemDelegate):
 
     # Load visual representation
     def paint(self, painter, option, index):
+
+        painter.save()
+        painter.fillRect(option.rect, QBrush(QColor("#FFFFFF")))  # Light blue, for example
+        painter.restore()
 
         button = QStyleOptionButton()
         button.rect = option.rect
@@ -38,7 +42,7 @@ class ButtonDelegate(QStyledItemDelegate):
 
         QApplication.style().drawControl(QStyle.ControlElement.CE_PushButton, button, painter)
 
-        super().paint(painter, option, index)
+        # super().paint(painter, option, index)
 
     # Handle events made to the button
     def editorEvent(self, event, model, option, index):

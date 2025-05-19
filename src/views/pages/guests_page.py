@@ -64,22 +64,20 @@ class GuestsPage(QWidget, GuestsPageUI):
             }
         """)
 
-        guest_table_view_header.resizeSection(0, 10)
-        guest_table_view_header.resizeSection(2, 105)
-        guest_table_view_header.resizeSection(3, 150)
-        guest_table_view_header.resizeSection(4, 150)
-        guest_table_view_header.resizeSection(5, 150)
-        guest_table_view_header.resizeSection(6, 115)
-        guest_table_view_header.resizeSection(7, 45)
+        # guest_table_view_header.resizeSection(0, 10)
+        guest_table_view_header.resizeSection(2, 150)
+        guest_table_view_header.resizeSection(3, 140)
+        guest_table_view_header.resizeSection(4, 130)
+        guest_table_view_header.resizeSection(5, 170)
+        guest_table_view_header.resizeSection(6, 50)
 
-        guest_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+        # guest_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
         guest_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         guest_table_view_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
         guest_table_view_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
         guest_table_view_header.setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
         guest_table_view_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
         guest_table_view_header.setSectionResizeMode(6, QHeaderView.ResizeMode.Fixed)
-        guest_table_view_header.setSectionResizeMode(7, QHeaderView.ResizeMode.Fixed)
 
     def set_table_views_button_delegate(self):
         button_delegate_icon_path = "../resources/icons/guests_page/info_icon.svg"
@@ -88,16 +86,13 @@ class GuestsPage(QWidget, GuestsPageUI):
                                               can_be_disabled=False,
                                               parent=self.guest_table_view)
 
-
-
-        self.guest_table_view.setItemDelegateForColumn(7, self.button_delegate)
+        self.guest_table_view.setItemDelegateForColumn(6, self.button_delegate)
 
     def connect_signals_to_slots(self):
         self.button_delegate.clicked.connect(self.clicked_info_button.emit)
 
         self.search_lineedit.textChanged.connect(self.start_debounce_timer)
         self.timer.timeout.connect(self.on_debounced_text_changed)
-
 
     def disable_table_views_selection_mode(self):
         self.guest_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)

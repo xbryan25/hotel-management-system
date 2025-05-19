@@ -17,7 +17,6 @@ class CustomTableView(QTableView):
 
         self.horizontalHeader().setMinimumSectionSize(25)
 
-
     def hide_first_column(self):
         # Hide 'Guest ID' column
         self.setColumnHidden(0, True)
