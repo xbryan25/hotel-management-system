@@ -110,7 +110,11 @@ class RoomQueries:
 
         return list_result
 
-    def get_all_rooms(self, room_status=None, sort_by="room_number", sort_type="ASC", search_input=None):
+    def get_all_rooms(self, room_status=None, max_room_per_page=5, current_page_number=1,
+                      sort_by="room_number", sort_type="ASC", search_input=None):
+
+        if sort_by == "status":
+            sort_by = "availability_status"
 
         if search_input:
             search_input_query = """ AND (
@@ -136,14 +140,17 @@ class RoomQueries:
                     rooms.capacity, rooms.image_file_name
                     FROM rooms
                     WHERE is_active=1 {search_input_query}
-                    ORDER BY rooms.{sort_by} {sort_type};"""
+                    """
 
         else:
             sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.daily_rate, rooms.availability_status, 
                                 rooms.capacity, rooms.image_file_name
                                 FROM rooms
                                 WHERE rooms.availability_status='{room_status.lower()}' AND is_active=1 {search_input_query}
-                                ORDER BY rooms.{sort_by} {sort_type};"""
+                                """
+
+        sql += f""" ORDER BY rooms.{sort_by} {sort_type} LIMIT {max_room_per_page}
+                    OFFSET {max_room_per_page * (current_page_number - 1)}"""
 
         self.cursor.execute(sql, values)
 
@@ -153,12 +160,30 @@ class RoomQueries:
 
         return list_result
 
-    def get_room_count(self, availability_status):
-        if availability_status not in ["available", "reserved", "occupied"]:
-            raise ValueError(f"Invalid availability status: {availability_status}. Must be 'available', 'reserved', or 'occupied'.")
+    def get_room_count(self, availability_status, search_input=None):
+        if availability_status not in ["all", "available", "reserved", "occupied"]:
+            raise ValueError(f"Invalid availability status: {availability_status}. Must be 'all', 'available', 'reserved', or 'occupied'.")
 
-        sql = "SELECT COUNT(*) FROM rooms WHERE availability_status=%s;"
-        values = (availability_status,)
+        if search_input:
+            search_input_query = """AND (
+                      rooms.room_number LIKE %s OR
+                      rooms.room_type LIKE %s OR
+                      CAST(rooms.daily_rate AS CHAR) LIKE %s OR
+                      rooms.availability_status LIKE %s OR
+                      CAST(rooms.capacity AS CHAR) LIKE %s
+                    )"""
+
+            search_input = f"%{search_input}%"
+            values = (search_input, search_input, search_input, search_input, search_input)
+        else:
+            search_input_query = ""
+            values = ()
+
+        if availability_status == "all":
+            sql = f"SELECT COUNT(*) FROM rooms WHERE is_active=1 {search_input_query}"
+        else:
+            sql = f"SELECT COUNT(*) FROM rooms WHERE availability_status=%s AND is_active=1 {search_input_query}"
+            values = (availability_status,) + values
 
         self.cursor.execute(sql, values)
 

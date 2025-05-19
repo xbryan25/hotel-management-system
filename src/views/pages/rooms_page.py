@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QSpacerItem, QSizePolicy, QFrame
 from PyQt6.QtGui import QIcon, QFontDatabase, QFont, QPixmap
-from PyQt6.QtCore import QSize, pyqtSignal, Qt, QTimer
+from PyQt6.QtCore import QSize, pyqtSignal, Qt, QTimer, QThread
 
 from views.custom_widgets import ListRoomsFrame, GridRoomsFrame
 
@@ -42,6 +42,8 @@ class RoomsPage(QWidget, RoomsPageUI):
         self.load_fonts()
 
         self.set_icons()
+
+        self.image_cache = {}
 
     def add_timer_to_search_lineedit(self):
         self.timer = QTimer()
@@ -124,8 +126,8 @@ class RoomsPage(QWidget, RoomsPageUI):
 
             # If item is a QSpacerItem, Python's GC will collect item, since it has no more reference
 
-    def update_list_view_frames_contents(self, data_from_model, open_add_edit_room_dialog_func, delete_room_func,
-                                         update_type):
+    def update_list_view_frames_contents(self, data_from_model, open_add_edit_room_dialog_func, delete_room_func):
+
         for row in range(self.list_view_grid_layout.count()):
 
             item = self.list_view_grid_layout.itemAtPosition(row, 0)
@@ -134,20 +136,22 @@ class RoomsPage(QWidget, RoomsPageUI):
                 if list_rooms_frame:
                     room_number = data_from_model[row][0]
 
-                    if update_type == "status_update":
-                        list_rooms_frame.status_value_label.setText(data_from_model[row][3].capitalize())
+                    list_rooms_frame.room_num_label.setText(room_number.replace("room-", "#"))
+                    list_rooms_frame.room_type_value_label.setText(data_from_model[row][1].capitalize())
+                    list_rooms_frame.rate_value_label.setText(f"P{data_from_model[row][2]}/day")
+                    list_rooms_frame.status_value_label.setText(data_from_model[row][3].capitalize())
+                    list_rooms_frame.capacity_value_label.setText(str(data_from_model[row][4]))
+
+                    relative_file_path = "../resources/icons/rooms_page/room_images/" + data_from_model[row][5]
+
+                    if relative_file_path in self.image_cache:
+                        pixmap = self.image_cache[relative_file_path]
+                        list_rooms_frame.room_image_label.setPixmap(pixmap)
                     else:
+                        pixmap = QPixmap(relative_file_path)
+                        list_rooms_frame.room_image_label.setPixmap(pixmap)
 
-                        list_rooms_frame.room_num_label.setText(room_number.replace("room-", "#"))
-                        list_rooms_frame.room_type_value_label.setText(data_from_model[row][1].capitalize())
-                        list_rooms_frame.rate_value_label.setText(f"P{data_from_model[row][2]}/day")
-                        list_rooms_frame.status_value_label.setText(data_from_model[row][3].capitalize())
-                        list_rooms_frame.capacity_value_label.setText(str(data_from_model[row][4]))
-
-                        relative_file_path = "../resources/icons/rooms_page/room_images/"
-
-                        list_rooms_frame.room_image_label.setPixmap(
-                            QPixmap(relative_file_path + data_from_model[row][5]))
+                        self.image_cache.update({relative_file_path: pixmap})
 
                     try:
                         list_rooms_frame.edit_button.clicked.disconnect()
@@ -314,10 +318,7 @@ class RoomsPage(QWidget, RoomsPageUI):
         # Plus one because row is zero-indexed
         return max_row + 1, max_column + 1
 
-    # Grid view end ------------------------------------------------------------------------------------------------
-
-    def update_grid_view_frames_contents(self, data_from_model, open_add_edit_room_dialog_func, delete_room_func,
-                                         update_type):
+    def update_grid_view_frames_contents(self, data_from_model, open_add_edit_room_dialog_func, delete_room_func):
 
         max_row, max_column = self.get_current_rows_and_columns_in_grid_layout("grid_view")
         counter = 0
@@ -336,40 +337,47 @@ class RoomsPage(QWidget, RoomsPageUI):
 
                         room_number = data_from_model[counter][0]
 
-                        if update_type == "status_update":
-                            grid_rooms_frame.status_value_label.setText(data_from_model[counter][3].capitalize())
+                        grid_rooms_frame.room_num_and_title_label.setText(
+                            f"{room_number.replace("room-", "#")} - {data_from_model[counter][1].capitalize()}")
+                        grid_rooms_frame.rate_value_label.setText(f"P{data_from_model[counter][2]}/day")
+                        grid_rooms_frame.status_value_label.setText(data_from_model[counter][3].capitalize())
+                        grid_rooms_frame.capacity_label.setText(str(data_from_model[counter][4]))
+
+                        grid_rooms_frame.delete_button.clicked.connect(
+                            lambda _, rn=room_number: delete_room_func(rn))
+
+                        relative_file_path = "../resources/icons/rooms_page/room_images/" + \
+                                             data_from_model[counter][5]
+
+                        if relative_file_path in self.image_cache:
+                            pixmap = self.image_cache[relative_file_path]
+                            grid_rooms_frame.room_image_label.setPixmap(pixmap)
                         else:
+                            pixmap = QPixmap(relative_file_path)
+                            grid_rooms_frame.room_image_label.setPixmap(pixmap)
 
-                            grid_rooms_frame.room_num_and_title_label.setText(
-                                f"{room_number.replace("room-", "#")} - {data_from_model[counter][1].capitalize()}")
-                            grid_rooms_frame.rate_value_label.setText(f"P{data_from_model[counter][2]}/day")
-                            grid_rooms_frame.status_value_label.setText(data_from_model[counter][3].capitalize())
-                            grid_rooms_frame.capacity_label.setText(str(data_from_model[counter][4]))
+                            self.image_cache.update({relative_file_path: pixmap})
 
-                            grid_rooms_frame.delete_button.clicked.connect(
-                                lambda _, rn=room_number: delete_room_func(rn))
+                    try:
+                        grid_rooms_frame.edit_button.clicked.disconnect()
+                        grid_rooms_frame.delete_button.clicked.disconnect()
+                    except TypeError:
+                        pass
 
-                            relative_file_path = "../resources/icons/rooms_page/room_images/"
+                    grid_rooms_frame.edit_button.clicked.connect(lambda _, mode="edit_room", rn=room_number:
+                                                                 open_add_edit_room_dialog_func(mode,
+                                                                                                room_number=rn))
 
-                            grid_rooms_frame.room_image_label.setPixmap(
-                                QPixmap(relative_file_path + data_from_model[counter][5]))
+                    grid_rooms_frame.delete_button.clicked.connect(lambda _, rn=room_number: delete_room_func(rn))
 
-                        try:
-                            grid_rooms_frame.edit_button.clicked.disconnect()
-                            grid_rooms_frame.delete_button.clicked.disconnect()
-                        except TypeError:
-                            pass
+                    grid_rooms_frame.set_status_value_label_stylesheet()
 
-                        grid_rooms_frame.edit_button.clicked.connect(lambda _, mode="edit_room", rn=room_number:
-                                                                     open_add_edit_room_dialog_func(mode,
-                                                                                                    room_number=rn))
+                    counter += 1
 
-                        grid_rooms_frame.set_status_value_label_stylesheet()
-
-                        counter += 1
+    # Grid view end ------------------------------------------------------------------------------------------------
 
     def get_list_view_current_max_rows(self):
-        list_rooms_frame_min_height = 97
+        list_rooms_frame_min_height = 87
 
         return self.list_view_contents_frame.height() // list_rooms_frame_min_height
 
@@ -429,7 +437,6 @@ class RoomsPage(QWidget, RoomsPageUI):
         if width_diff >= self.size_change_threshold or height_diff >= self.size_change_threshold:
 
             self.window_resized.emit()
-            print("activate")
 
             self.previous_width = current_width
             self.previous_height = current_height
