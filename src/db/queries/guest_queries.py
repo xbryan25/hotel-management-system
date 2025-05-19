@@ -29,12 +29,12 @@ class GuestQueries:
         sort_type_formatted = {"Ascending": "ASC", "Descending": "DESC"}
 
         if search_input:
-            search_input_query = """ AND (
-                      guests.name LIKE %s ORR
+            search_input_query = """ HAVING
+                      guests.name LIKE %s OR
                       guests.phone_number LIKE %s OR
                       guests.last_visit_date LIKE %s OR
-                      guests.visit_count LIKE %s)
-                      HAVING remaining_balance = %s """
+                      CAST(guests.visit_count AS CHAR) LIKE %s OR
+                      CAST(remaining_balance AS CHAR) LIKE %s"""
 
             search_input = f"%{search_input}%"
             values = (search_input, search_input, search_input, search_input, search_input)
@@ -48,13 +48,14 @@ class GuestQueries:
                 FROM guests
                 LEFT JOIN reservedrooms ON guests.guest_id = reservedrooms.guest_id
                 LEFT JOIN paidrooms ON guests.guest_id = paidrooms.guest_id
+                GROUP BY guests.guest_id, guests.name, guests.phone_number, guests.last_visit_date, guests.visit_count
                 {search_input_query}
-                GROUP BY guests.guest_id, guests.name"""
+                """
 
         if sort_by == "Total Amount Due":
             sql += f" ORDER BY remaining_balance"
         else:
-            sql += f" ORDER BY guests.{guest_table_columns[sort_by]} "
+            sql += f" ORDER BY guests.{guest_table_columns[sort_by]}"
 
         sql += f""" {sort_type_formatted[sort_type]}, guests.name ASC 
                     LIMIT {max_guests_per_page} 

@@ -78,13 +78,6 @@ class GuestsPageController:
 
         self.set_models()
 
-        # if self.check_if_underflow_contents():
-        #     # return because this is a recursive call, frames are already loaded in self.current_page - 1
-        #     return
-        # else:
-        #     self.load_frames()
-        #     self.load_data()
-
     def check_if_underflow_contents(self):
         if self.guests_model.get_len_of_data() == 0:
             self.go_to_previous_page()
