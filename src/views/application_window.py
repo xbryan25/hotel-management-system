@@ -65,7 +65,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
             1: self.rooms_page_controller.refresh_rooms_data,
             3: self.reservations_page_controller.update_reservations_table_view,
             4: self.bookings_page_controller.update_bookings_table_view,
-            5: self.guests_page_controller.update_guests_table_view,
+            5: self.guests_page_controller.refresh_guests_data,
             6: self.billings_page_controller.update_billings_table_view,
             7: self.services_page_controller.update_services_table_view,
         }

@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QHeaderView, QTableView
 from PyQt6.QtGui import QFont
-from PyQt6.QtCore import Qt, pyqtSignal, QModelIndex
+from PyQt6.QtCore import Qt, pyqtSignal, QModelIndex, QTimer
 
 from ui import GuestsPageUI
 from views.custom_widgets import ButtonDelegate, CustomTableView
@@ -8,6 +8,7 @@ from views.custom_widgets import ButtonDelegate, CustomTableView
 
 class GuestsPage(QWidget, GuestsPageUI):
     clicked_info_button = pyqtSignal(QModelIndex)
+    search_text_changed = pyqtSignal(str)
 
     def __init__(self):
         super().__init__()
@@ -19,9 +20,24 @@ class GuestsPage(QWidget, GuestsPageUI):
         self.disable_table_views_selection_mode()
         self.set_table_views_button_delegate()
 
-        self.set_external_stylesheet()
+        self.add_timer_to_search_lineedit()
 
+        self.connect_signals_to_slots()
+
+        self.set_external_stylesheet()
         self.load_fonts()
+
+    def add_timer_to_search_lineedit(self):
+        self.timer = QTimer()
+
+        self.timer.setInterval(300)
+        self.timer.setSingleShot(True)
+
+    def start_debounce_timer(self):
+        self.timer.start()
+
+    def on_debounced_text_changed(self):
+        self.search_text_changed.emit(self.search_lineedit.text())
 
     def update_table_view(self):
         # Remove old table view before adding
@@ -72,9 +88,16 @@ class GuestsPage(QWidget, GuestsPageUI):
                                               can_be_disabled=False,
                                               parent=self.guest_table_view)
 
-        self.button_delegate.clicked.connect(self.clicked_info_button.emit)
+
 
         self.guest_table_view.setItemDelegateForColumn(7, self.button_delegate)
+
+    def connect_signals_to_slots(self):
+        self.button_delegate.clicked.connect(self.clicked_info_button.emit)
+
+        self.search_lineedit.textChanged.connect(self.start_debounce_timer)
+        self.timer.timeout.connect(self.on_debounced_text_changed)
+
 
     def disable_table_views_selection_mode(self):
         self.guest_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)
