@@ -24,11 +24,6 @@ class RoomsPageController:
         self.max_rows_per_page = 5
         self.max_columns_per_page = 2
 
-        # self.set_models()
-        #
-        # self.load_frames()
-        # self.load_data()
-
     def set_models(self, max_room_per_page=5, current_page_number=1,
                    sort_by="room_number", sort_type="ASC", search_input=None):
 
@@ -84,9 +79,7 @@ class RoomsPageController:
             if self.confirmation_dialog.get_choice():
                 self.db_driver.room_queries.delete_room(room_number)
 
-                self.set_models()
-                self.load_frames()
-                self.load_data()
+                self.refresh_rooms_data()
 
                 self.success_dialog = FeedbackDialog(f"{room_number} deleted successfully.")
                 self.success_dialog.exec()
@@ -149,22 +142,7 @@ class RoomsPageController:
 
         if self.current_page > 1:
             self.current_page -= 1
-
-            if self.view_mode == "list_view":
-                self.set_models(max_room_per_page=self.max_rows_per_page, current_page_number=self.current_page,
-                                search_input=self.prev_search_input)
-
-            elif self.view_mode == "grid_view":
-                self.set_models(max_room_per_page=self.max_rows_per_page * self.max_columns_per_page,
-                                current_page_number=self.current_page,
-                                search_input=self.prev_search_input)
-
-            self.load_frames()
-            self.load_data()
-
-            print()
-            print(self.rooms_model.get_len_of_data())
-            print(self.rooms_model.get_contents())
+            self.refresh_rooms_data()
 
     def total_pages(self, room_count):
 
@@ -207,14 +185,30 @@ class RoomsPageController:
         sort_by = self.view.sort_by_combobox.currentText().replace("Sort by ", "").lower().replace(" ", "_")
         sort_type = "ASC" if self.view.sort_type_combobox.currentText() == "Ascending" else "DESC"
 
-        self.set_models(sort_by=sort_by, sort_type=sort_type, search_input=self.prev_search_input)
-        self.load_frames()
-
-        if update_type == "status_update" and self.is_load_contents:
-            self.load_data(update_type)
+        if self.view_mode == "list_view":
+            self.set_models(max_room_per_page=self.max_rows_per_page,
+                            current_page_number=self.current_page,
+                            sort_by=sort_by,
+                            sort_type=sort_type,
+                            search_input=self.prev_search_input)
         else:
-            self.load_data()
-            self.is_load_contents = True
+            self.set_models(max_room_per_page=self.max_rows_per_page * self.max_columns_per_page,
+                            current_page_number=self.current_page,
+                            sort_by=sort_by,
+                            sort_type=sort_type,
+                            search_input=self.prev_search_input)
+
+        if self.check_if_underflow_contents():
+            # return because this is a recursive call, frames are already loaded in self.current_page - 1
+            return
+        else:
+            self.load_frames()
+
+            if update_type == "status_update" and self.is_load_contents:
+                self.load_data(update_type)
+            else:
+                self.load_data()
+                self.is_load_contents = True
 
     def check_if_underflow_contents(self):
         if self.rooms_model.get_len_of_data() == 0:
@@ -240,8 +234,6 @@ class RoomsPageController:
             self.set_models(max_room_per_page=self.max_rows_per_page,
                             current_page_number=self.current_page,
                             search_input=self.prev_search_input)
-
-            self.check_if_underflow_contents()
 
             if not self.check_if_underflow_contents():
                 self.load_frames()

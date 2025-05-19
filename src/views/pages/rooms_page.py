@@ -364,6 +364,8 @@ class RoomsPage(QWidget, RoomsPageUI):
                                                                      open_add_edit_room_dialog_func(mode,
                                                                                                     room_number=rn))
 
+                        grid_rooms_frame.delete_button.clicked.connect(lambda _, rn=room_number: delete_room_func(rn))
+
                         grid_rooms_frame.set_status_value_label_stylesheet()
 
                         counter += 1
