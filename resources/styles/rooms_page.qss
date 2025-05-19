@@ -18,6 +18,19 @@ QPushButton:pressed {
     border: none;
 }
 
+QLabel#rooms_label{
+    color: #000000;
+}
+
+QFrame {
+    border: none;
+}
+
+
+#unit_room_no_label, #room_type_label, #capacity_label, #rate_label, #status_label, #action_label{
+    color: #000000;
+}
+
 #add_room_button{
     background-color: #194FCC;
     color: white;
@@ -30,6 +43,7 @@ QPushButton:pressed {
 #room_types_combobox, #room_status_combobox{
 
     background-color: #D9D9D9;
+    color: #000000;
     border: 1px solid #000000;
     border-radius: 5px;
 
@@ -38,7 +52,8 @@ QPushButton:pressed {
 }
 
 #search_lineedit{
-    background-color: #FFFFFF;
+    background-color: #BDBDC1;
+    color: #000000;
     border: 1px solid #000000;
 
     border-radius: 20px;
