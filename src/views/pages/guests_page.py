@@ -43,6 +43,7 @@ class GuestsPage(QWidget, GuestsPageUI):
         guest_table_view_header.setStyleSheet("""
             QHeaderView::section {
                 background-color: #FFFFFF;
+                color: #000000;
                 border: none;
                 outline: none;
             }

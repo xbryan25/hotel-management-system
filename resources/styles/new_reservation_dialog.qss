@@ -13,15 +13,37 @@ QDialog{
 
 #left_button, #right_button{
     padding: 5px;
-    border: 2px solid black;
     border-radius: 5px;
 }
 
 #left_button{
+    border: 2px solid black;
     background-color: transparent;
+    color: black;
+}
+
+#left_button::hover{
+    background-color: black;
+    color: #d9d9d9;
 }
 
 #right_button{
+    border: 2px solid #194FCC;
+    background-color: white;
+    color: #194FCC;
+}
+
+#right_button::hover{
     background-color: #194FCC;
     color: white;
 }
+
+#check_in_date_time_edit, #check_out_date_time_edit, #num_of_guests_spinbox{
+    color: black;
+}
+
+#room_type_filter_combobox, #rooms_combobox{
+    background-color: #d9d9d9;
+    color: black;
+}
+
