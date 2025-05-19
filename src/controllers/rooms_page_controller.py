@@ -117,7 +117,7 @@ class RoomsPageController:
         self.prev_search_input = search_input
 
     def go_to_next_page(self):
-        room_count = self.db_driver.room_queries.get_room_count("all")
+        room_count = self.db_driver.room_queries.get_room_count("all", search_input=self.prev_search_input)
 
         if self.current_page + 1 <= self.total_pages(room_count):
             self.current_page += 1
