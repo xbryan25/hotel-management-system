@@ -53,27 +53,22 @@
         </item>
         <item>
          <property name="text">
-          <string>Sort by Room Number</string>
+          <string>Sort by Phone Number</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Sort by Check In Date</string>
+          <string>Sort by Last Visit Date</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Sort by Check Out Date</string>
+          <string>Sort by Visit Count</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Sort by Room Type</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Sort by Amount Due</string>
+          <string>Sort by Total Amount Due</string>
          </property>
         </item>
        </widget>

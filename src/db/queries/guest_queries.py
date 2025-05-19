@@ -21,20 +21,19 @@ class GuestQueries:
     def get_all_guests(self, max_guests_per_page=20, current_page_number=1, sort_by="Guest Name", sort_type="Ascending",
                        search_input=None):
 
-        guest_table_columns = {"Guest Name": "name", "Room No.": "room_number", "Check In": "check_in_date",
-                               "Check Out": "check_out_date", "Room Type": "room_type",
-                               "Amount Due": "remaining_balance"}
+        guest_table_columns = {"Guest Name": "name",
+                               "Phone Number": "phone_number",
+                               "Last Visit Date": "last_visit_date",
+                               "Visit Count": "visit_count"}
 
         sort_type_formatted = {"Ascending": "ASC", "Descending": "DESC"}
 
         if search_input:
             search_input_query = """ AND (
-                      guests.guest_id LIKE %s OR
-                      guests.name LIKE %s OR
+                      guests.name LIKE %s ORR
                       guests.phone_number LIKE %s OR
                       guests.last_visit_date LIKE %s OR
-                      guests.visit_count LIKE %s OR
-                      remaining_balance LIKE %s)
+                      guests.visit_count LIKE %s)
                       HAVING remaining_balance = %s """
 
             search_input = f"%{search_input}%"
@@ -52,8 +51,14 @@ class GuestQueries:
                 {search_input_query}
                 GROUP BY guests.guest_id, guests.name"""
 
-        sql += f""" ORDER BY guests.{guest_table_columns[sort_by]} {sort_type_formatted[sort_type]} 
-                    LIMIT {max_guests_per_page} OFFSET {max_guests_per_page * (current_page_number - 1)}"""
+        if sort_by == "Total Amount Due":
+            sql += f" ORDER BY remaining_balance"
+        else:
+            sql += f" ORDER BY guests.{guest_table_columns[sort_by]} "
+
+        sql += f""" {sort_type_formatted[sort_type]}, guests.name ASC 
+                    LIMIT {max_guests_per_page} 
+                    OFFSET {max_guests_per_page * (current_page_number - 1)}"""
 
         self.cursor.execute(sql, values)
 
