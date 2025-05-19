@@ -1,3 +1,6 @@
+QFrame{
+    border: none;
+}
 
 QComboBox::drop-down {
     background: transparent;
@@ -16,6 +19,7 @@ QComboBox::down-arrow {
 
 #search_lineedit{
     background-color: #FFFFFF;
+    color: black;
     border: 1px solid #000000;
 
     border-radius: 20px;
@@ -31,6 +35,7 @@ QComboBox::down-arrow {
 #view_type_combobox, #sort_by_combobox, #sort_type_combobox{
 
     background-color: #D9D9D9;
+    color: black;
     border: 1px solid #000000;
     border-radius: 5px;
 
@@ -48,4 +53,9 @@ QComboBox::down-arrow {
 #billings_table_view{
     border: none;
     background-color: #FFFFFF;
+    color: black;
+}
+
+#billings_table_view QHeaderView::section{
+    color: black;
 }

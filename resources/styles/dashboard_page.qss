@@ -1,3 +1,37 @@
+QFrame{
+    border: none;
+}
+
+
+#current_day_label, #current_time_label{
+    color: #000000;
+}
+
+#today_check_in_frame_top_label,
+#today_check_in_frame_bottom_label, 
+#today_check_in_frame_num_label,
+#today_check_out_frame_top_label, 
+#today_check_out_frame_bottom_label, 
+#today_check_out_frame_num_label,
+#available_rooms_frame_top_label,
+#available_rooms_frame_bottom_label,
+#available_rooms_frame_num_label,
+#reserved_rooms_frame_top_label,
+#reserved_rooms_frame_bottom_label,
+#reserved_rooms_frame_num_label,
+#booked_rooms_frame_top_label,
+#booked_rooms_frame_bottom_label,
+#booked_rooms_frame_num_label{
+    color: #000000;
+}
+
+#recent_check_in_frame_label, #recent_check_out_frame_label, #rooms_frame_label, #reservation_list_frame_label{
+    color: #000000;
+}
+
+#rooms_frame_table_view, #reservation_list_frame_table_view{
+    background-color: #FFFFFF;
+}
 
 QTableWidget {
     border: none;
@@ -7,7 +41,14 @@ QPushButton, QLineEdit{
     border-radius: 5px;
 }
 
-QCalendarWidget QWidget#qt_calendar_navigationbar{
+QCalendarWidget QAbstractItemView{
+    background-color: #f0f0f0;
+    selection-background-color: #194FCC;
+    selection-color: white;
+    color: black;
+}
+
+QCalendarWidget QWidget#calendar_widget{
     background-color: #f0f0f0;
     border: 1px solid #ccc;
 }
@@ -110,7 +151,12 @@ QComboBox::down-arrow {
     margin: 0;
 }
 
-#overview_label, #todays_activity_frame_label{
+#overview_label{
+    padding-left: 3px;
+    color: #000000;
+}
+
+#todays_activity_frame_label{
     padding-left: 3px;
 }
 
@@ -138,6 +184,18 @@ QComboBox::down-arrow {
     background-color: #FFF3E0;
 }
 
+#recent_check_in_frame_table_view::section, #recent_check_out_frame_table_view::section{
+    color: #000000;
+}
+
+QTableView#recent_check_in_frame_table_view::item, QTableView#recent_check_out_frame_table_view::item{
+    color: #000000;
+}
+
+#recent_check_in_frame_table_view QHeaderView::section, #recent_check_out_frame_table_view QHeaderView::section{
+    color: #000000;
+}
+
 #recent_check_in_frame_table_view::item, #recent_check_out_frame_table_view::item{
     border-bottom: 1px solid #B4B4B4;
 }
@@ -147,7 +205,10 @@ QComboBox::down-arrow {
     border-radius: 10px;
 }
 
-#quick_action_frame_check_in_button,
+#quick_action_frame_label, #quick_action_frame_room_num_label, #quick_action_frame_guest_name_label{
+    color: #000000;
+}
+
 #quick_action_frame_confirm_button,
 #reservation_list_frame_add_reservation_button{
 
@@ -156,18 +217,34 @@ QComboBox::down-arrow {
 
 }
 
-#reservation_list_frame_search_lineedit,
-#reservation_list_frame_status_combobox,
-#quick_action_frame_check_out_button,
-#rooms_frame_status_combobox{
-
+#quick_action_frame_check_in_button, #quick_action_frame_check_out_button{
     background-color: #D9D9D9;
+    color: black;
+}
 
+#quick_action_frame_check_in_button::checked, #quick_action_frame_check_out_button::checked {
+    background-color: #194FCC;
+    color: #FFFFFF;
+}
+
+#quick_action_frame_confirm_button{
+    background-color: #194FCC;
+    color: #FFFFFF;
+}
+
+#reservation_list_frame_search_lineedit{
+    background-color: #D9D9D9;
+}
+
+#rooms_frame_status_combobox, #reservation_list_frame_status_combobox{
+    background-color: #d9d9d9;
+    color: #000000;
 }
 
 #reservation_list_frame_search_lineedit{
     border: none;
 
+    color: #000000;
 
     background-image: url(../resources/icons/dashboard_page/search_icon_small.svg);
     background-repeat: no-repeat;
@@ -176,6 +253,10 @@ QComboBox::down-arrow {
 
     padding-left: 28px;
 
+}
+
+QLineEdit#reservation_list_frame_search_lineedit::placeholder{
+    color: #000000;
 }
 
 #reservation_list_frame_add_reservation_button{
@@ -191,6 +272,8 @@ QComboBox::down-arrow {
 
 #search_bar_frame_search_lineedit{
 
+    background-color: #FFFFFF;
+    color: #000000;
     background-image: url(../resources/icons/dashboard_page/search_icon_big.svg);
     background-repeat: no-repeat;
     background-position: left center;
@@ -203,12 +286,13 @@ QComboBox::down-arrow {
 #quick_action_frame_cancel_button{
 
     background-color: #FFFFFF;
+    color: #000000;
     border: 1px solid #000000;
 }
 
 #quick_action_frame_room_num_lineedit,
 #quick_action_frame_guest_name_lineedit{
-
+    background-color: #FFFFFF;
     border: 1px solid #000000;
 }
 
