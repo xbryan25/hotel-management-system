@@ -18,6 +18,51 @@ class GuestQueries:
         else:
             return result[0]
 
+    def get_all_guests(self, max_guests_per_page=20, current_page_number=1, sort_by="Guest Name", sort_type="Ascending",
+                       search_input=None):
+
+        guest_table_columns = {"Guest Name": "name", "Room No.": "room_number", "Check In": "check_in_date",
+                               "Check Out": "check_out_date", "Room Type": "room_type",
+                               "Amount Due": "remaining_balance"}
+
+        sort_type_formatted = {"Ascending": "ASC", "Descending": "DESC"}
+
+        if search_input:
+            search_input_query = """ AND (
+                      guests.guest_id LIKE %s OR
+                      guests.name LIKE %s OR
+                      guests.phone_number LIKE %s OR
+                      guests.last_visit_date LIKE %s OR
+                      guests.visit_count LIKE %s OR
+                      remaining_balance LIKE %s)
+                      HAVING remaining_balance = %s """
+
+            search_input = f"%{search_input}%"
+            values = (search_input, search_input, search_input, search_input, search_input)
+        else:
+            search_input_query = ""
+            values = ()
+
+        sql = f"""SELECT guests.guest_id, guests.name, guests.phone_number, guests.last_visit_date, 
+                guests.visit_count, 
+                CAST(COALESCE(SUM(reservedrooms.total_reservation_cost), 0) -  COALESCE(SUM(paidrooms.amount), 0) AS SIGNED) AS remaining_balance
+                FROM guests
+                LEFT JOIN reservedrooms ON guests.guest_id = reservedrooms.guest_id
+                LEFT JOIN paidrooms ON guests.guest_id = paidrooms.guest_id
+                {search_input_query}
+                GROUP BY guests.guest_id, guests.name"""
+
+        sql += f""" ORDER BY guests.{guest_table_columns[sort_by]} {sort_type_formatted[sort_type]} 
+                    LIMIT {max_guests_per_page} OFFSET {max_guests_per_page * (current_page_number - 1)}"""
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchall()
+
+        list_result = [list(row) for row in result]
+
+        return list_result
+
     def get_active_guests(self, sort_by, sort_type):
 
         sort_by_dict = {"Guest Name": "guests.name",
