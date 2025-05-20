@@ -365,8 +365,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>493</width>
-            <height>367</height>
+            <width>100</width>
+            <height>30</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="services_scroll_area_grid_layout"/>
@@ -423,7 +423,7 @@
       <item row="7" column="0" colspan="2">
        <widget class="QFrame" name="button_frame">
         <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
+         <enum>QFrame::NoFrame</enum>
         </property>
         <property name="frameShadow">
          <enum>QFrame::Raised</enum>
