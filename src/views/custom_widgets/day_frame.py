@@ -7,6 +7,7 @@ from datetime import date
 from ui.day_frame_ui import Ui_Frame as DayFrameUI
 
 
+# Currently unused
 class DayFrame(QFrame, DayFrameUI):
     clicked = pyqtSignal(date)
 
