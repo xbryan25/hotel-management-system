@@ -1,3 +1,5 @@
+from PyQt6.QtCore import QTimer
+
 from models import GuestsModel, GuestInfoModel
 from views import GuestInfoDialog
 
@@ -14,15 +16,25 @@ class GuestsPageController:
 
         self.connect_signals_to_slots()
 
-        # self.set_models()
-
         self.prev_show_type = None
         self.prev_sort_by = None
         self.prev_sort_type = None
         self.prev_search_input = None
 
         self.current_page_number = 1
-        self.max_guests_per_page = 50
+        self.max_guests_per_page = 16
+
+    def update_row_count(self):
+        current_max_guests_per_page = self.view.get_max_rows_of_guest_table_view()
+
+        if current_max_guests_per_page != 0 and self.max_guests_per_page != current_max_guests_per_page:
+
+            self.max_guests_per_page = current_max_guests_per_page
+
+            self.view.guest_table_view.setUpdatesEnabled(False)
+            self.refresh_guests_data()
+            self.view.guest_table_view.setUpdatesEnabled(True)
+            self.view.guest_table_view.viewport().update()
 
     def set_models(self):
 
@@ -42,9 +54,7 @@ class GuestsPageController:
             self.guests_model.update_data(guests_data_from_db)
 
     def connect_signals_to_slots(self):
-        self.view.show_type_combobox.currentTextChanged.connect(self.refresh_guests_data)
-        self.view.sort_by_combobox.currentTextChanged.connect(self.refresh_guests_data)
-        self.view.sort_type_combobox.currentTextChanged.connect(self.refresh_guests_data)
+        self.view.window_resized.connect(self.update_row_count)
 
         self.view.clicked_info_button.connect(self.show_guest_info)
 

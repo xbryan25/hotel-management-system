@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QTableView, QApplication
+from PyQt6.QtWidgets import QTableView, QApplication, QAbstractScrollArea
 from PyQt6.QtCore import Qt
 
 
@@ -16,6 +16,10 @@ class CustomTableView(QTableView):
         self.table_view_mode = table_view_mode
 
         self.horizontalHeader().setMinimumSectionSize(25)
+
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.setSizeAdjustPolicy(QAbstractScrollArea.SizeAdjustPolicy.AdjustToContents)
 
     def hide_first_column(self):
         # Hide 'Guest ID' column

@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QHeaderView, QTableView
+from PyQt6.QtWidgets import QWidget, QHeaderView, QTableView, QApplication
 from PyQt6.QtGui import QFont
 from PyQt6.QtCore import Qt, pyqtSignal, QModelIndex, QTimer
 
@@ -7,6 +7,7 @@ from views.custom_widgets import ButtonDelegate, CustomTableView
 
 
 class GuestsPage(QWidget, GuestsPageUI):
+    window_resized = pyqtSignal()
     clicked_info_button = pyqtSignal(QModelIndex)
     search_text_changed = pyqtSignal(str)
 
@@ -99,6 +100,34 @@ class GuestsPage(QWidget, GuestsPageUI):
         self.guest_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)
         self.guest_table_view.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
+    def get_max_rows_of_guest_table_view(self):
+        self.guest_table_view.updateGeometry()
+        QApplication.processEvents()
+
+        viewport_height = self.guest_table_view.viewport().height()
+        print(f"Viewport height: {viewport_height}")
+
+        if self.guest_table_view.model() is None or self.guest_table_view.model().rowCount() == 0:
+            return 0
+
+        # if self.guest_table_view.model() is None:
+        #     return 0
+
+        # 2 is for buffer, to avoid the scroll bar showing up
+        row_height = self.guest_table_view.rowHeight(0)
+        print(f"Row height: {row_height}")
+
+        if row_height == 0:
+            return 0
+
+        max_rows = viewport_height // row_height
+        print(f"Max rows that can fit: {max_rows}")
+
+        self.guest_table_view.updateGeometry()
+        QApplication.processEvents()
+
+        return max_rows
+
     def set_external_stylesheet(self):
         with open("../resources/styles/guests_page.qss", "r") as file:
             self.setStyleSheet(file.read())
@@ -118,3 +147,7 @@ class GuestsPage(QWidget, GuestsPageUI):
 
         self.previous_page_button.setFont(QFont("Inter", 11, QFont.Weight.Normal))
         self.next_page_button.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        QTimer.singleShot(0, self.window_resized.emit)

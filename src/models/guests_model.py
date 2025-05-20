@@ -15,11 +15,16 @@ class GuestsModel(QAbstractTableModel):
         self._data = data
         self.endResetModel()
 
+        self.layoutChanged.emit()
+
     def get_guest_id(self, row):
         return self._data[row][0]
 
     def get_len_of_data(self):
         return len(self._data)
+
+    def get_data(self):
+        return self._data
 
     def rowCount(self, index=None):
         return self.get_len_of_data()
