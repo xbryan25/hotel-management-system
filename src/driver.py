@@ -4,6 +4,7 @@ import sys
 
 from views.application_window import ApplicationWindow
 
+
 def main():
     app = QApplication(sys.argv)
     app.setStyle("Fusion")

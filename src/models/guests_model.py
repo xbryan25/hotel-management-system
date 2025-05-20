@@ -8,18 +8,26 @@ class GuestsModel(QAbstractTableModel):
 
         self._data = data or []
 
-        self.columns = ["Guest ID", "Guest Name", "Room No.", "Check In", "Check Out", "Room Type", "Amount Due", ""]
+        self.columns = ["Guest ID", "Guest Name", "Phone Number", "Last Visit Date", "Visit Count", "Total Amount Due", ""]
 
     def update_data(self, data):
         self.beginResetModel()
         self._data = data
         self.endResetModel()
 
+        self.layoutChanged.emit()
+
     def get_guest_id(self, row):
         return self._data[row][0]
 
-    def rowCount(self, index=None):
+    def get_len_of_data(self):
         return len(self._data)
+
+    def get_data(self):
+        return self._data
+
+    def rowCount(self, index=None):
+        return self.get_len_of_data()
 
     def columnCount(self, index=None):
         # -1 because Guest ID will be hidden
@@ -32,13 +40,13 @@ class GuestsModel(QAbstractTableModel):
 
         if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:
 
-            if index.column() == 2:
-                value = self._data[index.row()][index.column()].replace("room-", "#")
-            elif index.column() == 3 or index.column() == 4:
+            if index.column() == 3 and self._data[index.row()][index.column()]:
                 value = self._data[index.row()][index.column()].strftime("%b %d, %Y %I:%M %p")
-            elif index.column() == 6:
+            elif index.column() == 3 and not self._data[index.row()][index.column()]:
                 value = "-"
-            elif index.column() == 7:
+            elif index.column() == 5:
+                value = self._data[index.row()][index.column()]
+            elif index.column() == 6:
                 value = ""
             else:
                 value = self._data[index.row()][index.column()]
