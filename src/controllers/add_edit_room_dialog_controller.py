@@ -51,8 +51,10 @@ class AddEditRoomDialogController:
         self.view.update_chosen_image_label(filename)
 
     def set_models(self):
-        available_rooms = self.db_driver.room_queries.get_available_rooms()
-        self.available_room_numbers_model = AvailableRoomsModel(available_rooms, 1, model_type="rooms")
+        all_rooms = self.db_driver.room_queries.get_all_rooms()
+
+        # TODO: Change model? It's not really only available rooms
+        self.available_room_numbers_model = AvailableRoomsModel(all_rooms, 1, model_type="rooms")
         self.view.room_type_value_combobox.setModel(self.available_room_numbers_model)
 
     def add_or_edit_room(self, room_number):

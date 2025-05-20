@@ -110,13 +110,13 @@ class RoomQueries:
 
         return list_result
 
-    def get_all_rooms(self, room_status=None, max_room_per_page=5, current_page_number=1,
+    def get_all_rooms(self, enable_pagination=False, room_status=None, max_room_per_page=5, current_page_number=1,
                       sort_by="room_number", sort_type="ASC", search_input=None):
 
-        if sort_by == "status":
+        if sort_by == "status" and enable_pagination:
             sort_by = "availability_status"
 
-        if search_input:
+        if search_input and enable_pagination:
             search_input_query = """ AND (
                       rooms.room_number LIKE %s OR
                       rooms.room_type LIKE %s OR
@@ -149,7 +149,8 @@ class RoomQueries:
                                 WHERE rooms.availability_status='{room_status.lower()}' AND is_active=1 {search_input_query}
                                 """
 
-        sql += f""" ORDER BY rooms.{sort_by} {sort_type} LIMIT {max_room_per_page}
+        if enable_pagination:
+            sql += f""" ORDER BY rooms.{sort_by} {sort_type} LIMIT {max_room_per_page}
                     OFFSET {max_room_per_page * (current_page_number - 1)}"""
 
         self.cursor.execute(sql, values)
