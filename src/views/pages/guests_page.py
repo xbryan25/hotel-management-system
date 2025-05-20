@@ -10,6 +10,8 @@ class GuestsPage(QWidget, GuestsPageUI):
     window_resized = pyqtSignal()
     clicked_info_button = pyqtSignal(QModelIndex)
     search_text_changed = pyqtSignal(str)
+    next_page_button_pressed = pyqtSignal()
+    previous_page_button_pressed = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -95,6 +97,9 @@ class GuestsPage(QWidget, GuestsPageUI):
 
         self.search_lineedit.textChanged.connect(self.start_debounce_timer)
         self.timer.timeout.connect(self.on_debounced_text_changed)
+
+        self.next_page_button.clicked.connect(self.next_page_button_pressed.emit)
+        self.previous_page_button.clicked.connect(self.previous_page_button_pressed.emit)
 
     def disable_table_views_selection_mode(self):
         self.guest_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)

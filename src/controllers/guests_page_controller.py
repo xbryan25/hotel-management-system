@@ -56,6 +56,10 @@ class GuestsPageController:
     def connect_signals_to_slots(self):
         self.view.window_resized.connect(self.update_row_count)
 
+        self.view.show_type_combobox.currentTextChanged.connect(self.refresh_guests_data)
+        self.view.sort_by_combobox.currentTextChanged.connect(self.refresh_guests_data)
+        self.view.sort_type_combobox.currentTextChanged.connect(self.refresh_guests_data)
+
         self.view.clicked_info_button.connect(self.show_guest_info)
 
         self.guest_info_dialog.mode_changed.connect(self.switch_information_mode_guest_info)
@@ -63,41 +67,41 @@ class GuestsPageController:
         self.view.search_text_changed.connect(self.update_prev_search_input)
         self.view.search_text_changed.connect(lambda _: self.refresh_guests_data())
 
+        self.view.next_page_button_pressed.connect(self.go_to_next_page)
+        self.view.previous_page_button_pressed.connect(self.go_to_previous_page)
+
     def update_prev_search_input(self, search_input):
         self.prev_search_input = search_input
 
     def go_to_next_page(self):
-        room_count = 10
-        # room_count = self.db_driver.room_queries.get_guest_count("all", search_input=self.prev_search_input)
+        guest_count = self.db_driver.guest_queries.get_guest_count(show_type=self.prev_show_type,
+                                                                   search_input=self.prev_search_input)
 
-        if self.current_page_number + 1 <= self.total_pages(room_count):
+        if self.current_page_number + 1 <= self.total_pages(guest_count):
             self.current_page_number += 1
 
             self.refresh_guests_data()
 
     def go_to_previous_page(self):
-
         if self.current_page_number > 1:
             self.current_page_number -= 1
             self.refresh_guests_data()
 
-    def total_pages(self, room_count):
-        return (room_count + self.max_rows_per_page - 1) // self.max_rows_per_page
+    def total_pages(self, guest_count):
+        return (guest_count + self.max_guests_per_page - 1) // self.max_guests_per_page
 
     def refresh_guests_data(self):
-        print("load")
         self.prev_show_type = self.view.show_type_combobox.currentText()
         self.prev_sort_by = self.view.sort_by_combobox.currentText().replace("Sort by ", "")
         self.prev_sort_type = self.view.sort_type_combobox.currentText()
 
         self.set_models()
 
+        self.check_if_underflow_contents()
+
     def check_if_underflow_contents(self):
         if self.guests_model.get_len_of_data() == 0:
             self.go_to_previous_page()
-            return True
-
-        return False
 
     def show_guest_info(self, index):
         # Get guest_id of guest from index

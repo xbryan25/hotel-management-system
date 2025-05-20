@@ -135,6 +135,135 @@ class GuestQueries:
 
         return list_result
 
+    def get_guest_count(self, show_type=None,  search_input=None):
+
+        if search_input and show_type == "All Guests":
+            search_input_query = """ HAVING
+                      guests.name LIKE %s OR
+                      guests.phone_number LIKE %s OR
+                      guests.last_visit_date LIKE %s OR
+                      CAST(guests.visit_count AS CHAR) LIKE %s OR
+                      CAST(COALESCE(SUM(reservedrooms.total_reservation_cost), 0) - COALESCE(SUM(paidrooms.amount), 0) AS CHAR) LIKE %s"""
+
+            search_input = f"%{search_input}%"
+            values = (search_input, search_input, search_input, search_input, search_input)
+        elif search_input:
+            search_input_query = """ HAVING
+                                  guests.name LIKE %s OR
+                                  guests.phone_number LIKE %s OR
+                                  guests.last_visit_date LIKE %s OR
+                                  CAST(guests.visit_count AS CHAR) LIKE %s OR
+                                  CAST(COALESCE(reservations.total_cost, 0) - COALESCE(payments.total_paid, 0) AS CHAR) LIKE %s"""
+
+            search_input = f"%{search_input}%"
+            values = (search_input, search_input, search_input, search_input, search_input)
+        else:
+            search_input_query = ""
+            values = ()
+
+        if show_type == "With Reservations":
+
+            sql = f"""SELECT COUNT(*) FROM (
+                        SELECT guests.guest_id FROM guests
+
+                        LEFT JOIN (
+                            SELECT guest_id, SUM(total_reservation_cost) AS total_cost
+                            FROM reservedrooms
+                            WHERE reservation_status IN ('pending', 'confirmed')
+                            GROUP BY guest_id
+                        ) AS reservations ON guests.guest_id = reservations.guest_id
+
+                        LEFT JOIN (
+                            SELECT guest_id, SUM(amount) AS total_paid
+                            FROM paidrooms
+                            GROUP BY guest_id
+                        ) AS payments ON guests.guest_id = payments.guest_id
+
+                        WHERE guests.guest_id IN (
+                            SELECT guest_id FROM reservedrooms WHERE reservation_status = 'pending'
+                        )
+
+                        GROUP BY guests.guest_id, guests.name, guests.phone_number, guests.last_visit_date, guests.visit_count
+
+                        {search_input_query}
+                    ) AS filtered_guests;
+                        """
+
+        elif show_type == "Currently Staying":
+
+            sql = f"""SELECT COUNT(*) FROM (
+                        SELECT guests.guest_id FROM guests
+
+                        LEFT JOIN (
+                            SELECT guest_id, SUM(total_reservation_cost) AS total_cost
+                            FROM reservedrooms
+                            WHERE reservation_status IN ('pending', 'confirmed')
+                            GROUP BY guest_id
+                        ) AS reservations ON guests.guest_id = reservations.guest_id
+
+                        LEFT JOIN (
+                            SELECT guest_id, SUM(amount) AS total_paid
+                            FROM paidrooms
+                            GROUP BY guest_id
+                        ) AS payments ON guests.guest_id = payments.guest_id
+
+                        WHERE guests.guest_id IN (
+                            SELECT guest_id FROM bookedrooms WHERE check_in_status = 'in progress'
+                        )
+
+                        GROUP BY guests.guest_id, guests.name, guests.phone_number, guests.last_visit_date, guests.visit_count
+
+                        {search_input_query}
+                    ) AS filtered_guests;
+                        """
+
+        elif show_type == "Active Guests":
+
+            sql = f"""SELECT COUNT(*) FROM (
+                        SELECT guests.guest_id FROM guests
+
+                        LEFT JOIN (
+                            SELECT guest_id, SUM(total_reservation_cost) AS total_cost
+                            FROM reservedrooms
+                            WHERE reservation_status IN ('pending', 'confirmed')
+                            GROUP BY guest_id
+                        ) AS reservations ON guests.guest_id = reservations.guest_id
+
+                        LEFT JOIN (
+                            SELECT guest_id, SUM(amount) AS total_paid
+                            FROM paidrooms
+                            GROUP BY guest_id
+                        ) AS payments ON guests.guest_id = payments.guest_id
+
+                        WHERE guests.guest_id IN (
+                            SELECT guest_id FROM reservedrooms WHERE reservation_status = 'pending'
+                            UNION
+                            SELECT guest_id FROM bookedrooms WHERE check_in_status = 'in progress'
+                        )
+
+                        GROUP BY guests.guest_id, guests.name, guests.phone_number, guests.last_visit_date, guests.visit_count
+
+                        {search_input_query}
+                    ) AS filtered_guests;
+                    """
+
+        else:
+            sql = f"""SELECT COUNT(*) FROM (
+                        SELECT guests.guest_id
+                        FROM guests
+                        LEFT JOIN reservedrooms ON guests.guest_id = reservedrooms.guest_id 
+                        LEFT JOIN paidrooms ON guests.guest_id = paidrooms.guest_id
+                        GROUP BY guests.guest_id, guests.name, guests.phone_number, guests.last_visit_date, guests.visit_count
+                        {search_input_query}
+                    ) AS filtered_guests;
+                        """
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()[0]
+
+        return result
+
     def get_active_guests(self, sort_by, sort_type):
 
         sort_by_dict = {"Guest Name": "guests.name",
