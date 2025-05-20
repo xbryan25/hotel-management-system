@@ -8,6 +8,8 @@ QListWidget {
     color: white;
     border: none;
     outline: none;
+    margin: 0px;
+    padding: 0px;
 }
 
 QListWidget::item {
