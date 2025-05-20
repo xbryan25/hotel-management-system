@@ -36,7 +36,7 @@ QComboBox::down-arrow {
     color: black;
 }
 
-#sort_by_combobox, #sort_type_combobox{
+#show_type_combobox, #sort_by_combobox, #sort_type_combobox{
 
     background-color: #D9D9D9;
     color: black;

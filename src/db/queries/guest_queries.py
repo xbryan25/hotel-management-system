@@ -1,4 +1,6 @@
 
+# TODO: Check if sorting works with searching
+# TODO: Pagination
 
 class GuestQueries:
     def __init__(self, db, cursor):
@@ -18,8 +20,8 @@ class GuestQueries:
         else:
             return result[0]
 
-    def get_all_guests(self, max_guests_per_page=20, current_page_number=1, sort_by="Guest Name", sort_type="Ascending",
-                       search_input=None):
+    def get_all_guests(self, max_guests_per_page=20, current_page_number=1, show_type="All Guests",
+                       sort_by="Guest Name", sort_type="Ascending", search_input=None):
 
         guest_table_columns = {"Guest Name": "name",
                                "Phone Number": "phone_number",
@@ -42,15 +44,79 @@ class GuestQueries:
             search_input_query = ""
             values = ()
 
-        sql = f"""SELECT guests.guest_id, guests.name, guests.phone_number, guests.last_visit_date, 
-                guests.visit_count, 
-                CAST(COALESCE(SUM(reservedrooms.total_reservation_cost), 0) -  COALESCE(SUM(paidrooms.amount), 0) AS SIGNED) AS remaining_balance
-                FROM guests
-                LEFT JOIN reservedrooms ON guests.guest_id = reservedrooms.guest_id
-                LEFT JOIN paidrooms ON guests.guest_id = paidrooms.guest_id
-                GROUP BY guests.guest_id, guests.name, guests.phone_number, guests.last_visit_date, guests.visit_count
-                {search_input_query}
-                """
+        if show_type == "With Reservations":
+
+            sql = f"""SELECT guests.guest_id, guests.name, guests.phone_number, 
+                                   guests.last_visit_date, guests.visit_count,
+                                   CAST(COALESCE(SUM(reservedrooms.total_reservation_cost), 0) 
+                                        - COALESCE(paid.total_paid, 0) AS SIGNED) AS remaining_balance
+                                FROM guests
+                                JOIN reservedrooms ON guests.guest_id = reservedrooms.guest_id
+                                  AND reservedrooms.reservation_status = 'pending'
+                                LEFT JOIN (
+                                    SELECT guest_id, SUM(amount) AS total_paid
+                                    FROM paidrooms
+                                    GROUP BY guest_id
+                                ) AS paid ON guests.guest_id = paid.guest_id
+                                GROUP BY guests.guest_id, guests.name, guests.phone_number, 
+                                         guests.last_visit_date, guests.visit_count
+                                {search_input_query}
+                                """
+
+        elif show_type == "Currently Staying":
+
+            sql = f"""SELECT guests.guest_id, guests.name, guests.phone_number, guests.last_visit_date, 
+                        guests.visit_count, 
+                        CAST(COALESCE(SUM(reservedrooms.total_reservation_cost), 0) -  COALESCE(SUM(paidrooms.amount), 0) AS SIGNED) AS remaining_balance
+                        FROM guests
+                        LEFT JOIN reservedrooms ON guests.guest_id = reservedrooms.guest_id 
+                        JOIN bookedrooms ON guests.guest_id = bookedrooms.guest_id
+                            AND bookedrooms.check_in_status = 'in progress'
+                        LEFT JOIN paidrooms ON guests.guest_id = paidrooms.guest_id
+                        GROUP BY guests.guest_id, guests.name, guests.phone_number, guests.last_visit_date, guests.visit_count
+                        {search_input_query}
+                        """
+
+        elif show_type == "Active Guests":
+
+            sql = f"""SELECT guests.guest_id, guests.name, guests.phone_number, guests.last_visit_date, 
+                        guests.visit_count, 
+                        CAST(COALESCE(reservations.total_cost, 0) -  COALESCE(payments.total_paid, 0) AS SIGNED) AS remaining_balance
+                        FROM guests
+                        
+                        LEFT JOIN (
+                            SELECT guest_id, SUM(total_reservation_cost) AS total_cost
+                            FROM reservedrooms
+                            WHERE reservation_status IN ('pending', 'confirmed')
+                            GROUP BY guest_id
+                        ) AS reservations ON guests.guest_id = reservations.guest_id
+                        
+                        LEFT JOIN (
+                            SELECT guest_id, SUM(amount) AS total_paid
+                            FROM paidrooms
+                            GROUP BY guest_id
+                        ) AS payments ON guests.guest_id = payments.guest_id
+                        
+                        WHERE guests.guest_id IN (
+                            SELECT guest_id FROM reservedrooms WHERE reservation_status = 'pending'
+                            UNION
+                            SELECT guest_id FROM bookedrooms WHERE check_in_status = 'in progress'
+                        )
+                        
+                        GROUP BY guests.guest_id, guests.name, guests.phone_number, guests.last_visit_date, guests.visit_count
+                        {search_input_query}
+                        """
+
+        else:
+            sql = f"""SELECT guests.guest_id, guests.name, guests.phone_number, guests.last_visit_date, 
+                        guests.visit_count, 
+                        CAST(COALESCE(SUM(reservedrooms.total_reservation_cost), 0) -  COALESCE(SUM(paidrooms.amount), 0) AS SIGNED) AS remaining_balance
+                        FROM guests
+                        LEFT JOIN reservedrooms ON guests.guest_id = reservedrooms.guest_id 
+                        LEFT JOIN paidrooms ON guests.guest_id = paidrooms.guest_id
+                        GROUP BY guests.guest_id, guests.name, guests.phone_number, guests.last_visit_date, guests.visit_count
+                        {search_input_query}
+                        """
 
         if sort_by == "Total Amount Due":
             sql += f" ORDER BY remaining_balance"

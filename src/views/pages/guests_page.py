@@ -109,6 +109,7 @@ class GuestsPage(QWidget, GuestsPageUI):
 
         self.search_lineedit.setFont(QFont("Inter", 16, QFont.Weight.Normal))
 
+        self.show_type_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.sort_by_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.sort_type_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
 

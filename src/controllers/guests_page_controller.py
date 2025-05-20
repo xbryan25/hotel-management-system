@@ -16,7 +16,7 @@ class GuestsPageController:
 
         # self.set_models()
 
-
+        self.prev_show_type = None
         self.prev_sort_by = None
         self.prev_sort_type = None
         self.prev_search_input = None
@@ -28,6 +28,7 @@ class GuestsPageController:
 
         guests_data_from_db = self.db_driver.guest_queries.get_all_guests(max_guests_per_page=self.max_guests_per_page,
                                                                           current_page_number=self.current_page_number,
+                                                                          show_type=self.prev_show_type,
                                                                           sort_by=self.prev_sort_by,
                                                                           sort_type=self.prev_sort_type,
                                                                           search_input=self.prev_search_input)
@@ -41,6 +42,7 @@ class GuestsPageController:
             self.guests_model.update_data(guests_data_from_db)
 
     def connect_signals_to_slots(self):
+        self.view.show_type_combobox.currentTextChanged.connect(self.refresh_guests_data)
         self.view.sort_by_combobox.currentTextChanged.connect(self.refresh_guests_data)
         self.view.sort_type_combobox.currentTextChanged.connect(self.refresh_guests_data)
 
@@ -73,6 +75,8 @@ class GuestsPageController:
         return (room_count + self.max_rows_per_page - 1) // self.max_rows_per_page
 
     def refresh_guests_data(self):
+        print("load")
+        self.prev_show_type = self.view.show_type_combobox.currentText()
         self.prev_sort_by = self.view.sort_by_combobox.currentText().replace("Sort by ", "")
         self.prev_sort_type = self.view.sort_type_combobox.currentText()
 
