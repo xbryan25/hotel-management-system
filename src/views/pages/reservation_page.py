@@ -3,9 +3,7 @@ from PyQt6.QtWidgets import QWidget, QFrame, QHeaderView, QTableView, QApplicati
 from PyQt6.QtGui import QFont, QIcon
 
 from ui import ReservationPageUI
-
 from views.custom_widgets import DayFrame, ButtonDelegate, CustomTableView
-
 
 from datetime import date, timedelta
 
@@ -145,7 +143,6 @@ class ReservationPage(QWidget, ReservationPageUI):
             return 0
 
         max_rows = viewport_height // row_height
-        print(f"Max rows that can fit: {max_rows}")
 
         self.reservations_table_view.updateGeometry()
         QApplication.processEvents()
@@ -176,7 +173,6 @@ class ReservationPage(QWidget, ReservationPageUI):
 
         self.previous_page_button.setFont(QFont("Inter", 11, QFont.Weight.Normal))
         self.next_page_button.setFont(QFont("Inter", 11, QFont.Weight.Normal))
-
 
     def resizeEvent(self, event):
         super().resizeEvent(event)

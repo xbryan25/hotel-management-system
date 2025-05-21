@@ -73,11 +73,13 @@ class ReservedRoomQueries:
 
         sort_by_dict = {"Reservation ID": "reservedrooms.reservation_id",
                         "Name": "guests.name",
-                        "Room No.": "rooms.room_number",
+                        "Room No.": "reservedrooms.room_number",
                         "Room Type": "rooms.room_type",
                         "Check-In Date": "reservedrooms.check_in_date",
                         "Check-Out Date": "reservedrooms.check_out_date",
-                        "Status": "payment_status"}
+                        "Status": "payment_status",
+                        "Total Reservation Cost": "reservedrooms.total_reservation_cost",
+                        "Remaining Balance": "remaining_balance"}
 
         sort_type_dict = {"Ascending": "ASC", "Descending": "DESC"}
 
@@ -92,8 +94,8 @@ class ReservedRoomQueries:
                         reservedrooms.reservation_id LIKE %s OR 
                         guests.name LIKE %s OR 
                         reservedrooms.room_number LIKE %s OR 
-                        reservedrooms.total_reservation_cost LIKE %s 
-                        CAST(reservedrooms.total_reservation_cost - COALESCE(SUM(paidrooms.amount), 0) AS CHAR) AS remaining_balance
+                        reservedrooms.total_reservation_cost LIKE %s OR
+                        CAST(reservedrooms.total_reservation_cost - COALESCE(SUM(paidrooms.amount), 0) AS CHAR) LIKE %s
             """
 
             search_input = f"%{search_input}%"
@@ -119,14 +121,21 @@ class ReservedRoomQueries:
 
             sql = f"""SELECT reservedrooms.reservation_id, guests.name, reservedrooms.room_number, 
                             reservedrooms.total_reservation_cost, 
-                            CAST(reservedrooms.total_reservation_cost - COALESCE(SUM(paidrooms.amount), 0) AS SIGNED) AS remaining_balance,
+                            CAST(
+                                CASE 
+                                    WHEN reservedrooms.payment_status = 'fully paid' THEN 0
+                                    ELSE reservedrooms.total_reservation_cost - COALESCE(SUM(paidrooms.amount), 0)
+                                END AS SIGNED
+                            ) AS remaining_balance,
                             reservedrooms.payment_status
                             FROM reservedrooms 
                             JOIN guests ON reservedrooms.guest_id = guests.guest_id
-                            LEFT JOIN paidrooms ON reservedrooms.room_number = paidrooms.room_number
-                            AND paidrooms.transaction_date BETWEEN reservedrooms.reservation_date AND reservedrooms.check_in_date
-                            {view_type_dict[view_type]} AND reservedrooms.reservation_status = 'pending'
-                            GROUP BY reservedrooms.reservation_id
+                            LEFT JOIN paidrooms ON reservedrooms.guest_id = paidrooms.guest_id 
+                                AND reservedrooms.room_number = paidrooms.room_number
+                                AND paidrooms.transaction_date BETWEEN reservedrooms.reservation_date AND reservedrooms.check_in_date
+                            {view_type_dict[view_type]} 
+                            GROUP BY reservedrooms.reservation_id, guests.name, reservedrooms.room_number,
+                                reservedrooms.total_reservation_cost
                             {search_input_query}
                             ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]}"""
 
@@ -197,7 +206,6 @@ class ReservedRoomQueries:
                             LEFT JOIN paidrooms ON reservedrooms.room_number = paidrooms.room_number
                                 AND paidrooms.transaction_date BETWEEN reservedrooms.reservation_date AND reservedrooms.check_in_date
                             {view_type_dict[view_type]} 
-                            AND reservedrooms.reservation_status = 'pending'
                             GROUP BY reservedrooms.reservation_id
                             {search_input_query}
                         ) AS sub"""
