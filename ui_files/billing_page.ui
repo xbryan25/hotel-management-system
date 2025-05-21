@@ -140,17 +140,12 @@
            </item>
            <item>
             <property name="text">
-             <string>Sort by Room Type</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
              <string>Sort by Total Reservation Cost</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Sort by Remaning Balance</string>
+             <string>Sort by Remaining Balance</string>
             </property>
            </item>
           </widget>
