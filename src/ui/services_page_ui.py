@@ -53,7 +53,7 @@ class Ui_Widget(object):
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
         self.gridLayout_6.addItem(spacerItem, 0, 2, 1, 1)
         self.add_service_button = QtWidgets.QPushButton(parent=self.actions_frame)
-        self.add_service_button.setMinimumSize(QtCore.QSize(125, 30))
+        self.add_service_button.setMinimumSize(QtCore.QSize(170, 30))
         self.add_service_button.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
         self.add_service_button.setObjectName("add_service_button")
         self.gridLayout_6.addWidget(self.add_service_button, 0, 3, 1, 1)
