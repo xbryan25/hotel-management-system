@@ -87,11 +87,26 @@ class ReservedRoomQueries:
                           "Past Billings": "WHERE reservedrooms.payment_status = 'fully paid'",
                           "All": ""}
 
-        if search_input:
+        if search_input and billing_view_mode:
+            search_input_query = """ HAVING 
+                        reservedrooms.reservation_id LIKE %s OR 
+                        guests.name LIKE %s OR 
+                        reservedrooms.room_number LIKE %s OR 
+                        reservedrooms.total_reservation_cost LIKE %s 
+                        CAST(reservedrooms.total_reservation_cost - COALESCE(SUM(paidrooms.amount), 0) AS CHAR) AS remaining_balance,
+            """
+
+            search_input = f"%{search_input}%"
+            values = (search_input, search_input, search_input, search_input, search_input)
+        elif search_input:
             search_input_query = """ WHERE
-                      guests.name LIKE %s OR
-                      guests.phone_number LIKE %s OR
-                      guests.last_visit_date LIKE %s """
+                        reservedrooms.reservation_id LIKE %s OR 
+                        guests.name LIKE %s OR 
+                        reservedrooms.room_number LIKE %s OR 
+                        rooms.room_type LIKE %s OR
+                        DATE_FORMAT(check_in_date, '%Y-%m-%d') LIKE %s OR
+                        DATE_FORMAT(check_out_date, '%Y-%m-%d') LIKE %s OR
+                        CONCAT(DATE_FORMAT(check_in_date, '%b %d, %Y'), ' - ', DATE_FORMAT(check_out_date, '%b %d, %Y')) LIKE %s"""
 
             search_input = f"%{search_input}%"
             values = (search_input, search_input, search_input, search_input, search_input)
@@ -137,6 +152,66 @@ class ReservedRoomQueries:
 
         return list_result
 
+    def get_reservation_count(self, view_type=None, search_input=None, billing_view_mode=False):
+
+        view_type_dict = {"Reservations": "WHERE reservedrooms.reservation_status = 'pending'",
+                          "Past Reservations": "WHERE reservedrooms.reservation_status IN ('confirmed', 'cancelled', 'expired')",
+                          "Billings": "WHERE reservedrooms.payment_status IN ('not paid', 'partially paid')",
+                          "Past Billings": "WHERE reservedrooms.payment_status = 'fully paid'",
+                          "All": ""}
+
+        if search_input and billing_view_mode:
+            search_input_query = """ HAVING 
+                        reservedrooms.reservation_id LIKE %s OR 
+                        guests.name LIKE %s OR 
+                        reservedrooms.room_number LIKE %s OR 
+                        reservedrooms.total_reservation_cost LIKE %s 
+                        CAST(reservedrooms.total_reservation_cost - COALESCE(SUM(paidrooms.amount), 0) AS CHAR) AS remaining_balance,
+            """
+
+            search_input = f"%{search_input}%"
+            values = (search_input, search_input, search_input, search_input, search_input)
+        elif search_input:
+            search_input_query = """ WHERE
+                        reservedrooms.reservation_id LIKE %s OR 
+                        guests.name LIKE %s OR 
+                        reservedrooms.room_number LIKE %s OR 
+                        rooms.room_type LIKE %s OR
+                        DATE_FORMAT(check_in_date, '%Y-%m-%d') LIKE %s OR
+                        DATE_FORMAT(check_out_date, '%Y-%m-%d') LIKE %s OR
+                        CONCAT(DATE_FORMAT(check_in_date, '%b %d, %Y'), ' - ', DATE_FORMAT(check_out_date, '%b %d, %Y')) LIKE %s"""
+
+            search_input = f"%{search_input}%"
+            values = (search_input, search_input, search_input, search_input, search_input)
+        else:
+            search_input_query = ""
+            values = ()
+
+        if billing_view_mode:
+            sql = f"""SELECT COUNT(*) FROM (
+                            SELECT reservedrooms.reservation_id
+                            FROM reservedrooms 
+                            JOIN guests ON reservedrooms.guest_id = guests.guest_id
+                            LEFT JOIN paidrooms ON reservedrooms.room_number = paidrooms.room_number
+                                AND paidrooms.transaction_date BETWEEN reservedrooms.reservation_date AND reservedrooms.check_in_date
+                            {view_type_dict[view_type]} 
+                            AND reservedrooms.reservation_status = 'pending'
+                            GROUP BY reservedrooms.reservation_id
+                            {search_input_query}
+                        ) AS sub"""
+        else:
+            sql = f"""SELECT COUNT(*)
+                        FROM reservedrooms 
+                        JOIN guests ON reservedrooms.guest_id = guests.guest_id
+                        JOIN rooms ON reservedrooms.room_number = rooms.room_number
+                        {view_type_dict[view_type]}
+                        {search_input_query}"""
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()[0]
+
+        return result
 
     def get_latest_reservation_id(self):
 

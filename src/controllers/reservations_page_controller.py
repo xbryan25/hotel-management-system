@@ -86,6 +86,9 @@ class ReservationsPageController:
         self.view.clicked_info_button.connect(self.open_reservation_info_dialog)
         self.view.clicked_check_in_button.connect(self.convert_reservation_to_booking)
 
+        self.view.next_page_button_pressed.connect(self.go_to_next_page)
+        self.view.previous_page_button_pressed.connect(self.go_to_previous_page)
+
     def convert_reservation_to_booking(self, index):
 
         selected_payment_status = index.sibling(index.row(), 5).data()
@@ -129,8 +132,8 @@ class ReservationsPageController:
         self.prev_search_input = search_input
 
     def go_to_next_page(self):
-        # reservation_count = self.db_driver.reserved_room_queries.get_reservation_count(show_type=self.prev_show_type,
-        #                                                                                search_input=self.prev_search_input)
+        reservation_count = self.db_driver.reserved_room_queries.get_reservation_count(view_type=self.prev_view_type,
+                                                                                       search_input=self.prev_search_input)
 
         if self.current_page_number + 1 <= self.total_pages(reservation_count):
             self.current_page_number += 1

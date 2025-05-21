@@ -15,6 +15,8 @@ class ReservationPage(QWidget, ReservationPageUI):
     clicked_add_reservation_button = pyqtSignal()
     clicked_info_button = pyqtSignal(QModelIndex)
     clicked_check_in_button = pyqtSignal(QModelIndex)
+    next_page_button_pressed = pyqtSignal()
+    previous_page_button_pressed = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -105,6 +107,9 @@ class ReservationPage(QWidget, ReservationPageUI):
 
     def connect_signals_to_slots(self):
         self.add_reservation_button.clicked.connect(self.clicked_add_reservation_button.emit)
+
+        self.next_page_button.clicked.connect(self.next_page_button_pressed.emit)
+        self.previous_page_button.clicked.connect(self.previous_page_button_pressed.emit)
 
     def get_max_rows_of_reservations_table_view(self):
         self.reservations_table_view.updateGeometry()
