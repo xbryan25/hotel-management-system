@@ -90,7 +90,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
     def initialize_sidebar(self):
         self.sidebar_list = [{"name": "Dashboard", "icon": "../resources/icons/sidebar/dashboard_icon.svg"},
                              {"name": "Rooms", "icon": "../resources/icons/sidebar/rooms_icon.svg"},
-                             {"name": "Calendar", "icon": "../resources/icons/sidebar/calendar_icon.svg"},
                              {"name": "Reservation", "icon": "../resources/icons/sidebar/reservation_icon.svg"},
                              {"name": "Booking", "icon": "../resources/icons/sidebar/booking_icon.svg"},
                              {"name": "Guests", "icon": "../resources/icons/sidebar/guests_icon.svg"},
@@ -143,7 +142,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
     def load_pages(self):
         self.billing_page = BillingPage()
         self.booking_page = BookingPage()
-        self.calendar_page = CalendarPage()
         self.dashboard_page = DashboardPage()
         self.guests_page = GuestsPage()
         self.reservation_page = ReservationPage()
@@ -154,7 +152,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
         # Loaded according to index of sidebar
         self.stacked_widget.addWidget(self.dashboard_page)
         self.stacked_widget.addWidget(self.rooms_page)
-        self.stacked_widget.addWidget(self.calendar_page)
         self.stacked_widget.addWidget(self.reservation_page)
         self.stacked_widget.addWidget(self.booking_page)
         self.stacked_widget.addWidget(self.guests_page)
