@@ -32,8 +32,8 @@ class BookedRoomQueries:
                         "Name": "guests.name",
                         "Room No.": "rooms.room_number",
                         "Room Type": "rooms.room_type",
-                        "Check-in Date": "bookedrooms.actual_check_in_date",
-                        "Check-out Date": "bookedrooms.check_out_date"}
+                        "Check-In Date": "bookedrooms.actual_check_in_date",
+                        "Check-Out Date": "bookedrooms.check_out_date"}
 
         sort_type_dict = {"Ascending": "ASC", "Descending": "DESC"}
 
