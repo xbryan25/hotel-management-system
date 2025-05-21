@@ -86,6 +86,9 @@ class ReservationsPageController:
         self.view.clicked_info_button.connect(self.open_reservation_info_dialog)
         self.view.clicked_check_in_button.connect(self.convert_reservation_to_booking)
 
+        self.view.search_text_changed.connect(self.update_prev_search_input)
+        self.view.search_text_changed.connect(lambda _: self.refresh_reservations_data())
+
         self.view.next_page_button_pressed.connect(self.go_to_next_page)
         self.view.previous_page_button_pressed.connect(self.go_to_previous_page)
 

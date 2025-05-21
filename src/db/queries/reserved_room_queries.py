@@ -93,23 +93,24 @@ class ReservedRoomQueries:
                         guests.name LIKE %s OR 
                         reservedrooms.room_number LIKE %s OR 
                         reservedrooms.total_reservation_cost LIKE %s 
-                        CAST(reservedrooms.total_reservation_cost - COALESCE(SUM(paidrooms.amount), 0) AS CHAR) AS remaining_balance,
+                        CAST(reservedrooms.total_reservation_cost - COALESCE(SUM(paidrooms.amount), 0) AS CHAR) AS remaining_balance
             """
 
             search_input = f"%{search_input}%"
             values = (search_input, search_input, search_input, search_input, search_input)
         elif search_input:
-            search_input_query = """ WHERE
-                        reservedrooms.reservation_id LIKE %s OR 
+            search_input_query = """ AND 
+                        (reservedrooms.reservation_id LIKE %s OR 
                         guests.name LIKE %s OR 
                         reservedrooms.room_number LIKE %s OR 
                         rooms.room_type LIKE %s OR
-                        DATE_FORMAT(check_in_date, '%Y-%m-%d') LIKE %s OR
-                        DATE_FORMAT(check_out_date, '%Y-%m-%d') LIKE %s OR
-                        CONCAT(DATE_FORMAT(check_in_date, '%b %d, %Y'), ' - ', DATE_FORMAT(check_out_date, '%b %d, %Y')) LIKE %s"""
+                        DATE_FORMAT(check_in_date, '%%Y-%%m-%%d') LIKE %s OR
+                        DATE_FORMAT(check_out_date, '%%Y-%%m-%%d') LIKE %s OR
+                        CONCAT(DATE_FORMAT(check_in_date, '%%b %%d, %%Y'), ' - ', DATE_FORMAT(check_out_date, '%%b %%d, %%Y')) LIKE %s OR
+                        reservedrooms.payment_status LIKE %s)"""
 
             search_input = f"%{search_input}%"
-            values = (search_input, search_input, search_input, search_input, search_input)
+            values = (search_input, search_input, search_input, search_input, search_input, search_input, search_input, search_input)
         else:
             search_input_query = ""
             values = ()
@@ -172,17 +173,18 @@ class ReservedRoomQueries:
             search_input = f"%{search_input}%"
             values = (search_input, search_input, search_input, search_input, search_input)
         elif search_input:
-            search_input_query = """ WHERE
-                        reservedrooms.reservation_id LIKE %s OR 
+            search_input_query = """ AND
+                        (reservedrooms.reservation_id LIKE %s OR 
                         guests.name LIKE %s OR 
                         reservedrooms.room_number LIKE %s OR 
                         rooms.room_type LIKE %s OR
-                        DATE_FORMAT(check_in_date, '%Y-%m-%d') LIKE %s OR
-                        DATE_FORMAT(check_out_date, '%Y-%m-%d') LIKE %s OR
-                        CONCAT(DATE_FORMAT(check_in_date, '%b %d, %Y'), ' - ', DATE_FORMAT(check_out_date, '%b %d, %Y')) LIKE %s"""
+                        DATE_FORMAT(check_in_date, '%%Y-%%m-%%d') LIKE %s OR
+                        DATE_FORMAT(check_out_date, '%%Y-%%m-%%d') LIKE %s OR
+                        CONCAT(DATE_FORMAT(check_in_date, '%%b %%d, %%Y'), ' - ', DATE_FORMAT(check_out_date, '%%b %%d, %%Y')) LIKE %s OR 
+                        reservedrooms.payment_status LIKE %s)"""
 
             search_input = f"%{search_input}%"
-            values = (search_input, search_input, search_input, search_input, search_input)
+            values = (search_input, search_input, search_input, search_input, search_input, search_input, search_input, search_input)
         else:
             search_input_query = ""
             values = ()

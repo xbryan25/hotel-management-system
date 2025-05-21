@@ -15,6 +15,7 @@ class ReservationPage(QWidget, ReservationPageUI):
     clicked_add_reservation_button = pyqtSignal()
     clicked_info_button = pyqtSignal(QModelIndex)
     clicked_check_in_button = pyqtSignal(QModelIndex)
+    search_text_changed = pyqtSignal(str)
     next_page_button_pressed = pyqtSignal()
     previous_page_button_pressed = pyqtSignal()
 
@@ -30,16 +31,30 @@ class ReservationPage(QWidget, ReservationPageUI):
         self.left_most_day = date.today()
         self.selected_day = date.today()
 
+        self.add_timer_to_search_lineedit()
         self.connect_signals_to_slots()
 
         self.update_table_view()
 
         self.set_icons()
-        self.set_external_stylesheet()
-        self.load_fonts()
 
         self.set_table_views_button_delegate()
         self.disable_table_views_selection_mode()
+
+        self.set_external_stylesheet()
+        self.load_fonts()
+
+    def add_timer_to_search_lineedit(self):
+        self.timer = QTimer()
+
+        self.timer.setInterval(300)
+        self.timer.setSingleShot(True)
+
+    def start_debounce_timer(self):
+        self.timer.start()
+
+    def on_debounced_text_changed(self):
+        self.search_text_changed.emit(self.search_lineedit.text())
 
     def update_table_view(self):
         # Remove old table view before adding
@@ -107,6 +122,9 @@ class ReservationPage(QWidget, ReservationPageUI):
 
     def connect_signals_to_slots(self):
         self.add_reservation_button.clicked.connect(self.clicked_add_reservation_button.emit)
+
+        self.search_lineedit.textChanged.connect(self.start_debounce_timer)
+        self.timer.timeout.connect(self.on_debounced_text_changed)
 
         self.next_page_button.clicked.connect(self.next_page_button_pressed.emit)
         self.previous_page_button.clicked.connect(self.previous_page_button_pressed.emit)
