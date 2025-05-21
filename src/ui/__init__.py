@@ -5,7 +5,6 @@ from .application_window_ui import Ui_MainWindow as ApplicationWindowUI
 # Pages
 from .billing_page_ui import Ui_Widget as BillingPageUI
 from .booking_page_ui import Ui_Widget as BookingPageUI
-from .calendar_page_ui import Ui_Widget as CalendarPageUI
 from .dashboard_page_ui import Ui_Widget as DashboardPageUI
 from .guests_page_ui import Ui_Widget as GuestsPageUI
 from .reservation_page_ui import Ui_Widget as ReservationPageUI
