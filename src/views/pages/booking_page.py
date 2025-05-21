@@ -1,20 +1,25 @@
 from PyQt6.QtWidgets import QWidget, QTableView, QHeaderView
 from PyQt6.QtGui import QFont
-from PyQt6.QtCore import pyqtSignal, QModelIndex, Qt
+from PyQt6.QtCore import pyqtSignal, QModelIndex, Qt, QTimer
 
 from ui import BookingPageUI
 from views.custom_widgets import DayFrame, ButtonDelegate, CustomTableView
 
 
 class BookingPage(QWidget, BookingPageUI):
+    window_resized = pyqtSignal()
     clicked_info_button = pyqtSignal(QModelIndex)
     clicked_check_out_button = pyqtSignal(QModelIndex)
+    search_text_changed = pyqtSignal(str)
+    next_page_button_pressed = pyqtSignal()
+    previous_page_button_pressed = pyqtSignal()
 
     def __init__(self):
         super().__init__()
 
         self.setupUi(self)
 
+        self.add_timer_to_search_lineedit()
         self.connect_signals_to_slots()
 
         self.update_table_view()
@@ -24,6 +29,18 @@ class BookingPage(QWidget, BookingPageUI):
 
         self.set_table_views_button_delegate()
         self.disable_table_views_selection_mode()
+
+    def add_timer_to_search_lineedit(self):
+        self.timer = QTimer()
+
+        self.timer.setInterval(300)
+        self.timer.setSingleShot(True)
+
+    def start_debounce_timer(self):
+        self.timer.start()
+
+    def on_debounced_text_changed(self):
+        self.search_text_changed.emit(self.search_lineedit.text())
 
     def update_table_view(self):
         # Remove old table view before adding
@@ -88,7 +105,32 @@ class BookingPage(QWidget, BookingPageUI):
         self.bookings_table_view.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
     def connect_signals_to_slots(self):
-        pass
+        self.search_lineedit.textChanged.connect(self.start_debounce_timer)
+        self.timer.timeout.connect(self.on_debounced_text_changed)
+
+        self.next_page_button.clicked.connect(self.next_page_button_pressed.emit)
+        self.previous_page_button.clicked.connect(self.previous_page_button_pressed.emit)
+
+    def get_max_rows_of_bookings_table_view(self):
+        self.bookings_table_view.updateGeometry()
+        QApplication.processEvents()
+
+        viewport_height = self.bookings_table_view.viewport().height()
+
+        if self.bookings_table_view.model() is None or self.bookings_table_view.model().rowCount() == 0:
+            return 0
+
+        row_height = self.bookings_table_view.rowHeight(0)
+
+        if row_height == 0:
+            return 0
+
+        max_rows = viewport_height // row_height
+
+        self.bookings_table_view.updateGeometry()
+        QApplication.processEvents()
+
+        return max_rows
 
     def set_external_stylesheet(self):
         with open("../resources/styles/booking_page.qss", "r") as file:

@@ -14,9 +14,6 @@ class ReservationsPageController:
 
         self.connect_signals_to_slots()
 
-        # self.set_models()
-
-        # self.view.set_table_views_column_widths()
         self.reservations_model = None
 
         self.prev_view_type = None
@@ -119,7 +116,7 @@ class ReservationsPageController:
                 self.db_driver.reserved_room_queries.set_reservation_status('confirmed', selected_reservation_id)
                 self.db_driver.room_queries.set_room_status(reservation_room_number, 'occupied')
 
-                self.update_reservations_table_view()
+                self.refresh_reservations_data()
 
                 latest_booking_id = self.db_driver.booked_room_queries.get_latest_booking_id()
 

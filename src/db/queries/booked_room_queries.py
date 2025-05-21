@@ -25,14 +25,15 @@ class BookedRoomQueries:
         self.cursor.execute(sql, values)
         self.db.commit()
 
-    def get_all_bookings(self, sort_by="Booking ID", sort_type="Ascending", view_type="Bookings"):
+    def get_all_bookings(self, max_bookings_per_page=20, current_page_number=1, view_type="Bookings",
+                         sort_by="Booking ID", sort_type="Ascending", search_input=None):
 
         sort_by_dict = {"Booking ID": "bookedrooms.booking_id",
                         "Name": "guests.name",
                         "Room No.": "rooms.room_number",
                         "Room Type": "rooms.room_type",
-                        "Check-in Date": "bookedrooms.actual_check_in_date",
-                        "Check-out Date": "bookedrooms.check_out_date"}
+                        "Check-In Date": "bookedrooms.actual_check_in_date",
+                        "Check-Out Date": "bookedrooms.check_out_date"}
 
         sort_type_dict = {"Ascending": "ASC", "Descending": "DESC"}
 
@@ -40,21 +41,75 @@ class BookedRoomQueries:
                           "Past Bookings": "WHERE bookedrooms.check_in_status = 'checked out'",
                           "All": ""}
 
+        if search_input:
+            search_input_query = """ AND 
+                        (bookedrooms.booking_id LIKE %s OR 
+                        guests.name LIKE %s OR 
+                        bookedrooms.room_number LIKE %s OR 
+                        rooms.room_type LIKE %s OR
+                        DATE_FORMAT(actual_check_in_date, '%%Y-%%m-%%d') LIKE %s OR
+                        DATE_FORMAT(check_out_date, '%%Y-%%m-%%d') LIKE %s OR
+                        CONCAT(DATE_FORMAT(check_in_date, '%%b %%d, %%Y'), ' - ', DATE_FORMAT(check_out_date, '%%b %%d, %%Y')) LIKE %s)"""
+
+            search_input = f"%{search_input}%"
+            values = (search_input, search_input, search_input, search_input, search_input, search_input, search_input)
+        else:
+            search_input_query = ""
+            values = ()
+
         sql = f"""SELECT bookedrooms.booking_id, guests.name, rooms.room_number, rooms.room_type, 
                         bookedrooms.actual_check_in_date, bookedrooms.check_out_date, bookedrooms.check_in_status
                         FROM bookedrooms
                         JOIN guests ON bookedrooms.guest_id = guests.guest_id
                         JOIN rooms ON bookedrooms.room_number = rooms.room_number
                         {view_type_dict[view_type]}
-                        ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]};"""
+                        {search_input_query}
+                        ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]}"""
 
-        self.cursor.execute(sql)
+        sql += f""" LIMIT {max_bookings_per_page} OFFSET {max_bookings_per_page * (current_page_number - 1)}"""
+
+        self.cursor.execute(sql, values)
 
         result = self.cursor.fetchall()
 
         list_result = [list(row) for row in result]
 
         return list_result
+
+    def get_booking_count(self, view_type=None, search_input=None):
+
+        view_type_dict = {"Bookings": "WHERE bookedrooms.check_in_status = 'in progress'",
+                          "Past Bookings": "WHERE bookedrooms.check_in_status = 'checked out'",
+                          "All": ""}
+
+        if search_input:
+            search_input_query = """ AND 
+                        (bookedrooms.booking_id LIKE %s OR 
+                        guests.name LIKE %s OR 
+                        bookedrooms.room_number LIKE %s OR 
+                        rooms.room_type LIKE %s OR
+                        DATE_FORMAT(actual_check_in_date, '%%Y-%%m-%%d') LIKE %s OR
+                        DATE_FORMAT(check_out_date, '%%Y-%%m-%%d') LIKE %s OR
+                        CONCAT(DATE_FORMAT(check_in_date, '%%b %%d, %%Y'), ' - ', DATE_FORMAT(check_out_date, '%%b %%d, %%Y')) LIKE %s)"""
+
+            search_input = f"%{search_input}%"
+            values = (search_input, search_input, search_input, search_input, search_input, search_input, search_input)
+        else:
+            search_input_query = ""
+            values = ()
+
+        sql = f"""SELECT COUNT(*)
+                    FROM bookedrooms
+                    JOIN guests ON bookedrooms.guest_id = guests.guest_id
+                    JOIN rooms ON bookedrooms.room_number = rooms.room_number
+                    {view_type_dict[view_type]}
+                    {search_input_query}"""
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()[0]
+
+        return result
 
     def get_latest_booking_id(self):
 

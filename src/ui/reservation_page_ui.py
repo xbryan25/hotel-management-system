@@ -150,6 +150,6 @@ class Ui_Widget(object):
         self.sort_by_combobox.setItemText(2, _translate("Widget", "Sort by Room No."))
         self.sort_by_combobox.setItemText(3, _translate("Widget", "Sort by Room Type"))
         self.sort_by_combobox.setItemText(4, _translate("Widget", "Sort by Check-In Date"))
-        self.sort_by_combobox.setItemText(5, _translate("Widget", "Sort by Check-out Date"))
+        self.sort_by_combobox.setItemText(5, _translate("Widget", "Sort by Check-Out Date"))
         self.sort_by_combobox.setItemText(6, _translate("Widget", "Sort by Status"))
         self.reservations_label.setText(_translate("Widget", "Reservations"))

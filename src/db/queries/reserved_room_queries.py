@@ -75,8 +75,8 @@ class ReservedRoomQueries:
                         "Name": "guests.name",
                         "Room No.": "rooms.room_number",
                         "Room Type": "rooms.room_type",
-                        "Check-in Date": "reservedrooms.check_in_date",
-                        "Check-out Date": "reservedrooms.check_out_date",
+                        "Check-In Date": "reservedrooms.check_in_date",
+                        "Check-Out Date": "reservedrooms.check_out_date",
                         "Status": "payment_status"}
 
         sort_type_dict = {"Ascending": "ASC", "Descending": "DESC"}
