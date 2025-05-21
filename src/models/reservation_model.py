@@ -46,7 +46,11 @@ class ReservationModel(QAbstractTableModel):
         if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:
 
             if self.view_mode == "billing_page_view":
-                if index.column() == 5:
+
+                if index.column() == 2 and not self._data[index.row()][index.column()]:
+                    return "[deleted]"
+
+                elif index.column() == 5:
                     return None
 
                 return self._data[index.row()][index.column()]
