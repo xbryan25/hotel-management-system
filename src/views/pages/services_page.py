@@ -43,7 +43,7 @@ class ServicesPage(QWidget, ServicesPageUI):
 
     def load_fonts(self):
 
-        self.services_list_label.setFont(QFont("Inter", 20, QFont.Weight.Bold))
+        self.services_label.setFont(QFont("Inter", 20, QFont.Weight.Bold))
 
         self.search_lineedit.setFont(QFont("Inter", 16, QFont.Weight.Normal))
 

@@ -98,7 +98,6 @@ class BookingPage(QWidget, BookingPageUI):
         self.search_lineedit.setFont(QFont("Inter", 16, QFont.Weight.Normal))
 
         self.bookings_label.setFont(QFont("Inter", 20, QFont.Weight.Bold))
-        self.date_today_label.setFont(QFont("Inter", 18, QFont.Weight.Normal))
 
         self.view_type_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.sort_by_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))

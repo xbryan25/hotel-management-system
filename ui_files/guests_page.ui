@@ -35,81 +35,144 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
-      <item row="1" column="2">
-       <widget class="QComboBox" name="sort_by_combobox">
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item row="2" column="0">
+       <widget class="QFrame" name="actions_frame">
         <property name="minimumSize">
          <size>
-          <width>125</width>
-          <height>30</height>
+          <width>0</width>
+          <height>35</height>
          </size>
         </property>
-        <property name="cursor">
-         <cursorShape>PointingHandCursor</cursorShape>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
         </property>
-        <item>
-         <property name="text">
-          <string>Sort by Guest Name</string>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_6">
+         <property name="leftMargin">
+          <number>0</number>
          </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Sort by Phone Number</string>
+         <property name="topMargin">
+          <number>0</number>
          </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Sort by Last Visit Date</string>
+         <property name="rightMargin">
+          <number>0</number>
          </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Sort by Visit Count</string>
+         <property name="bottomMargin">
+          <number>0</number>
          </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Sort by Total Amount Due</string>
-         </property>
-        </item>
+         <item row="0" column="2">
+          <widget class="QComboBox" name="sort_type_combobox">
+           <property name="minimumSize">
+            <size>
+             <width>125</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <item>
+            <property name="text">
+             <string>Ascending</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Descending</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="sort_by_combobox">
+           <property name="minimumSize">
+            <size>
+             <width>125</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <item>
+            <property name="text">
+             <string>Sort by Guest Name</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Sort by Phone Number</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Sort by Last Visit Date</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Sort by Visit Count</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Sort by Total Amount Due</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QComboBox" name="show_type_combobox">
+           <property name="minimumSize">
+            <size>
+             <width>125</width>
+             <height>30</height>
+            </size>
+           </property>
+           <item>
+            <property name="text">
+             <string>All Guests</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Currently Staying</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>With Reservations</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Active Guests</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="guest_list_label">
+       <widget class="QLabel" name="guests_label">
         <property name="minimumSize">
          <size>
-          <width>175</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Guest List</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QComboBox" name="sort_type_combobox">
-        <property name="minimumSize">
-         <size>
-          <width>125</width>
+          <width>0</width>
           <height>30</height>
          </size>
         </property>
-        <property name="cursor">
-         <cursorShape>PointingHandCursor</cursorShape>
+        <property name="text">
+         <string>Guests</string>
         </property>
-        <item>
-         <property name="text">
-          <string>Ascending</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Descending</string>
-         </property>
-        </item>
        </widget>
       </item>
-      <item row="1" column="4">
+      <item row="2" column="1">
        <spacer name="hs_3">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -122,36 +185,6 @@
         </property>
        </spacer>
       </item>
-      <item row="1" column="1">
-       <widget class="QComboBox" name="show_type_combobox">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>30</height>
-         </size>
-        </property>
-        <item>
-         <property name="text">
-          <string>All Guests</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Currently Staying</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>With Reservations</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Active Guests</string>
-         </property>
-        </item>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
@@ -160,7 +193,13 @@
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>50</height>
+       <height>60</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>60</height>
       </size>
      </property>
      <property name="frameShape">
@@ -227,12 +266,18 @@
    <item row="2" column="0">
     <widget class="QFrame" name="guest_table_view_frame">
      <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
+      <enum>QFrame::NoFrame</enum>
      </property>
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
       <item row="0" column="0">
        <widget class="QTableView" name="guest_table_view">
         <property name="verticalScrollBarPolicy">

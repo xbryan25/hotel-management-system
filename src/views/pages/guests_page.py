@@ -139,7 +139,7 @@ class GuestsPage(QWidget, GuestsPageUI):
 
     def load_fonts(self):
 
-        self.guest_list_label.setFont(QFont("Inter", 20, QFont.Weight.Bold))
+        self.guests_label.setFont(QFont("Inter", 20, QFont.Weight.Bold))
 
         self.search_lineedit.setFont(QFont("Inter", 16, QFont.Weight.Normal))
 
