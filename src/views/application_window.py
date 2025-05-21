@@ -63,7 +63,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
 
         page_update_actions = {
             1: self.rooms_page_controller.refresh_rooms_data,
-            3: self.reservations_page_controller.update_reservations_table_view,
+            3: self.reservations_page_controller.refresh_reservations_data,
             4: self.bookings_page_controller.update_bookings_table_view,
             5: self.guests_page_controller.refresh_guests_data,
             6: self.billings_page_controller.update_billings_table_view,
