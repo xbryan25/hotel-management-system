@@ -110,7 +110,6 @@ class GuestsPage(QWidget, GuestsPageUI):
         QApplication.processEvents()
 
         viewport_height = self.guest_table_view.viewport().height()
-        print(f"Viewport height: {viewport_height}")
 
         if self.guest_table_view.model() is None or self.guest_table_view.model().rowCount() == 0:
             return 0
@@ -120,13 +119,11 @@ class GuestsPage(QWidget, GuestsPageUI):
 
         # 2 is for buffer, to avoid the scroll bar showing up
         row_height = self.guest_table_view.rowHeight(0)
-        print(f"Row height: {row_height}")
 
         if row_height == 0:
             return 0
 
         max_rows = viewport_height // row_height
-        print(f"Max rows that can fit: {max_rows}")
 
         self.guest_table_view.updateGeometry()
         QApplication.processEvents()

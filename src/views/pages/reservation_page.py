@@ -1,5 +1,5 @@
 from PyQt6.QtCore import QTime, QTimer, QSize, Qt, pyqtSignal, QModelIndex
-from PyQt6.QtWidgets import QWidget, QFrame, QHeaderView, QTableView
+from PyQt6.QtWidgets import QWidget, QFrame, QHeaderView, QTableView, QApplication
 from PyQt6.QtGui import QFont, QIcon
 
 from ui import ReservationPageUI
@@ -11,6 +11,7 @@ from datetime import date, timedelta
 
 
 class ReservationPage(QWidget, ReservationPageUI):
+    window_resized = pyqtSignal()
     clicked_add_reservation_button = pyqtSignal()
     clicked_info_button = pyqtSignal(QModelIndex)
     clicked_check_in_button = pyqtSignal(QModelIndex)
@@ -103,8 +104,30 @@ class ReservationPage(QWidget, ReservationPageUI):
         self.reservations_table_view.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
     def connect_signals_to_slots(self):
-
         self.add_reservation_button.clicked.connect(self.clicked_add_reservation_button.emit)
+
+    def get_max_rows_of_reservations_table_view(self):
+        self.reservations_table_view.updateGeometry()
+        QApplication.processEvents()
+
+        viewport_height = self.reservations_table_view.viewport().height()
+
+        if self.reservations_table_view.model() is None or self.reservations_table_view.model().rowCount() == 0:
+            return 0
+
+        # 2 is for buffer, to avoid the scroll bar showing up
+        row_height = self.reservations_table_view.rowHeight(0)
+
+        if row_height == 0:
+            return 0
+
+        max_rows = viewport_height // row_height
+        print(f"Max rows that can fit: {max_rows}")
+
+        self.reservations_table_view.updateGeometry()
+        QApplication.processEvents()
+
+        return max_rows
 
     def set_external_stylesheet(self):
         with open("../resources/styles/reservation_page.qss", "r") as file:
@@ -133,5 +156,5 @@ class ReservationPage(QWidget, ReservationPageUI):
 
 
     def resizeEvent(self, event):
-
         super().resizeEvent(event)
+        QTimer.singleShot(0, self.window_resized.emit)

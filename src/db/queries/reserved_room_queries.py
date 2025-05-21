@@ -67,7 +67,8 @@ class ReservedRoomQueries:
 
         return result if result else None
 
-    def get_all_reservations(self, sort_by="Reservation ID", sort_type="Ascending", view_type="Reservations",
+    def get_all_reservations(self, enable_pagination=False, max_reservations_per_page=20, current_page_number=1,
+                             view_type="Reservations", sort_by="Reservation ID", sort_type="Ascending", search_input=None,
                              billing_view_mode=False):
 
         sort_by_dict = {"Reservation ID": "reservedrooms.reservation_id",
@@ -82,33 +83,53 @@ class ReservedRoomQueries:
 
         view_type_dict = {"Reservations": "WHERE reservedrooms.reservation_status = 'pending'",
                           "Past Reservations": "WHERE reservedrooms.reservation_status IN ('confirmed', 'cancelled', 'expired')",
-                          "Billings": "WHERE r.payment_status IN ('not paid', 'partially paid')",
-                          "Past Billings": "WHERE r.payment_status = 'fully paid'",
+                          "Billings": "WHERE reservedrooms.payment_status IN ('not paid', 'partially paid')",
+                          "Past Billings": "WHERE reservedrooms.payment_status = 'fully paid'",
                           "All": ""}
+
+        if search_input:
+            search_input_query = """ WHERE
+                      guests.name LIKE %s OR
+                      guests.phone_number LIKE %s OR
+                      guests.last_visit_date LIKE %s """
+
+            search_input = f"%{search_input}%"
+            values = (search_input, search_input, search_input, search_input, search_input)
+        else:
+            search_input_query = ""
+            values = ()
 
         if billing_view_mode:
 
-            sql = f"""SELECT r.reservation_id, guests.name, r.room_number, r.total_reservation_cost, 
-                            CAST(r.total_reservation_cost - COALESCE(SUM(p.amount), 0) AS SIGNED) AS remaining_balance,
-                            r.payment_status
-                            FROM reservedrooms r
-                            JOIN guests ON r.guest_id = guests.guest_id
-                            LEFT JOIN paidrooms p ON r.room_number = p.room_number
-                            AND p.transaction_date BETWEEN r.reservation_date AND r.check_in_date
-                            {view_type_dict[view_type]}  AND r.reservation_status = 'pending'
-                            GROUP BY r.reservation_id"""
+            sql = f"""SELECT reservedrooms.reservation_id, guests.name, reservedrooms.room_number, 
+                            reservedrooms.total_reservation_cost, 
+                            CAST(reservedrooms.total_reservation_cost - COALESCE(SUM(paidrooms.amount), 0) AS SIGNED) AS remaining_balance,
+                            reservedrooms.payment_status
+                            FROM reservedrooms 
+                            JOIN guests ON reservedrooms.guest_id = guests.guest_id
+                            LEFT JOIN paidrooms ON reservedrooms.room_number = paidrooms.room_number
+                            AND paidrooms.transaction_date BETWEEN reservedrooms.reservation_date AND reservedrooms.check_in_date
+                            {view_type_dict[view_type]} AND reservedrooms.reservation_status = 'pending'
+                            GROUP BY reservedrooms.reservation_id
+                            {search_input_query}
+                            ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]}"""
 
         else:
             sql = f"""SELECT reservedrooms.reservation_id, guests.name, rooms.room_number, rooms.room_type, 
-                                        reservedrooms.check_in_date, reservedrooms.check_out_date, reservedrooms.payment_status,
-                                        reservedrooms.reservation_status
-                                        FROM reservedrooms 
-                                        JOIN guests ON reservedrooms.guest_id = guests.guest_id
-                                        JOIN rooms ON reservedrooms.room_number = rooms.room_number
-                                        {view_type_dict[view_type]}
-                                        ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]};"""
+                            reservedrooms.check_in_date, reservedrooms.check_out_date, reservedrooms.payment_status,
+                            reservedrooms.reservation_status
+                            FROM reservedrooms 
+                            JOIN guests ON reservedrooms.guest_id = guests.guest_id
+                            JOIN rooms ON reservedrooms.room_number = rooms.room_number
+                            {view_type_dict[view_type]}
+                            {search_input_query}
+                            ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]}"""
 
-        self.cursor.execute(sql)
+        if enable_pagination:
+            sql += f""" LIMIT {max_reservations_per_page} 
+                        OFFSET {max_reservations_per_page * (current_page_number - 1)}"""
+
+        self.cursor.execute(sql, values)
 
         result = self.cursor.fetchall()
 
