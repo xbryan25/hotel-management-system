@@ -18,28 +18,91 @@ class ServiceQueries:
         else:
             return result[0]
 
-    def get_all_services(self, sort_by=None, sort_type=None):
+    def get_all_services(self, enable_pagination=False, max_services_per_page=20, current_page_number=1,
+                         view_type="Active Services", sort_by="Service Name", sort_type="Ascending",
+                         search_input=None):
 
         sort_by_dict = {"Service Name": "services.service_name",
                         "Rate": "services.rate"}
 
         sort_type_dict = {"Ascending": "ASC", "Descending": "DESC"}
 
-        if sort_by and sort_type:
-            sql = f"""SELECT services.service_name, services.rate
-                    FROM services
-                    ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]};"""
-        else:
-            sql = f"""SELECT services.service_id, services.service_name, services.rate
-                    FROM services"""
+        view_type_dict = {"Active Services": "WHERE services.is_active = 1",
+                          "Inactive Services": "WHERE services.is_active = 0",
+                          "All": ""}
 
-        self.cursor.execute(sql)
+        if search_input and view_type_dict in ('Active Services', 'Inactive Services'):
+            search_input_query = """ AND 
+                                (services.service_name LIKE %s OR 
+                                services.rate LIKE %s)"""
+
+            search_input = f"%{search_input}%"
+            values = (search_input, search_input)
+        elif search_input and view_type_dict == "All":
+            search_input_query = """ WHERE
+                                    (services.service_name LIKE %s OR 
+                                    services.rate LIKE %s)"""
+
+            search_input = f"%{search_input}%"
+            values = (search_input, search_input)
+
+        else:
+            search_input_query = ""
+            values = ()
+
+        sql = f"""SELECT services.service_id, services.service_name, services.rate
+                FROM services
+                {view_type_dict[view_type]}
+                {search_input_query}
+                ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]}"""
+
+        if enable_pagination:
+            sql += f""" LIMIT {max_services_per_page} OFFSET {max_services_per_page * (current_page_number - 1)}"""
+
+        self.cursor.execute(sql, values)
 
         result = self.cursor.fetchall()
 
         list_result = [list(row) for row in result]
 
         return list_result
+
+    def get_service_count(self, view_type=None, search_input=None):
+
+        view_type_dict = {"Active Services": "WHERE services.is_active = 1",
+                          "Inactive Services": "WHERE services.is_active = 0",
+                          "All": ""}
+
+        if search_input and view_type_dict in ('Active Services', 'Inactive Services'):
+            search_input_query = """ AND 
+                                        (services.service_name LIKE %s OR 
+                                        services.rate LIKE %s)"""
+
+            search_input = f"%{search_input}%"
+            values = (search_input, search_input)
+
+        elif search_input and view_type_dict == "All":
+            search_input_query = """ WHERE
+                                    (services.service_name LIKE %s OR 
+                                    services.rate LIKE %s)"""
+
+            search_input = f"%{search_input}%"
+            values = (search_input, search_input)
+
+        else:
+            search_input_query = ""
+            values = ()
+
+        sql = f"""SELECT COUNT(*)
+                        FROM services
+                        {view_type_dict[view_type]}
+                        {search_input_query}"""
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()[0]
+
+        return result
 
     def add_service(self, service_information):
         sql = """INSERT INTO services

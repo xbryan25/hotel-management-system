@@ -32,7 +32,7 @@ class ReservationModel(QAbstractTableModel):
     def get_len_of_data(self):
         return len(self._data)
 
-    def get_data(self):
+    def get_all(self):
         return self._data
 
     def rowCount(self, index=None):
