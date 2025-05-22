@@ -1,5 +1,5 @@
 from models import ServicesModel
-from views import AddEditServiceDialog
+from views import AddEditServiceDialog, ConfirmationDialog, FeedbackDialog
 
 from controllers.add_edit_service_dialog_controller import AddEditServiceDialogController
 
@@ -33,6 +33,28 @@ class ServicesPageController:
     def open_service_info_dialog(self, index):
         pass
 
+    def set_service_active_status(self, index):
+
+        selected_service_id = index.sibling(index.row(), 0).data()
+
+        if self.db_driver.service_queries.get_service_active_status(selected_service_id) == 'active':
+            delete_or_restore = "Delete"
+            is_active = False
+        else:
+            delete_or_restore = "Restore"
+            is_active = True
+
+        self.confirmation_dialog = ConfirmationDialog(f"{delete_or_restore} {selected_service_id}?")
+        self.confirmation_dialog.exec()
+
+        if self.confirmation_dialog.get_choice():
+            self.db_driver.service_queries.set_service_active_status(is_active, selected_service_id)
+
+            self.refresh_services_data()
+
+            self.feedback_dialog = FeedbackDialog(f"{delete_or_restore}d {selected_service_id}.")
+            self.feedback_dialog.exec()
+
     def update_row_count(self):
         current_max_services_per_page = self.view.get_max_rows_of_services_table_view()
 
@@ -55,7 +77,7 @@ class ServicesPageController:
         self.view.clicked_add_service_button.connect(self.open_new_service_dialog)
 
         self.view.clicked_info_button.connect(self.open_service_info_dialog)
-        self.view.clicked_delete_button.connect(lambda: print("Delete service"))
+        self.view.clicked_change_active_status_button.connect(self.set_service_active_status)
 
         self.view.search_text_changed.connect(self.update_prev_search_input)
         self.view.search_text_changed.connect(lambda _: self.refresh_services_data())

@@ -11,6 +11,9 @@ class ServicesModel(QAbstractTableModel):
 
         self.columns = ["Service ID", "Service Name", "Rate", "", ""]
 
+    def get_active_status_of_service(self, row):
+        return self._services[row][3]
+
     def get_all(self) -> list[dict]:
         return self._services
 
@@ -64,11 +67,13 @@ class ServicesModel(QAbstractTableModel):
             elif index.column() == 4:
                 if self._services[index.row()][3] == 1:
                     return "Disable service?"
+                else:
+                    return "Restore service?"
 
-        if role == self.BUTTON_ENABLED_ROLE and index.column() == 4:
-            is_service_active = self._services[index.row()][3]
-
-            return is_service_active == 1
+        # if role == self.BUTTON_ENABLED_ROLE and index.column() == 4:
+        #     is_service_active = self._services[index.row()][3]
+        #
+        #     return is_service_active == 1
 
         return None
 

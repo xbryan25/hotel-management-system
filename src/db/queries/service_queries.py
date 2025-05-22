@@ -5,6 +5,22 @@ class ServiceQueries:
         self.db = db
         self.cursor = cursor
 
+    def set_service_active_status(self, is_active, service_id):
+        sql = "UPDATE services SET is_active=%s WHERE service_id=%s"
+        values = (is_active, service_id)
+
+        self.cursor.execute(sql, values)
+        self.db.commit()
+
+    def get_service_active_status(self, service_id):
+        sql = "SELECT services.is_active FROM services WHERE service_id = %s;"
+        values = (service_id,)
+
+        self.cursor.execute(sql, values)
+        result = self.cursor.fetchone()[0]
+
+        return 'active' if result == 1 else 'inactive'
+
     def does_service_name_exist(self, service_name):
         sql = "SELECT 1 FROM services WHERE service_name = %s LIMIT 1;"
         values = (service_name,)
