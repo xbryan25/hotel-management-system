@@ -33,7 +33,6 @@ class AvailableRoomsModel(QAbstractListModel):
 
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
         if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:
-
             return self._rooms[index.row()][self._field_index]
 
     def set_rooms(self, rooms):

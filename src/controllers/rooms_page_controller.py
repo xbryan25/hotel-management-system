@@ -40,7 +40,7 @@ class RoomsPageController:
         initial_rows = self.view.get_list_view_current_max_rows()
 
         if not self.rooms_model:
-            self.rooms_model = RoomsModel(rooms_data, initial_rows, -1)
+            self.rooms_model = RoomsModel(rooms_data)
         else:
             self.rooms_model.update_data(rooms_data)
 

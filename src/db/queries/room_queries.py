@@ -83,26 +83,17 @@ class RoomQueries:
         else:
             return result[0]
 
-    def get_available_rooms(self, room_type=None):
-        if not room_type:
-            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.daily_rate, rooms.availability_status, 
-                            rooms.capacity
-                            FROM rooms
-                            WHERE rooms.availability_status="available"
-                            ORDER BY rooms.room_number ASC;"""
+    def get_rooms_from_room_type(self, room_type):
 
-            self.cursor.execute(sql)
-        else:
-            sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.daily_rate, rooms.availability_status, 
-                            rooms.capacity
-                            FROM rooms
-                            WHERE rooms.room_type=%s
-                            AND rooms.availability_status="available"
-                            ORDER BY rooms.room_number ASC;"""
+        sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.daily_rate, rooms.availability_status, 
+                        rooms.capacity
+                        FROM rooms
+                        WHERE rooms.room_type=%s
+                        ORDER BY rooms.room_number ASC;"""
 
-            values = (room_type,)
+        values = (room_type,)
 
-            self.cursor.execute(sql, values)
+        self.cursor.execute(sql, values)
 
         result = self.cursor.fetchall()
 

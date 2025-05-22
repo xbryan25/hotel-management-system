@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QSizePolicy, QSpacerItem
 
-from models import AvailableRoomsModel, ServicesModel
+from models import RoomsModel, ServicesModel
 from views import FeedbackDialog, UpcomingReservationsDialog
 from controllers.upcoming_reservations_dialog_controller import UpcomingReservationsDialogController
 
@@ -45,7 +45,7 @@ class NewReservationDialogController:
 
         hours = seconds / 3600
 
-        current_room_cost = self.available_room_numbers_model.get_cost_of_room(current_room)
+        current_room_cost = self.room_numbers_model.get_cost_of_room(current_room)
 
         total_room_cost = (((hours-1)//24) + 1) * current_room_cost
 
@@ -78,16 +78,17 @@ class NewReservationDialogController:
         self.view.services_scroll_area_grid_layout.addItem(v_spacer, len(services), 0, 1, 1)
 
     def set_models(self):
-        available_rooms = self.db_driver.room_queries.get_available_rooms()
+        all_rooms = self.db_driver.room_queries.get_all_rooms(enable_pagination=False)
 
-        # list(available_rooms) makes a copy of available_rooms so that it won't be affected
-        self.available_room_numbers_model = AvailableRoomsModel(available_rooms, 0)
-        self.available_room_types_model = AvailableRoomsModel(list(available_rooms), 1)
+        # nrd = new_reservation_dialog
 
-        self.view.rooms_combobox.setModel(self.available_room_numbers_model)
+        self.room_numbers_model = RoomsModel(all_rooms, model_type='nrd_room_numbers')
+        self.room_types_model = RoomsModel(all_rooms, model_type='nrd_room_types')
+
+        self.view.rooms_combobox.setModel(self.room_numbers_model)
 
         self.view.room_type_filter_combobox.blockSignals(True)
-        self.view.room_type_filter_combobox.setModel(self.available_room_types_model)
+        self.view.room_type_filter_combobox.setModel(self.room_types_model)
         self.view.room_type_filter_combobox.blockSignals(False)
 
         available_services = self.db_driver.service_queries.get_all_services()
@@ -96,11 +97,11 @@ class NewReservationDialogController:
     def update_models(self, room_type):
 
         if room_type == "-":
-            available_rooms_from_room_type = self.db_driver.room_queries.get_available_rooms()
+            rooms_from_room_type = self.db_driver.room_queries.get_all_rooms(enable_pagination=False)
         else:
-            available_rooms_from_room_type = self.db_driver.room_queries.get_available_rooms(room_type)
+            rooms_from_room_type = self.db_driver.room_queries.get_rooms_from_room_type(room_type)
 
-        self.available_room_numbers_model.set_rooms(available_rooms_from_room_type)
+        self.room_numbers_model.update_data(rooms_from_room_type)
 
     def make_reservation(self):
         guest_inputs = self.view.get_guest_inputs()
