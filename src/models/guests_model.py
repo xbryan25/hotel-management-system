@@ -41,7 +41,7 @@ class GuestsModel(QAbstractTableModel):
         if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:
 
             if index.column() == 3 and self._data[index.row()][index.column()]:
-                value = self._data[index.row()][index.column()].strftime("%b %d, %Y %I:%M %p")
+                value = self._data[index.row()][index.column()].strftime("%b %d, %Y")
             elif index.column() == 3 and not self._data[index.row()][index.column()]:
                 value = "-"
             elif index.column() == 5:

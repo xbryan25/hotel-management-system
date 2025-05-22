@@ -103,18 +103,20 @@ class ReservationsPageController:
             if self.confirmation_dialog.get_choice():
                 check_in_date, check_out_date = index.sibling(index.row(), 4).data().split("-")
                 reservation_room_number = index.sibling(index.row(), 2).data()
+                guest_id = self.db_driver.reserved_room_queries.get_specific_reservation_details('guest_id', selected_reservation_id)
 
                 booking_inputs = {"check_in_status": "in progress",
                                   "check_in_date": datetime.strptime(check_in_date.strip(), "%b %d, %Y"),
                                   "check_out_date": datetime.strptime(check_out_date.strip(), "%b %d, %Y"),
                                   "actual_check_in_date": datetime.now(),
                                   "actual_check_out_date": None,
-                                  "guest_id": self.db_driver.reserved_room_queries.get_specific_reservation_details('guest_id', selected_reservation_id),
+                                  "guest_id": guest_id,
                                   "room_number": reservation_room_number}
 
                 self.db_driver.booked_room_queries.add_booked_room(booking_inputs)
                 self.db_driver.reserved_room_queries.set_reservation_status('confirmed', selected_reservation_id)
                 self.db_driver.room_queries.set_room_status(reservation_room_number, 'occupied')
+                self.db_driver.guest_queries.update_guest_visit_count_and_last_visit_date(guest_id)
 
                 self.refresh_reservations_data()
 

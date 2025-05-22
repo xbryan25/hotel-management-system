@@ -1,11 +1,17 @@
 
-# TODO: Check if sorting works with searching
-# TODO: Pagination
+from datetime import date
 
 class GuestQueries:
     def __init__(self, db, cursor):
         self.db = db
         self.cursor = cursor
+
+    def update_guest_visit_count_and_last_visit_date(self, guest_id):
+        sql = "UPDATE guests SET last_visit_date=%s, visit_count=visit_count+1 WHERE guest_id=%s"
+        values = (date.today(), guest_id)
+
+        self.cursor.execute(sql, values)
+        self.db.commit()
 
     def get_latest_guest_id(self):
 
@@ -361,7 +367,7 @@ class GuestQueries:
                   guest_information["phone_number"],
                   guest_information["birth_date"],
                   guest_information["government_id"],
-                  1)
+                  0)
 
         self.cursor.execute(sql, values)
         self.db.commit()
