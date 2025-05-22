@@ -6,6 +6,21 @@ class ReservedRoomQueries:
         self.db = db
         self.cursor = cursor
 
+    def get_all_check_in_and_check_out_of_room(self, room_number):
+        sql = """SELECT reservedrooms.check_in_date, reservedrooms.check_out_date FROM reservedrooms 
+                    WHERE reservedrooms.room_number=%s AND 
+                    CURDATE() BETWEEN reservedrooms.check_in_date AND reservedrooms.check_out_date"""
+
+        values = (room_number,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchall()
+
+        list_result = [list(row) for row in result]
+
+        return list_result
+
     def get_num_of_reservations_from_room(self, room_number):
         sql = """SELECT COUNT(*) FROM reservedrooms WHERE reservedrooms.room_number=%s AND 
                     reservedrooms.reservation_status=%s"""

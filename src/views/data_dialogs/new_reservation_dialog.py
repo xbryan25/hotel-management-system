@@ -259,6 +259,7 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         self.total_cost_value_label.setFont(QFont("Inter", 16, QFont.Weight.Bold))
 
         self.reservation_details_label.setFont(QFont("Inter", 18, QFont.Weight.Bold))
+        self.room_reservations_button.setFont(QFont("Inter", 12, QFont.Weight.Bold))
         self.check_in_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
         self.check_out_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
         self.room_type_filter_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))

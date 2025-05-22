@@ -5,6 +5,7 @@ from .add_payment_dialog import AddPaymentDialog
 from .reservation_info_dialog import ReservationInfoDialog
 from .add_edit_room_dialog import AddEditRoomDialog
 from .add_edit_service_dialog import AddEditServiceDialog
+from .upcoming_reservations_dialog import UpcomingReservationsDialog
 
 __all__ = [
     "GuestInfoDialog",
@@ -12,5 +13,6 @@ __all__ = [
     "AddPaymentDialog",
     "ReservationInfoDialog",
     "AddEditRoomDialog",
-    "AddEditServiceDialog"
+    "AddEditServiceDialog",
+    "UpcomingReservationsDialog"
 ]
