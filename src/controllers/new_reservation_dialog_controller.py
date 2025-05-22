@@ -16,6 +16,12 @@ class NewReservationDialogController:
 
         self.create_service_frames(self.services_model.get_all())
 
+    def open_reservation_list_dialog(self):
+
+        self.add_edit_service_dialog = AddEditServiceDialog()
+
+        self.add_edit_service_dialog.exec()
+
     def connect_signals_to_slots(self):
         self.view.room_type_changed.connect(self.update_models)
 
@@ -25,6 +31,8 @@ class NewReservationDialogController:
         self.view.spinbox_enabled.connect(lambda: self.update_total_service_cost(self.service_frames))
 
         self.view.clicked_reservation.connect(self.make_reservation)
+
+        self.view.room_reservations_button.clicked.connect(lambda: print("clicked"))
 
     def calculate_room_cost(self, current_room):
         check_in_check_out_date_time = self.view.get_check_in_check_out_date_and_time()
