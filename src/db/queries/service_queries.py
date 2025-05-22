@@ -59,7 +59,7 @@ class ServiceQueries:
             search_input_query = ""
             values = ()
 
-        sql = f"""SELECT services.service_id, services.service_name, services.rate
+        sql = f"""SELECT services.service_id, services.service_name, services.rate, services.is_active
                 FROM services
                 {view_type_dict[view_type]}
                 {search_input_query}

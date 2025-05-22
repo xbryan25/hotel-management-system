@@ -70,15 +70,19 @@ class ServicesPage(QWidget, ServicesPageUI):
             }
         """)
 
-        services_table_view_header.resizeSection(2, 250)
+        services_table_view_header.resizeSection(2, 150)
+        services_table_view_header.resizeSection(3, 40)
+        services_table_view_header.resizeSection(4, 40)
 
         # services_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         services_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         services_table_view_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
+        services_table_view_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
+        services_table_view_header.setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
 
     def set_table_views_button_delegate(self):
 
-        info_button_delegate_icon_path = "../resources/icons/reservation_page/info_icon.svg"
+        info_button_delegate_icon_path = "../resources/icons/services_page/info_icon.svg"
         self.info_button_delegate = ButtonDelegate(icon_path=info_button_delegate_icon_path,
                                                    can_be_disabled=False,
                                                    parent=self.services_table_view)
@@ -86,7 +90,7 @@ class ServicesPage(QWidget, ServicesPageUI):
         self.info_button_delegate.clicked.connect(self.clicked_info_button.emit)
         self.services_table_view.setItemDelegateForColumn(3, self.info_button_delegate)
 
-        check_in_button_delegate_icon_path = "../resources/icons/reservation_page/check_in_icon.svg"
+        check_in_button_delegate_icon_path = "../resources/icons/services_page/delete_icon.svg"
         self.check_in_button_delegate = ButtonDelegate(icon_path=check_in_button_delegate_icon_path,
                                                        can_be_disabled=True,
                                                        parent=self.services_table_view)

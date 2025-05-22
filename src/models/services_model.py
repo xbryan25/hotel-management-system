@@ -2,12 +2,14 @@ from PyQt6.QtCore import QAbstractTableModel, Qt
 
 
 class ServicesModel(QAbstractTableModel):
+    BUTTON_ENABLED_ROLE = Qt.ItemDataRole.UserRole + 1
+
     def __init__(self, services_list: list[dict]):
         super().__init__()
 
         self._services = services_list
 
-        self.columns = ["Service ID", "Service Name", "Rate"]
+        self.columns = ["Service ID", "Service Name", "Rate", "", ""]
 
     def get_all(self) -> list[dict]:
         return self._services
@@ -48,10 +50,25 @@ class ServicesModel(QAbstractTableModel):
             return None
 
         if role == Qt.ItemDataRole.DisplayRole:
-            return self._services[index.row()][index.column()]
+            if index.column() == 3 or index.column() == 4:
+                return ""
+            else:
+                return self._services[index.row()][index.column()]
 
         if role == Qt.ItemDataRole.TextAlignmentRole:
             return Qt.AlignmentFlag.AlignCenter
+
+        if role == Qt.ItemDataRole.ToolTipRole:
+            if index.column() == 3:
+                return "View service details?"
+            elif index.column() == 4:
+                if self._services[index.row()][3] == 1:
+                    return "Disable service?"
+
+        if role == self.BUTTON_ENABLED_ROLE and index.column() == 4:
+            is_service_active = self._services[index.row()][3]
+
+            return is_service_active == 1
 
         return None
 
