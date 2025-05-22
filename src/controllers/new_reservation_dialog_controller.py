@@ -1,7 +1,8 @@
 from PyQt6.QtWidgets import QSizePolicy, QSpacerItem
 
 from models import AvailableRoomsModel, ServicesModel
-from views import FeedbackDialog
+from views import FeedbackDialog, UpcomingReservationsDialog
+from controllers.upcoming_reservations_dialog_controller import UpcomingReservationsDialogController
 
 
 class NewReservationDialogController:
@@ -16,11 +17,14 @@ class NewReservationDialogController:
 
         self.create_service_frames(self.services_model.get_all())
 
-    def open_reservation_list_dialog(self):
+    def open_upcoming_reservations_dialog(self):
 
-        self.add_edit_service_dialog = AddEditServiceDialog()
+        self.upcoming_reservations_dialog = UpcomingReservationsDialog()
+        self.upcoming_reservations_dialog_controller = UpcomingReservationsDialogController(self.upcoming_reservations_dialog,
+                                                                                            self.db_driver,
+                                                                                            self.view.rooms_combobox.currentText())
 
-        self.add_edit_service_dialog.exec()
+        self.upcoming_reservations_dialog.exec()
 
     def connect_signals_to_slots(self):
         self.view.room_type_changed.connect(self.update_models)
@@ -32,7 +36,7 @@ class NewReservationDialogController:
 
         self.view.clicked_reservation.connect(self.make_reservation)
 
-        self.view.room_reservations_button.clicked.connect(lambda: print("clicked"))
+        self.view.room_reservations_button.clicked.connect(self.open_upcoming_reservations_dialog)
 
     def calculate_room_cost(self, current_room):
         check_in_check_out_date_time = self.view.get_check_in_check_out_date_and_time()

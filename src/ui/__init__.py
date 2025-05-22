@@ -19,6 +19,7 @@ from .add_payment_dialog_ui import Ui_Dialog as AddPaymentDialogUI
 from .reservation_info_dialog_ui import Ui_Dialog as ReservationInfoDialogUI
 from .add_edit_room_dialog_ui import Ui_Dialog as AddEditRoomDialogUI
 from .add_edit_service_dialog_ui import Ui_Dialog as AddEditServiceDialogUI
+from .upcoming_reservations_dialog_ui import Ui_Dialog as UpcomingReservationsDialogUI
 
 # Popup dialogs
 from .confirmation_dialog_ui import Ui_Dialog as ConfirmationDialogUI
