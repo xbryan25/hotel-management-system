@@ -163,7 +163,7 @@
            </property>
            <item>
             <property name="text">
-             <string>Current Services</string>
+             <string>Active Services</string>
             </property>
            </item>
            <item>

@@ -106,16 +106,17 @@ class ServiceQueries:
 
     def add_service(self, service_information):
         sql = """INSERT INTO services
-                (service_id, service_name, rate) VALUES
-                (%s, %s, %s)"""
+                (service_id, service_name, rate, is_active) VALUES
+                (%s, %s, %s, %s)"""
 
         latest_service_id = self.get_latest_service_id()
 
         new_service_id = f"service-{int(latest_service_id[9:]) + 1:03}"
 
         values = (new_service_id,
-                  service_information[0],
-                  service_information[1])
+                  service_information['service_name'],
+                  service_information['rate'],
+                  True)
 
         self.cursor.execute(sql, values)
         self.db.commit()
