@@ -1,5 +1,7 @@
 from models import ServicesModel
-from views import GuestInfoDialog
+from views import AddEditServiceDialog
+
+from controllers.add_edit_service_dialog_controller import AddEditServiceDialogController
 
 
 class ServicesPageController:
@@ -21,7 +23,12 @@ class ServicesPageController:
         self.max_services_per_page = 16
 
     def open_new_service_dialog(self):
-        pass
+        self.add_service_dialog = AddEditServiceDialog()
+        self.add_service_controller = AddEditServiceDialogController(self.add_service_dialog, self.db_driver)
+
+        self.add_service_dialog.exec()
+
+        self.refresh_services_data()
 
     def open_service_info_dialog(self, index):
         pass
