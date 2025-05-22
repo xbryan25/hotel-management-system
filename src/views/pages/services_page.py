@@ -1,20 +1,63 @@
-from PyQt6.QtWidgets import QWidget, QHeaderView
+from PyQt6.QtWidgets import QWidget, QHeaderView, QTableView, QApplication
 from PyQt6.QtGui import QFont, QIcon
-from PyQt6.QtCore import QSize
+from PyQt6.QtCore import QSize, QTimer, pyqtSignal, QModelIndex, Qt
 
 from ui import ServicesPageUI
+from views.custom_widgets import ButtonDelegate, CustomTableView
 
 
 class ServicesPage(QWidget, ServicesPageUI):
+    window_resized = pyqtSignal()
+    clicked_add_service_button = pyqtSignal()
+    clicked_info_button = pyqtSignal(QModelIndex)
+    clicked_delete_button = pyqtSignal(QModelIndex)
+    search_text_changed = pyqtSignal(str)
+    next_page_button_pressed = pyqtSignal()
+    previous_page_button_pressed = pyqtSignal()
+
     def __init__(self):
         super().__init__()
 
         self.setupUi(self)
 
+        self.add_timer_to_search_lineedit()
+        self.connect_signals_to_slots()
+
+        self.update_table_view()
+
+        self.set_icons()
+
+        self.set_table_views_button_delegate()
+        self.disable_table_views_selection_mode()
+
         self.set_external_stylesheet()
         self.load_fonts()
 
-        self.set_icons()
+    def add_timer_to_search_lineedit(self):
+        self.timer = QTimer()
+
+        self.timer.setInterval(300)
+        self.timer.setSingleShot(True)
+
+    def start_debounce_timer(self):
+        self.timer.start()
+
+    def on_debounced_text_changed(self):
+        self.search_text_changed.emit(self.search_lineedit.text())
+
+    def update_table_view(self):
+        # Remove old table view before adding
+
+        for i in reversed(range(self.gridLayout_2.count())):
+            item = self.gridLayout_2.itemAt(i)
+            widget = item.widget()
+            if widget and widget.objectName() == "services_table_view":
+                self.gridLayout_2.removeWidget(widget)
+                widget.setParent(None)
+
+        self.services_table_view = CustomTableView(parent=self.service_table_view_frame, table_view_mode="services")
+
+        self.gridLayout_2.addWidget(self.services_table_view, 0, 0, 1, 1)
 
     def set_table_views_column_widths(self):
         services_table_view_header = self.services_table_view.horizontalHeader()
@@ -23,15 +66,68 @@ class ServicesPage(QWidget, ServicesPageUI):
             QHeaderView::section {
                 background-color: #FFFFFF;
                 border: none;
-                outline: none;
+                outline: none; 
             }
         """)
 
-        services_table_view_header.resizeSection(1, 250)
+        services_table_view_header.resizeSection(2, 250)
 
-        services_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
-        services_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Fixed)
+        # services_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        services_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        services_table_view_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
 
+    def set_table_views_button_delegate(self):
+
+        info_button_delegate_icon_path = "../resources/icons/reservation_page/info_icon.svg"
+        self.info_button_delegate = ButtonDelegate(icon_path=info_button_delegate_icon_path,
+                                                   can_be_disabled=False,
+                                                   parent=self.services_table_view)
+
+        self.info_button_delegate.clicked.connect(self.clicked_info_button.emit)
+        self.services_table_view.setItemDelegateForColumn(3, self.info_button_delegate)
+
+        check_in_button_delegate_icon_path = "../resources/icons/reservation_page/check_in_icon.svg"
+        self.check_in_button_delegate = ButtonDelegate(icon_path=check_in_button_delegate_icon_path,
+                                                       can_be_disabled=True,
+                                                       parent=self.services_table_view)
+
+        self.check_in_button_delegate.clicked.connect(self.clicked_delete_button.emit)
+        self.services_table_view.setItemDelegateForColumn(4, self.check_in_button_delegate)
+
+    def disable_table_views_selection_mode(self):
+        self.services_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)
+        self.services_table_view.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+
+    def connect_signals_to_slots(self):
+        self.add_service_button.clicked.connect(self.clicked_add_service_button.emit)
+
+        self.search_lineedit.textChanged.connect(self.start_debounce_timer)
+        self.timer.timeout.connect(self.on_debounced_text_changed)
+
+        self.next_page_button.clicked.connect(self.next_page_button_pressed.emit)
+        self.previous_page_button.clicked.connect(self.previous_page_button_pressed.emit)
+
+    def get_max_rows_of_services_table_view(self):
+        self.services_table_view.updateGeometry()
+        QApplication.processEvents()
+
+        viewport_height = self.services_table_view.viewport().height()
+
+        if self.services_table_view.model() is None or self.services_table_view.model().rowCount() == 0:
+            return 0
+
+        # 2 is for buffer, to avoid the scroll bar showing up
+        row_height = self.services_table_view.rowHeight(0)
+
+        if row_height == 0:
+            return 0
+
+        max_rows = viewport_height // row_height
+
+        self.services_table_view.updateGeometry()
+        QApplication.processEvents()
+
+        return max_rows
 
     def set_icons(self):
         self.add_service_button.setIcon(QIcon("../resources/icons/services_page/add_icon.svg"))
@@ -47,6 +143,7 @@ class ServicesPage(QWidget, ServicesPageUI):
 
         self.search_lineedit.setFont(QFont("Inter", 16, QFont.Weight.Normal))
 
+        self.view_type_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.sort_by_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.sort_type_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
 
@@ -57,3 +154,7 @@ class ServicesPage(QWidget, ServicesPageUI):
 
         self.previous_page_button.setFont(QFont("Inter", 11, QFont.Weight.Normal))
         self.next_page_button.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        QTimer.singleShot(0, self.window_resized.emit)

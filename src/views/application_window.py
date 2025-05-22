@@ -67,7 +67,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
             3: self.bookings_page_controller.refresh_bookings_data,
             4: self.guests_page_controller.refresh_guests_data,
             5: self.billings_page_controller.refresh_billings_data,
-            6: self.services_page_controller.update_services_table_view,
+            6: self.services_page_controller.refresh_services_data,
         }
 
         action = page_update_actions.get(index)

@@ -7,7 +7,7 @@ class ServicesModel(QAbstractTableModel):
 
         self._services = services_list
 
-        self.columns = ["Service Name", "Rate"]
+        self.columns = ["Service ID", "Service Name", "Rate"]
 
     def get_all(self) -> list[dict]:
         return self._services
@@ -27,6 +27,9 @@ class ServicesModel(QAbstractTableModel):
     def remove_service_by_id(self, service_id: str):
         self._services = [s for s in self._services if s[0] != service_id]
 
+    def get_len_of_data(self):
+        return len(self._services)
+
     def update_data(self, services):
         self.beginResetModel()
         self._services = services
@@ -34,7 +37,7 @@ class ServicesModel(QAbstractTableModel):
 
     # Only for dashboard
     def rowCount(self, index=None):
-        return len(self._services)
+        return self.get_len_of_data()
 
     def columnCount(self, index=None):
         return len(self.columns)
