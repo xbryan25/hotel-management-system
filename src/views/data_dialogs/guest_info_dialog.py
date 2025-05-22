@@ -2,6 +2,8 @@ from PyQt6.QtWidgets import QDialog
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QFont
 
+from datetime import date
+
 from ui import GuestInfoDialogUI
 
 
@@ -43,7 +45,11 @@ class GuestInfoDialog(QDialog, GuestInfoDialogUI):
             self.birth_date_value_label.setText(guest_info["birth_date"].strftime("%b %d, %Y"))
             self.government_id_value_label.setText(guest_info["government_id"])
 
-        self.last_visit_date_value_label.setText(guest_info["last_visit_date"])
+        if isinstance(guest_info["last_visit_date"], date):
+            self.last_visit_date_value_label.setText(guest_info["last_visit_date"].strftime("%b %d, %Y"))
+        else:
+            self.last_visit_date_value_label.setText(guest_info["last_visit_date"])
+
         self.total_visit_count_value_label.setText(str(guest_info["total_visit_count"]))
         self.total_amount_due_value_label.setText(guest_info["total_amount_due"])
 
