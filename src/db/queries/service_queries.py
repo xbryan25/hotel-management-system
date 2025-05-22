@@ -5,6 +5,16 @@ class ServiceQueries:
         self.db = db
         self.cursor = cursor
 
+    def get_service_details(self, service_id):
+        sql = "SELECT * FROM services WHERE service_id=%s;"
+        values = (service_id,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        return result if result else None
+
     def set_service_active_status(self, is_active, service_id):
         sql = "UPDATE services SET is_active=%s WHERE service_id=%s"
         values = (is_active, service_id)
@@ -146,14 +156,12 @@ class ServiceQueries:
         self.cursor.execute(sql, values)
         self.db.commit()
 
-    def update_service(self, old_service_id, service_information):
-        sql = """UPDATE services SET service_id=%s, service_name=%s, rate=%s
-        WHERE service_id=%s;"""
+    def update_service(self, service_id, service_inputs):
+        sql = """UPDATE services SET service_name=%s, rate=%s WHERE service_id=%s;"""
 
-        values = (service_information[0],
-                  service_information[1],
-                  service_information[2],
-                  old_service_id)
+        values = (service_inputs['service_name'],
+                  service_inputs['rate'],
+                  service_id)
 
         self.cursor.execute(sql, values)
         self.db.commit()

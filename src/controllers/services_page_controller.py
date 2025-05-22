@@ -22,16 +22,20 @@ class ServicesPageController:
         self.current_page_number = 1
         self.max_services_per_page = 16
 
-    def open_new_service_dialog(self):
-        self.add_service_dialog = AddEditServiceDialog()
-        self.add_service_controller = AddEditServiceDialogController(self.add_service_dialog, self.db_driver)
+    def open_add_edit_service_dialog(self, dialog_type, index=None):
 
-        self.add_service_dialog.exec()
+        if index:
+            selected_service_id = index.sibling(index.row(), 0).data()
+        else:
+            selected_service_id = None
+
+        self.add_edit_service_dialog = AddEditServiceDialog()
+        self.add_edit_service_controller = AddEditServiceDialogController(self.add_edit_service_dialog, self.db_driver,
+                                                                          dialog_type, selected_service_id)
+
+        self.add_edit_service_dialog.exec()
 
         self.refresh_services_data()
-
-    def open_service_info_dialog(self, index):
-        pass
 
     def set_service_active_status(self, index):
 
@@ -74,9 +78,9 @@ class ServicesPageController:
         self.view.sort_type_combobox.currentTextChanged.connect(self.refresh_services_data)
         self.view.view_type_combobox.currentTextChanged.connect(self.refresh_services_data)
 
-        self.view.clicked_add_service_button.connect(self.open_new_service_dialog)
+        self.view.clicked_add_service_button.connect(lambda: self.open_add_edit_service_dialog("add_service"))
 
-        self.view.clicked_info_button.connect(self.open_service_info_dialog)
+        self.view.clicked_edit_button.connect(self.open_add_edit_service_dialog)
         self.view.clicked_change_active_status_button.connect(self.set_service_active_status)
 
         self.view.search_text_changed.connect(self.update_prev_search_input)

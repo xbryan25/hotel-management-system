@@ -38,7 +38,7 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
         self.chosen_image_label.setToolTip(filename)
 
     @staticmethod
-    def truncate_filename_preserving_ext(filename, max_length=20):
+    def truncate_filename_preserving_ext(filename, max_length=18):
         name, ext = os.path.splitext(filename)
         if len(filename) <= max_length:
             return filename
