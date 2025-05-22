@@ -96,36 +96,47 @@ class ReservationsPageController:
         if selected_payment_status == "fully paid":
             selected_reservation_id = index.sibling(index.row(), 0).data()
 
-            self.confirmation_dialog = ConfirmationDialog(f"Confirm check-in of {selected_reservation_id}?")
+            reservation_check_in_date = self.db_driver.reserved_room_queries.get_specific_reservation_details(
+                'check_in_date', selected_reservation_id)
 
-            self.confirmation_dialog.exec()
+            reservation_check_out_date = self.db_driver.reserved_room_queries.get_specific_reservation_details(
+                'check_out_date', selected_reservation_id)
 
-            if self.confirmation_dialog.get_choice():
-                check_in_date, check_out_date = index.sibling(index.row(), 4).data().split("-")
-                reservation_room_number = index.sibling(index.row(), 2).data()
-                guest_id = self.db_driver.reserved_room_queries.get_specific_reservation_details('guest_id', selected_reservation_id)
+            if datetime.now() >= reservation_check_in_date:
 
-                booking_inputs = {"check_in_status": "in progress",
-                                  "check_in_date": datetime.strptime(check_in_date.strip(), "%b %d, %Y"),
-                                  "check_out_date": datetime.strptime(check_out_date.strip(), "%b %d, %Y"),
-                                  "actual_check_in_date": datetime.now(),
-                                  "actual_check_out_date": None,
-                                  "guest_id": guest_id,
-                                  "room_number": reservation_room_number}
+                self.confirmation_dialog = ConfirmationDialog(f"Confirm check-in of {selected_reservation_id}?")
 
-                self.db_driver.booked_room_queries.add_booked_room(booking_inputs)
-                self.db_driver.reserved_room_queries.set_reservation_status('confirmed', selected_reservation_id)
-                self.db_driver.room_queries.set_room_status(reservation_room_number, 'occupied')
-                self.db_driver.guest_queries.update_guest_visit_count_and_last_visit_date(guest_id)
+                self.confirmation_dialog.exec()
 
-                self.refresh_reservations_data()
+                if self.confirmation_dialog.get_choice():
+                    reservation_room_number = index.sibling(index.row(), 2).data()
+                    guest_id = self.db_driver.reserved_room_queries.get_specific_reservation_details('guest_id', selected_reservation_id)
 
-                latest_booking_id = self.db_driver.booked_room_queries.get_latest_booking_id()
+                    booking_inputs = {"check_in_status": "in progress",
+                                      "check_in_date": reservation_check_in_date,
+                                      "check_out_date": reservation_check_out_date,
+                                      "actual_check_in_date": datetime.now(),
+                                      "actual_check_out_date": None,
+                                      "guest_id": guest_id,
+                                      "room_number": reservation_room_number}
 
-                self.feedback_dialog = FeedbackDialog("Reservation converted to booking!",
-                                                      f"The booking id is {latest_booking_id}.")
+                    self.db_driver.booked_room_queries.add_booked_room(booking_inputs)
+                    self.db_driver.reserved_room_queries.set_reservation_status('confirmed', selected_reservation_id)
+                    self.db_driver.room_queries.set_room_status(reservation_room_number, 'occupied')
+                    self.db_driver.guest_queries.update_guest_visit_count_and_last_visit_date(guest_id)
+
+                    self.refresh_reservations_data()
+
+                    latest_booking_id = self.db_driver.booked_room_queries.get_latest_booking_id()
+
+                    self.feedback_dialog = FeedbackDialog("Reservation converted to booking!",
+                                                          f"The booking id is {latest_booking_id}.")
+                    self.feedback_dialog.exec()
+
+            else:
+                self.feedback_dialog = FeedbackDialog("Booking is not allowed before the check-in date.",
+                                                      f"Check-in: {reservation_check_in_date.strftime("%b %d, %Y %I:%M %p")}")
                 self.feedback_dialog.exec()
-
         else:
             self.feedback_dialog = FeedbackDialog("Remaining balance detected.", "Complete payment to proceed.")
             self.feedback_dialog.exec()
