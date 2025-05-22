@@ -22,7 +22,6 @@ class AddEditServiceDialog(QDialog, AddEditServiceDialogUI):
 
     def validate_form_completion(self):
 
-        # TODO: Also check if service name already exists or not
         if self.service_name_lineedit.text().strip() != '':
             self.confirm_service()
         else:

@@ -5,6 +5,15 @@ class ServiceQueries:
         self.db = db
         self.cursor = cursor
 
+    def does_service_name_exist(self, service_name):
+        sql = "SELECT 1 FROM services WHERE service_name = %s LIMIT 1;"
+        values = (service_name,)
+
+        self.cursor.execute(sql, values)
+        result = self.cursor.fetchall()
+
+        return True if result else False
+
     def get_latest_service_id(self):
 
         self.cursor.execute("""SELECT service_id FROM services

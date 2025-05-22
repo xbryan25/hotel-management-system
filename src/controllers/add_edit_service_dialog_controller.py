@@ -16,7 +16,12 @@ class AddEditServiceDialogController:
     def add_service(self):
         service_inputs = self.view.get_service_inputs()
 
-        self.db_driver.service_queries.add_service(service_inputs)
+        if self.db_driver.service_queries.does_service_name_exist(service_inputs['service_name']):
+            self.fail_dialog = FeedbackDialog("Service name already exists.", "Please input another service name.")
+            self.fail_dialog.exec()
 
-        self.success_dialog = FeedbackDialog("Service added successfully.", connected_view=self.view)
-        self.success_dialog.exec()
+        else:
+            self.db_driver.service_queries.add_service(service_inputs)
+
+            self.success_dialog = FeedbackDialog("Service added successfully.", connected_view=self.view)
+            self.success_dialog.exec()
