@@ -10,6 +10,7 @@ QDialog{
 
 #left_button{
     background-color: transparent;
+    color: black;
 }
 
 #right_button{

@@ -3,18 +3,18 @@ QFrame#outer_frame{
     border-radius: 5px;
 }
 
-#cancel_button, #add_service_button{
+#left_button, #right_button{
     padding: 5px;
     border: 2px solid black;
     border-radius: 5px;
 }
 
-#cancel_button{
+#left_button{
     background-color: transparent;
         color: #000000;
 }
 
-#add_service_button{
+#right_button{
     background-color: #194FCC;
     color: white;
 }

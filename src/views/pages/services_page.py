@@ -9,8 +9,8 @@ from views.custom_widgets import ButtonDelegate, CustomTableView
 class ServicesPage(QWidget, ServicesPageUI):
     window_resized = pyqtSignal()
     clicked_add_service_button = pyqtSignal()
-    clicked_info_button = pyqtSignal(QModelIndex)
-    clicked_delete_button = pyqtSignal(QModelIndex)
+    clicked_edit_button = pyqtSignal(str, QModelIndex)
+    clicked_change_active_status_button = pyqtSignal(QModelIndex)
     search_text_changed = pyqtSignal(str)
     next_page_button_pressed = pyqtSignal()
     previous_page_button_pressed = pyqtSignal()
@@ -70,29 +70,35 @@ class ServicesPage(QWidget, ServicesPageUI):
             }
         """)
 
-        services_table_view_header.resizeSection(2, 250)
+        services_table_view_header.resizeSection(2, 150)
+        services_table_view_header.resizeSection(3, 40)
+        services_table_view_header.resizeSection(4, 40)
 
         # services_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         services_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         services_table_view_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
+        services_table_view_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
+        services_table_view_header.setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
 
     def set_table_views_button_delegate(self):
 
-        info_button_delegate_icon_path = "../resources/icons/reservation_page/info_icon.svg"
-        self.info_button_delegate = ButtonDelegate(icon_path=info_button_delegate_icon_path,
+        edit_button_delegate_icon_path = "../resources/icons/services_page/edit_icon.svg"
+        self.edit_button_delegate = ButtonDelegate(icon_path=edit_button_delegate_icon_path,
                                                    can_be_disabled=False,
                                                    parent=self.services_table_view)
 
-        self.info_button_delegate.clicked.connect(self.clicked_info_button.emit)
-        self.services_table_view.setItemDelegateForColumn(3, self.info_button_delegate)
+        self.edit_button_delegate.clicked.connect(lambda index: self.clicked_edit_button.emit("edit_service", index))
+        self.services_table_view.setItemDelegateForColumn(3, self.edit_button_delegate)
 
-        check_in_button_delegate_icon_path = "../resources/icons/reservation_page/check_in_icon.svg"
-        self.check_in_button_delegate = ButtonDelegate(icon_path=check_in_button_delegate_icon_path,
-                                                       can_be_disabled=True,
-                                                       parent=self.services_table_view)
+        delete_button_delegate_icon_path = "../resources/icons/services_page/delete_icon.svg"
+        restore_button_delegate_icon_path = "../resources/icons/services_page/restore_icon.svg"
+        self.change_active_status_button_delegate = ButtonDelegate(icon_path=delete_button_delegate_icon_path,
+                                                                   can_be_disabled=False,
+                                                                   parent=self.services_table_view,
+                                                                   alt_icon_path=restore_button_delegate_icon_path)
 
-        self.check_in_button_delegate.clicked.connect(self.clicked_delete_button.emit)
-        self.services_table_view.setItemDelegateForColumn(4, self.check_in_button_delegate)
+        self.change_active_status_button_delegate.clicked.connect(self.clicked_change_active_status_button.emit)
+        self.services_table_view.setItemDelegateForColumn(4, self.change_active_status_button_delegate)
 
     def disable_table_views_selection_mode(self):
         self.services_table_view.setSelectionMode(QTableView.SelectionMode.NoSelection)

@@ -6,12 +6,13 @@ from PyQt6.QtGui import QMouseEvent, QCursor, QIcon, QColor, QBrush
 class ButtonDelegate(QStyledItemDelegate):
     clicked = pyqtSignal(QModelIndex)  # Signal when button is clicked
 
-    def __init__(self, icon_path, can_be_disabled, parent=None):
+    def __init__(self, icon_path, can_be_disabled, parent=None, alt_icon_path=None):
         super().__init__(parent)
 
         self.icon_path = icon_path
         self.can_be_disabled = can_be_disabled
         self.enable_role = Qt.ItemDataRole.UserRole + 1
+        self.alt_icon_path = alt_icon_path
 
     # Load visual representation
     def paint(self, painter, option, index):
@@ -24,6 +25,11 @@ class ButtonDelegate(QStyledItemDelegate):
         button.rect = option.rect
         button.text = ""
         button.icon = QIcon(self.icon_path)
+
+        # Only for ServicesModel restore feature
+        if index.model().__class__.__name__ == "ServicesModel":
+            if index.column() == 4 and index.model().get_active_status_of_service(index.row()) == 0:
+                button.icon = QIcon(self.alt_icon_path)
 
         # button.iconSize = button.rect.size()
 

@@ -9,7 +9,7 @@ from views import ConfirmationDialog, FeedbackDialog
 
 
 class AddEditServiceDialog(QDialog, AddEditServiceDialogUI):
-    clicked_add_service_button = pyqtSignal()
+    clicked_right_button = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -20,9 +20,17 @@ class AddEditServiceDialog(QDialog, AddEditServiceDialogUI):
         self.load_fonts()
         self.set_external_stylesheet()
 
+    def load_edit_service_view(self, service_id, service_details):
+        self.service_label.setText(f"Edit {service_id}")
+        self.right_button.setText("Edit Service")
+
+        self.service_name_lineedit.setPlaceholderText(service_details[1])
+        self.rate_spinbox.setValue(service_details[2])
+
     def validate_form_completion(self):
 
-        if self.service_name_lineedit.text().strip() != '':
+        if self.service_name_lineedit.text().strip() != '' or (self.service_name_lineedit.text().strip() == '' and
+                                                               self.service_name_lineedit.placeholderText().strip() != ''):
             self.confirm_service()
         else:
             self.warning_dialog = FeedbackDialog("Service name is blank.")
@@ -36,20 +44,22 @@ class AddEditServiceDialog(QDialog, AddEditServiceDialogUI):
         self.confirmation_dialog.exec()
 
         if self.confirmation_dialog.get_choice():
-            self.clicked_add_service_button.emit()
+            self.clicked_right_button.emit()
 
     def get_service_inputs(self):
         service_inputs = {}
 
-        service_inputs.update({"service_name": self.service_name_lineedit.text()})
+        service_inputs.update({"service_name": self.service_name_lineedit.text() if self.service_name_lineedit.text() != ''
+                                                else self.service_name_lineedit.placeholderText().strip()})
+
         service_inputs.update({"rate": self.rate_spinbox.value()})
 
         return service_inputs
 
     def connect_signals_to_slots(self):
 
-        self.add_service_button.clicked.connect(self.validate_form_completion)
-        self.cancel_button.clicked.connect(self.close)
+        self.right_button.clicked.connect(self.validate_form_completion)
+        self.left_button.clicked.connect(self.close)
 
     def set_external_stylesheet(self):
         with open("../resources/styles/add_edit_service_dialog.qss", "r") as file:
@@ -57,10 +67,10 @@ class AddEditServiceDialog(QDialog, AddEditServiceDialogUI):
 
     def load_fonts(self):
 
-        self.add_new_service_label.setFont(QFont("Inter", 20, QFont.Weight.Bold))
+        self.service_label.setFont(QFont("Inter", 20, QFont.Weight.Bold))
 
-        self.cancel_button.setFont(QFont("Inter", 15, QFont.Weight.Bold))
-        self.add_service_button.setFont(QFont("Inter", 15, QFont.Weight.Bold))
+        self.left_button.setFont(QFont("Inter", 15, QFont.Weight.Bold))
+        self.right_button.setFont(QFont("Inter", 15, QFont.Weight.Bold))
 
         self.service_name_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
         self.rate_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
