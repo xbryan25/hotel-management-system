@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QWidget, QHeaderView, QTableView
-from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QWidget, QHeaderView, QTableView, QGraphicsDropShadowEffect
+from PyQt6.QtGui import QFont, QColor
 from PyQt6.QtCore import Qt, pyqtSignal
 
 from ui import DashboardPageUI
@@ -21,6 +21,27 @@ class DashboardPage(QWidget, DashboardPageUI):
 
         self.set_external_stylesheet()
         self.load_fonts()
+
+        self.apply_shadow_to_frames()
+
+    @staticmethod
+    def apply_shadow(widget):
+        shadow = QGraphicsDropShadowEffect()
+        shadow.setBlurRadius(15)
+        shadow.setOffset(5, 5)
+        shadow.setColor(QColor(0, 0, 0, 160))
+        widget.setGraphicsEffect(shadow)
+
+    def apply_shadow_to_frames(self):
+
+        self.apply_shadow(self.today_check_in_frame)
+        self.apply_shadow(self.today_check_out_frame)
+        self.apply_shadow(self.available_rooms_frame)
+        self.apply_shadow(self.reserved_rooms_frame)
+        self.apply_shadow(self.booked_rooms_frame)
+        self.apply_shadow(self.todays_activity_frame)
+        self.apply_shadow(self.reservation_list_frame)
+        self.apply_shadow(self.rooms_frame)
 
     def connect_signals_to_slots(self):
         self.reservation_list_frame_add_reservation_button.clicked.connect(self.clicked_new_reservation_button.emit)
@@ -92,7 +113,7 @@ class DashboardPage(QWidget, DashboardPageUI):
         reservation_list_frame_table_view_header.resizeSection(2, 80)
         reservation_list_frame_table_view_header.resizeSection(3, 100)
         reservation_list_frame_table_view_header.resizeSection(4, 185)
-        reservation_list_frame_table_view_header.resizeSection(5, 70)
+        reservation_list_frame_table_view_header.resizeSection(5, 90)
 
         reservation_list_frame_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
         reservation_list_frame_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
@@ -125,9 +146,6 @@ class DashboardPage(QWidget, DashboardPageUI):
         # day_and_time_frame
         self.current_day_label.setFont(QFont("Inter", 16, QFont.Weight.Light))
         self.current_time_label.setFont(QFont("Inter", 26, QFont.Weight.ExtraBold))
-
-        # search_bar_frame
-        self.search_bar_frame_search_lineedit.setFont(QFont("Inter", 16, QFont.Weight.Normal))
 
         # overview_frame
         self.overview_label.setFont(QFont("Inter", 16, QFont.Weight.ExtraBold))
@@ -171,21 +189,6 @@ class DashboardPage(QWidget, DashboardPageUI):
         self.reservation_list_frame_status_combobox.setFont(QFont("Inter", 10, QFont.Weight.Normal))
         self.reservation_list_frame_table_view.setFont(QFont("Inter", 9, QFont.Weight.Normal))
         self.reservation_list_frame_table_view.horizontalHeader().setFont(QFont("Inter", 12, QFont.Weight.DemiBold))
-
-        # quick_action_frame
-        self.quick_action_frame_label.setFont(QFont("Inter", 16, QFont.Weight.ExtraBold))
-
-        self.quick_action_frame_check_in_button.setFont(QFont("Inter", 10, QFont.Weight.Normal))
-        self.quick_action_frame_check_out_button.setFont(QFont("Inter", 10, QFont.Weight.Normal))
-
-        self.quick_action_frame_room_num_label.setFont(QFont("Inter", 10, QFont.Weight.Normal))
-        self.quick_action_frame_room_num_lineedit.setFont(QFont("Inter", 10, QFont.Weight.Normal))
-
-        self.quick_action_frame_guest_name_label.setFont(QFont("Inter", 10, QFont.Weight.Normal))
-        self.quick_action_frame_guest_name_lineedit.setFont(QFont("Inter", 10, QFont.Weight.Normal))
-
-        self.quick_action_frame_cancel_button.setFont(QFont("Inter", 10, QFont.Weight.Normal))
-        self.quick_action_frame_confirm_button.setFont(QFont("Inter", 10, QFont.Weight.Normal))
 
         # rooms_frame
         self.rooms_frame_label.setFont(QFont("Inter", 16, QFont.Weight.ExtraBold))

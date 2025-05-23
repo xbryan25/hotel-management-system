@@ -2,6 +2,9 @@ QFrame{
     border: none;
 }
 
+#top_level_frame{
+    background-color: #F8F4F0;
+}
 
 #current_day_label, #current_time_label{
     color: #000000;
@@ -184,20 +187,16 @@ QComboBox::down-arrow {
     background-color: #FFF3E0;
 }
 
-#recent_check_in_frame_table_view::section, #recent_check_out_frame_table_view::section{
+
+#recent_check_in_frame_table_view QHeaderView::section, #recent_check_out_frame_table_view QHeaderView::section,
+#reservation_list_frame_table_view QHeaderView::section, #rooms_frame_table_view QHeaderView::section{
     color: #000000;
 }
 
-QTableView#recent_check_in_frame_table_view::item, QTableView#recent_check_out_frame_table_view::item{
-    color: #000000;
-}
-
-#recent_check_in_frame_table_view QHeaderView::section, #recent_check_out_frame_table_view QHeaderView::section{
-    color: #000000;
-}
-
-#recent_check_in_frame_table_view::item, #recent_check_out_frame_table_view::item{
+#recent_check_in_frame_table_view::item, #recent_check_out_frame_table_view::item,
+#reservation_list_frame_table_view::item, #rooms_frame_table_view::item{
     border-bottom: 1px solid #B4B4B4;
+    color: #000000;
 }
 
 #reservation_list_frame, #rooms_frame, #quick_action_frame{
@@ -264,10 +263,6 @@ QLineEdit#reservation_list_frame_search_lineedit::placeholder{
     background-repeat: no-repeat;
     background-position: left center;
     background-origin: border;
-}
-
-#reservation_list_frame_table_view::item{
-    border-bottom: 1px solid #000000;
 }
 
 #search_bar_frame_search_lineedit{
