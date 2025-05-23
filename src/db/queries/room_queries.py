@@ -60,6 +60,45 @@ class RoomQueries:
 
         # If set_type == "temporary", don't commit to the database!
 
+    def refresh_all_room_status(self):
+        sql = """SELECT 
+                  r.room_number,
+                  COALESCE(
+                    CASE
+                      WHEN rr.reservation_status = 'confirmed' AND br.check_in_status != 'checked out' THEN 'occupied'
+                      WHEN rr.reservation_status = 'pending' THEN 'reserved'
+                    END,
+                    'available'
+                  ) AS current_status
+                FROM rooms r
+                LEFT JOIN reservedrooms rr 
+                  ON r.room_number = rr.room_number
+                  AND NOW() BETWEEN rr.check_in_date AND rr.check_out_date
+                  AND rr.reservation_status IN ('pending', 'confirmed')
+                LEFT JOIN bookedrooms br
+                  ON r.room_number = br.room_number
+                  AND NOW() BETWEEN br.check_in_date AND br.check_out_date
+                WHERE r.is_active = 1;"""
+
+        self.cursor.execute(sql)
+
+        result = self.cursor.fetchall()
+
+        current_all_room_status = self.get_all_room_status()
+
+        for i in range(len(result)):
+            if result[i][0] == current_all_room_status[i][0] and result[i][1] != current_all_room_status[i][1] :
+                self.set_room_status(result[i][0], result[i][1], set_type="final")
+
+    def get_all_room_status(self):
+        sql = "SELECT rooms.room_number, rooms.availability_status FROM rooms WHERE rooms.is_active=1"
+
+        self.cursor.execute(sql)
+
+        result = self.cursor.fetchall()
+
+        return result
+
     def get_room_type(self, room_number):
         sql = "SELECT rooms.room_type FROM rooms WHERE rooms.room_number=%s"
         values = (room_number,)
