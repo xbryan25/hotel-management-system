@@ -173,40 +173,45 @@ class RoomsPage(QWidget, RoomsPageUI):
     def make_grid_view_rooms_frame(self, amount_of_frames):
 
         print("Elements in grid view grid layout b444: " + str(self.grid_view_grid_layout.count()))
+        print(f"amount of frames: {amount_of_frames}")
 
         current_max_rows, current_max_columns = self.get_current_rows_and_columns_in_grid_layout("grid_view")
 
         new_max_grid_rooms_frame_rows = self.get_grid_view_current_max_rows()
         new_max_grid_rooms_frame_columns = self.get_grid_view_current_max_columns()
 
-        new_max_grid_rooms_frame = new_max_grid_rooms_frame_columns * new_max_grid_rooms_frame_rows
+        max_slots = new_max_grid_rooms_frame_columns * new_max_grid_rooms_frame_rows
 
         # Choose between the lesser value between the two
-        new_max_grid_rooms_frame = min(amount_of_frames, new_max_grid_rooms_frame)
+        new_max_grid_rooms_frame = min(amount_of_frames, max_slots)
 
         self.clear_dummy_grid_frames(current_max_rows, current_max_columns)
 
-        if new_max_grid_rooms_frame < self.max_grid_rooms_frame:
-            self.clear_grid_view_frames(new_max_grid_rooms_frame_rows, new_max_grid_rooms_frame_columns, amount_of_frames)
+        reusable_frames = self.extract_existing_grid_room_frames(current_max_rows, current_max_columns)
 
-        elif new_max_grid_rooms_frame > self.max_grid_rooms_frame:
-            counter = 0
+        counter = 0
+        for row in range(new_max_grid_rooms_frame_rows):
+            for column in range(new_max_grid_rooms_frame_columns):
+                if counter < amount_of_frames:
+                    if reusable_frames:
+                        frame = reusable_frames.pop()
+                    else:
+                        frame = GridRoomsFrame({"room_type": "single"})
 
-            for row in range(new_max_grid_rooms_frame_rows):
-                for column in range(new_max_grid_rooms_frame_columns):
-                    item = self.grid_view_grid_layout.itemAtPosition(row, column)
-
+                    self.grid_view_grid_layout.addWidget(frame, row, column)
+                    frame.show()
                     counter += 1
 
-                    if counter <= amount_of_frames and item is None:
-                        self.grid_view_grid_layout.addWidget(GridRoomsFrame({"room_type": "single"}), row, column, 1, 1)
+        for frame in reusable_frames:
+            frame.hide()
 
         self.add_dummy_grid_frames(new_max_grid_rooms_frame_rows, new_max_grid_rooms_frame_columns)
 
-        if new_max_grid_rooms_frame != self.max_grid_rooms_frame:
-            self.max_grid_rooms_frame = new_max_grid_rooms_frame
+        max_rows, max_columns = self.get_current_rows_and_columns_in_grid_layout("grid_view")
 
-        self.set_column_and_row_stretch(new_max_grid_rooms_frame_rows, new_max_grid_rooms_frame_columns)
+        self.set_column_and_row_stretch(current_max_rows, current_max_columns, max_rows, max_columns)
+
+        self.max_grid_rooms_frame = new_max_grid_rooms_frame
 
         print("Elements in grid view grid layout: " + str(self.grid_view_grid_layout.count()))
 
@@ -219,7 +224,28 @@ class RoomsPage(QWidget, RoomsPageUI):
         # for column in range(new_max_grid_rooms_frame_columns):
         #     self.grid_view_grid_layout.setColumnStretch(column, 1)
 
-    def set_column_and_row_stretch(self, max_rows, max_columns):
+    def extract_existing_grid_room_frames(self, rows, columns):
+        reusable_frames = []
+
+
+        for i in reversed(range(self.grid_view_grid_layout.count())):
+            item = self.grid_view_grid_layout.itemAt(i)
+            widget = item.widget()
+
+            if isinstance(widget, GridRoomsFrame):
+                reusable_frames.append(widget)
+                self.grid_view_grid_layout.removeWidget(widget)
+
+        return reusable_frames
+
+    def set_column_and_row_stretch(self, current_max_rows, current_max_columns, max_rows, max_columns):
+
+        for c_row in range(current_max_rows):
+            self.grid_view_grid_layout.setRowStretch(c_row, 0)
+
+        for c_column in range(current_max_columns):
+            self.grid_view_grid_layout.setColumnStretch(c_column, 0)
+
         for row in range(max_rows):
             self.grid_view_grid_layout.setRowStretch(row, 1)
 
@@ -246,6 +272,7 @@ class RoomsPage(QWidget, RoomsPageUI):
                 if item:
                     widget = item.widget()
                     if widget and widget.objectName().startswith("dummy_frame_"):
+                        self.grid_view_grid_layout.removeWidget(widget)
                         widget.setParent(None)
                         widget.deleteLater()
 
@@ -336,6 +363,8 @@ class RoomsPage(QWidget, RoomsPageUI):
         return max_row + 1, max_column + 1
 
     def update_grid_view_frames_contents(self, data_from_model, open_add_edit_room_dialog_func, delete_room_func):
+
+        print("Elements in grid view grid layout CONTENTT: " + str(self.grid_view_grid_layout.count()))
 
         max_row, max_column = self.get_current_rows_and_columns_in_grid_layout("grid_view")
         counter = 0
@@ -444,8 +473,6 @@ class RoomsPage(QWidget, RoomsPageUI):
 
     # resizeEvent will be automatically called when switching to rooms page widget, so no need to preload frames
     def resizeEvent(self, event):
-
-        print("Elements in grid view grid layout b4444444: " + str(self.grid_view_grid_layout.count()))
 
         current_width = self.width()
         current_height = self.height()
