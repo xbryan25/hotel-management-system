@@ -4,6 +4,8 @@ from models import RoomsModel, ServicesModel
 from views import FeedbackDialog, UpcomingReservationsDialog
 from controllers.upcoming_reservations_dialog_controller import UpcomingReservationsDialogController
 
+import math
+
 
 class NewReservationDialogController:
     def __init__(self, dialog, db_driver):
@@ -38,6 +40,31 @@ class NewReservationDialogController:
 
         self.view.room_reservations_button.clicked.connect(self.open_upcoming_reservations_dialog)
 
+        self.view.selected_reservation_duration.connect(self.check_reservation_dates)
+
+    def check_reservation_dates(self, new_check_in_date, new_check_out_date):
+        reservation_durations = self.db_driver.reserved_room_queries.get_all_check_in_and_check_out_of_room(
+            self.view.rooms_combobox.currentText())
+
+        has_overlap = False
+
+        for reservation_duration in reservation_durations:
+
+            # Coincide
+            if ((reservation_duration[0] < new_check_in_date and reservation_duration[1] > new_check_out_date) or
+                    (new_check_in_date < reservation_duration[0] < new_check_out_date) or
+                    (reservation_duration[0] < new_check_in_date < reservation_duration[1])):
+
+                self.conflict_dialog = FeedbackDialog("Reservation conflict found.",
+                                                      f"Please recheck the reservations of {self.view.rooms_combobox.currentText()}.")
+                self.conflict_dialog.exec()
+
+                has_overlap = True
+                break
+
+        if not has_overlap:
+            self.view.page_change("right_button")
+
     def calculate_room_cost(self, current_room):
         check_in_check_out_date_time = self.view.get_check_in_check_out_date_and_time()
 
@@ -47,7 +74,10 @@ class NewReservationDialogController:
 
         current_room_cost = self.room_numbers_model.get_cost_of_room(current_room)
 
-        total_room_cost = (((hours-1)//24) + 1) * current_room_cost
+        if hours % 24 == 0:
+            total_room_cost = (((hours - 1) // 24) + 1) * current_room_cost
+        else:
+            total_room_cost = float(math.ceil((((hours - 1) / 24) + 1) * current_room_cost))
 
         self.view.update_room_cost_value_label(total_room_cost)
 

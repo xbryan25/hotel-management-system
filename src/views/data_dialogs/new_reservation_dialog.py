@@ -11,6 +11,7 @@ from views import ConfirmationDialog, FeedbackDialog
 class NewReservationDialog(QDialog, NewReservationDialogUI):
     room_type_changed = pyqtSignal(str)
     room_changed = pyqtSignal(str)
+    selected_reservation_duration = pyqtSignal(datetime, datetime)
     date_time_changed = pyqtSignal(str)
     spinbox_enabled = pyqtSignal()
     clicked_reservation = pyqtSignal()
@@ -137,7 +138,7 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
 
         if self.current_page == 1:
             self.left_button.clicked.connect(self.close)
-            self.right_button.clicked.connect(lambda: self.page_change("right_button"))
+            self.right_button.clicked.connect(self.emit_selected_reservation_duration)
 
         elif self.current_page == 2:
             self.left_button.clicked.connect(lambda: self.page_change("left_button"))
@@ -149,6 +150,10 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
 
         self.left_button.clicked.connect(self.change_button_signals)
         self.right_button.clicked.connect(self.change_button_signals)
+
+    def emit_selected_reservation_duration(self):
+        self.selected_reservation_duration.emit(self.check_in_date_time_edit.dateTime().toPyDateTime(),
+                                                self.check_out_date_time_edit.dateTime().toPyDateTime())
 
     def remove_button_signals(self):
         self.left_button.disconnect()

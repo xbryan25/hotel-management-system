@@ -23,7 +23,7 @@ class UpcomingReservationsDialogController:
             date_label = QLabel(parent=self.view.reservation_dates_scroll_area_contents)
 
             date_label.setText(f"""• {reservation_dates[i][0].strftime('%b %d, %Y %I:%M %p')} - {reservation_dates[i][1].strftime('%b %d, %Y %I:%M %p')}""")
-            date_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            date_label.setAlignment(Qt.AlignmentFlag.AlignLeft)
             date_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
 
             self.view.reservation_dates_scroll_area_grid_layout.addWidget(date_label)
