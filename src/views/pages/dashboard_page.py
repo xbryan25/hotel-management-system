@@ -34,7 +34,6 @@ class DashboardPage(QWidget, DashboardPageUI):
 
     def apply_shadow_to_frames(self):
 
-        self.apply_shadow(self.search_bar_frame)
         self.apply_shadow(self.today_check_in_frame)
         self.apply_shadow(self.today_check_out_frame)
         self.apply_shadow(self.available_rooms_frame)
@@ -43,8 +42,6 @@ class DashboardPage(QWidget, DashboardPageUI):
         self.apply_shadow(self.todays_activity_frame)
         self.apply_shadow(self.reservation_list_frame)
         self.apply_shadow(self.rooms_frame)
-        self.apply_shadow(self.quick_action_frame)
-        self.apply_shadow(self.calendar_frame)
 
     def connect_signals_to_slots(self):
         self.reservation_list_frame_add_reservation_button.clicked.connect(self.clicked_new_reservation_button.emit)
@@ -150,9 +147,6 @@ class DashboardPage(QWidget, DashboardPageUI):
         self.current_day_label.setFont(QFont("Inter", 16, QFont.Weight.Light))
         self.current_time_label.setFont(QFont("Inter", 26, QFont.Weight.ExtraBold))
 
-        # search_bar_frame
-        self.search_bar_frame_search_lineedit.setFont(QFont("Inter", 16, QFont.Weight.Normal))
-
         # overview_frame
         self.overview_label.setFont(QFont("Inter", 16, QFont.Weight.ExtraBold))
 
@@ -195,21 +189,6 @@ class DashboardPage(QWidget, DashboardPageUI):
         self.reservation_list_frame_status_combobox.setFont(QFont("Inter", 10, QFont.Weight.Normal))
         self.reservation_list_frame_table_view.setFont(QFont("Inter", 9, QFont.Weight.Normal))
         self.reservation_list_frame_table_view.horizontalHeader().setFont(QFont("Inter", 12, QFont.Weight.DemiBold))
-
-        # quick_action_frame
-        self.quick_action_frame_label.setFont(QFont("Inter", 16, QFont.Weight.ExtraBold))
-
-        self.quick_action_frame_check_in_button.setFont(QFont("Inter", 10, QFont.Weight.Normal))
-        self.quick_action_frame_check_out_button.setFont(QFont("Inter", 10, QFont.Weight.Normal))
-
-        self.quick_action_frame_room_num_label.setFont(QFont("Inter", 10, QFont.Weight.Normal))
-        self.quick_action_frame_room_num_lineedit.setFont(QFont("Inter", 10, QFont.Weight.Normal))
-
-        self.quick_action_frame_guest_name_label.setFont(QFont("Inter", 10, QFont.Weight.Normal))
-        self.quick_action_frame_guest_name_lineedit.setFont(QFont("Inter", 10, QFont.Weight.Normal))
-
-        self.quick_action_frame_cancel_button.setFont(QFont("Inter", 10, QFont.Weight.Normal))
-        self.quick_action_frame_confirm_button.setFont(QFont("Inter", 10, QFont.Weight.Normal))
 
         # rooms_frame
         self.rooms_frame_label.setFont(QFont("Inter", 16, QFont.Weight.ExtraBold))
