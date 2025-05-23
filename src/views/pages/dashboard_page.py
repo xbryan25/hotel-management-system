@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QWidget, QHeaderView, QTableView
-from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QWidget, QHeaderView, QTableView, QGraphicsDropShadowEffect
+from PyQt6.QtGui import QFont, QColor
 from PyQt6.QtCore import Qt, pyqtSignal
 
 from ui import DashboardPageUI
@@ -21,6 +21,30 @@ class DashboardPage(QWidget, DashboardPageUI):
 
         self.set_external_stylesheet()
         self.load_fonts()
+
+        self.apply_shadow_to_frames()
+
+    @staticmethod
+    def apply_shadow(widget):
+        shadow = QGraphicsDropShadowEffect()
+        shadow.setBlurRadius(15)
+        shadow.setOffset(5, 5)
+        shadow.setColor(QColor(0, 0, 0, 160))
+        widget.setGraphicsEffect(shadow)
+
+    def apply_shadow_to_frames(self):
+
+        self.apply_shadow(self.search_bar_frame)
+        self.apply_shadow(self.today_check_in_frame)
+        self.apply_shadow(self.today_check_out_frame)
+        self.apply_shadow(self.available_rooms_frame)
+        self.apply_shadow(self.reserved_rooms_frame)
+        self.apply_shadow(self.booked_rooms_frame)
+        self.apply_shadow(self.todays_activity_frame)
+        self.apply_shadow(self.reservation_list_frame)
+        self.apply_shadow(self.rooms_frame)
+        self.apply_shadow(self.quick_action_frame)
+        self.apply_shadow(self.calendar_frame)
 
     def connect_signals_to_slots(self):
         self.reservation_list_frame_add_reservation_button.clicked.connect(self.clicked_new_reservation_button.emit)
@@ -92,7 +116,7 @@ class DashboardPage(QWidget, DashboardPageUI):
         reservation_list_frame_table_view_header.resizeSection(2, 80)
         reservation_list_frame_table_view_header.resizeSection(3, 100)
         reservation_list_frame_table_view_header.resizeSection(4, 185)
-        reservation_list_frame_table_view_header.resizeSection(5, 70)
+        reservation_list_frame_table_view_header.resizeSection(5, 90)
 
         reservation_list_frame_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
         reservation_list_frame_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)

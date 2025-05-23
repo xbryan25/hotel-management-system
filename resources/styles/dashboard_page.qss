@@ -3,7 +3,7 @@ QFrame{
 }
 
 #top_level_frame{
-    background-color: #FFFFFF;
+    background-color: #F8F4F0;
 }
 
 #current_day_label, #current_time_label{
