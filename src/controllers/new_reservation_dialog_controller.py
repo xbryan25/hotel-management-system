@@ -1,8 +1,10 @@
 from PyQt6.QtWidgets import QSizePolicy, QSpacerItem
 
-from models import AvailableRoomsModel, ServicesModel
+from models import RoomsModel, ServicesModel
 from views import FeedbackDialog, UpcomingReservationsDialog
 from controllers.upcoming_reservations_dialog_controller import UpcomingReservationsDialogController
+
+import math
 
 
 class NewReservationDialogController:
@@ -38,6 +40,31 @@ class NewReservationDialogController:
 
         self.view.room_reservations_button.clicked.connect(self.open_upcoming_reservations_dialog)
 
+        self.view.selected_reservation_duration.connect(self.check_reservation_dates)
+
+    def check_reservation_dates(self, new_check_in_date, new_check_out_date):
+        reservation_durations = self.db_driver.reserved_room_queries.get_all_check_in_and_check_out_of_room(
+            self.view.rooms_combobox.currentText())
+
+        has_overlap = False
+
+        for reservation_duration in reservation_durations:
+
+            # Coincide
+            if ((reservation_duration[0] < new_check_in_date and reservation_duration[1] > new_check_out_date) or
+                    (new_check_in_date < reservation_duration[0] < new_check_out_date) or
+                    (reservation_duration[0] < new_check_in_date < reservation_duration[1])):
+
+                self.conflict_dialog = FeedbackDialog("Reservation conflict found.",
+                                                      f"Please recheck the reservations of {self.view.rooms_combobox.currentText()}.")
+                self.conflict_dialog.exec()
+
+                has_overlap = True
+                break
+
+        if not has_overlap:
+            self.view.page_change("right_button")
+
     def calculate_room_cost(self, current_room):
         check_in_check_out_date_time = self.view.get_check_in_check_out_date_and_time()
 
@@ -45,9 +72,12 @@ class NewReservationDialogController:
 
         hours = seconds / 3600
 
-        current_room_cost = self.available_room_numbers_model.get_cost_of_room(current_room)
+        current_room_cost = self.room_numbers_model.get_cost_of_room(current_room)
 
-        total_room_cost = (((hours-1)//24) + 1) * current_room_cost
+        if hours % 24 == 0:
+            total_room_cost = (((hours - 1) // 24) + 1) * current_room_cost
+        else:
+            total_room_cost = float(math.ceil((((hours - 1) / 24) + 1) * current_room_cost))
 
         self.view.update_room_cost_value_label(total_room_cost)
 
@@ -78,16 +108,17 @@ class NewReservationDialogController:
         self.view.services_scroll_area_grid_layout.addItem(v_spacer, len(services), 0, 1, 1)
 
     def set_models(self):
-        available_rooms = self.db_driver.room_queries.get_available_rooms()
+        all_rooms = self.db_driver.room_queries.get_all_rooms(enable_pagination=False)
 
-        # list(available_rooms) makes a copy of available_rooms so that it won't be affected
-        self.available_room_numbers_model = AvailableRoomsModel(available_rooms, 0)
-        self.available_room_types_model = AvailableRoomsModel(list(available_rooms), 1)
+        # nrd = new_reservation_dialog
 
-        self.view.rooms_combobox.setModel(self.available_room_numbers_model)
+        self.room_numbers_model = RoomsModel(all_rooms, model_type='nrd_room_numbers')
+        self.room_types_model = RoomsModel(all_rooms, model_type='nrd_room_types')
+
+        self.view.rooms_combobox.setModel(self.room_numbers_model)
 
         self.view.room_type_filter_combobox.blockSignals(True)
-        self.view.room_type_filter_combobox.setModel(self.available_room_types_model)
+        self.view.room_type_filter_combobox.setModel(self.room_types_model)
         self.view.room_type_filter_combobox.blockSignals(False)
 
         available_services = self.db_driver.service_queries.get_all_services()
@@ -96,11 +127,11 @@ class NewReservationDialogController:
     def update_models(self, room_type):
 
         if room_type == "-":
-            available_rooms_from_room_type = self.db_driver.room_queries.get_available_rooms()
+            rooms_from_room_type = self.db_driver.room_queries.get_all_rooms(enable_pagination=False)
         else:
-            available_rooms_from_room_type = self.db_driver.room_queries.get_available_rooms(room_type)
+            rooms_from_room_type = self.db_driver.room_queries.get_rooms_from_room_type(room_type)
 
-        self.available_room_numbers_model.set_rooms(available_rooms_from_room_type)
+        self.room_numbers_model.update_data(rooms_from_room_type)
 
     def make_reservation(self):
         guest_inputs = self.view.get_guest_inputs()

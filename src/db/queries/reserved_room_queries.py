@@ -9,7 +9,8 @@ class ReservedRoomQueries:
     def get_all_check_in_and_check_out_of_room(self, room_number):
         sql = """SELECT reservedrooms.check_in_date, reservedrooms.check_out_date FROM reservedrooms 
                     WHERE reservedrooms.room_number=%s AND 
-                    CURDATE() BETWEEN reservedrooms.check_in_date AND reservedrooms.check_out_date"""
+                    (NOW() < reservedrooms.check_in_date OR
+                        NOW() BETWEEN reservedrooms.check_in_date AND reservedrooms.check_out_date)"""
 
         values = (room_number,)
 

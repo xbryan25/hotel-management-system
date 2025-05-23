@@ -37,10 +37,10 @@ class RoomsPageController:
                                                                search_input=search_input)
 
         # Only for list view
-        initial_rows = self.view.get_list_view_current_max_rows()
+        # initial_rows = self.view.get_list_view_current_max_rows()
 
         if not self.rooms_model:
-            self.rooms_model = RoomsModel(rooms_data, initial_rows, -1)
+            self.rooms_model = RoomsModel(rooms_data)
         else:
             self.rooms_model.update_data(rooms_data)
 
@@ -165,6 +165,8 @@ class RoomsPageController:
         self.refresh_rooms_data()
 
     def refresh_rooms_data(self):
+
+        self.db_driver.room_queries.refresh_all_room_status()
 
         self.prev_sort_by = self.view.sort_by_combobox.currentText().replace("Sort by ", "").lower().replace(" ", "_")
         self.prev_sort_type = "ASC" if self.view.sort_type_combobox.currentText() == "Ascending" else "DESC"
