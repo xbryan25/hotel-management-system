@@ -172,6 +172,10 @@ class RoomsPage(QWidget, RoomsPageUI):
 
     def make_grid_view_rooms_frame(self, amount_of_frames):
 
+        print("Elements in grid view grid layout b444: " + str(self.grid_view_grid_layout.count()))
+
+        current_max_rows, current_max_columns = self.get_current_rows_and_columns_in_grid_layout("grid_view")
+
         new_max_grid_rooms_frame_rows = self.get_grid_view_current_max_rows()
         new_max_grid_rooms_frame_columns = self.get_grid_view_current_max_columns()
 
@@ -180,7 +184,7 @@ class RoomsPage(QWidget, RoomsPageUI):
         # Choose between the lesser value between the two
         new_max_grid_rooms_frame = min(amount_of_frames, new_max_grid_rooms_frame)
 
-        self.clear_dummy_grid_frames(new_max_grid_rooms_frame_rows, new_max_grid_rooms_frame_columns)
+        self.clear_dummy_grid_frames(current_max_rows, current_max_columns)
 
         if new_max_grid_rooms_frame < self.max_grid_rooms_frame:
             self.clear_grid_view_frames(new_max_grid_rooms_frame_rows, new_max_grid_rooms_frame_columns, amount_of_frames)
@@ -206,8 +210,14 @@ class RoomsPage(QWidget, RoomsPageUI):
 
         print("Elements in grid view grid layout: " + str(self.grid_view_grid_layout.count()))
 
-        for column in range(new_max_grid_rooms_frame_columns):
-            self.grid_view_grid_layout.setColumnStretch(column, 1)
+        # self.grid_view_grid_layout.update()
+        # self.grid_view_grid_layout.invalidate()
+        # self.grid_view_grid_layout.activate()
+        # self.grid_view_widget.adjustSize()
+        # self.grid_view_widget.updateGeometry()
+
+        # for column in range(new_max_grid_rooms_frame_columns):
+        #     self.grid_view_grid_layout.setColumnStretch(column, 1)
 
     def set_column_and_row_stretch(self, max_rows, max_columns):
         for row in range(max_rows):
@@ -256,6 +266,8 @@ class RoomsPage(QWidget, RoomsPageUI):
                         if widget:
                             widget.setParent(None)
                             widget.deleteLater()
+
+                            self.grid_view_grid_layout.setColumnStretch(column, 0)
                         else:
                             self.grid_view_grid_layout.removeItem(item)
                             break
@@ -274,6 +286,8 @@ class RoomsPage(QWidget, RoomsPageUI):
                         if widget:
                             widget.setParent(None)
                             widget.deleteLater()
+
+                            self.grid_view_grid_layout.setRowStretch(row, 0)
                         else:
                             self.grid_view_grid_layout.removeItem(item)
                             break
@@ -294,6 +308,9 @@ class RoomsPage(QWidget, RoomsPageUI):
                             if widget:
                                 widget.setParent(None)
                                 widget.deleteLater()
+
+                                self.grid_view_grid_layout.setRowStretch(row, 0)
+                                self.grid_view_grid_layout.setColumnStretch(column, 0)
                             else:
                                 self.grid_view_grid_layout.removeItem(item)
                                 break
@@ -427,6 +444,8 @@ class RoomsPage(QWidget, RoomsPageUI):
 
     # resizeEvent will be automatically called when switching to rooms page widget, so no need to preload frames
     def resizeEvent(self, event):
+
+        print("Elements in grid view grid layout b4444444: " + str(self.grid_view_grid_layout.count()))
 
         current_width = self.width()
         current_height = self.height()
