@@ -10,7 +10,7 @@ class BookedRoomQueries:
         sql = """SELECT COUNT(*) FROM bookedrooms WHERE bookedrooms.room_id=%s AND 
                     bookedrooms.check_in_status=%s"""
 
-        values = (room_id, 'in progress')
+        values = (room_id, 'In Progress')
 
         self.cursor.execute(sql, values)
 

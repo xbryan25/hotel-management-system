@@ -71,8 +71,10 @@ class RoomsPageController:
         self.refresh_rooms_data()
 
     def delete_room(self, room_number):
-        num_of_reservations = self.db_driver.reserved_room_queries.get_num_of_reservations_from_room(room_number)
-        num_of_bookings = self.db_driver.booked_room_queries.get_num_of_bookings_from_room(room_number)
+        room_id = self.db_driver.room_queries.get_room_id_from_room_number(room_number)
+
+        num_of_reservations = self.db_driver.reserved_room_queries.get_num_of_reservations_from_room(room_id)
+        num_of_bookings = self.db_driver.booked_room_queries.get_num_of_bookings_from_room(room_id)
 
         if num_of_reservations == 0 and num_of_bookings == 0:
             header_message = "Are you sure you want to delete this room?"
@@ -93,10 +95,14 @@ class RoomsPageController:
 
         else:
 
-            if num_of_bookings == 0:
-                subheader_message = f"It currently has a reservation."
+            if num_of_bookings == 0 and num_of_reservations == 1:
+                subheader_message = f"It has an upcoming reservation."
+            elif num_of_bookings == 0 and num_of_reservations > 1:
+                subheader_message = f"It has upcoming reservations."
+            elif num_of_bookings == 1 and num_of_reservation == 1:
+                subheader_message = f"It currently has a booking and an upcoming reservation."
             else:
-                subheader_message = f"It currently has a booking."
+                subheader_message = f"It currently has a booking and upcoming reservations."
 
             self.feedback_dialog = FeedbackDialog("Room can't be deleted.", subheader_message)
 
