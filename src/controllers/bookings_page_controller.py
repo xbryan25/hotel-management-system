@@ -40,7 +40,7 @@ class BookingsPageController:
     def booking_check_out(self, index):
 
         selected_booking_id = index.sibling(index.row(), 0).data()
-        booking_room_number = index.sibling(index.row(), 2).data()
+        # booking_room_number = index.sibling(index.row(), 2).data()
 
         self.confirmation_dialog = ConfirmationDialog(f"Confirm check-out of {selected_booking_id}?")
 
@@ -49,9 +49,9 @@ class BookingsPageController:
         if self.confirmation_dialog.get_choice():
 
             self.db_driver.booked_room_queries.set_check_out_booking(selected_booking_id)
-            self.db_driver.room_queries.set_room_status(booking_room_number, 'available')
+            # self.db_driver.room_queries.set_room_status(booking_room_number, 'available')
 
-            self.update_bookings_table_view()
+            self.refresh_bookings_data()
 
             self.feedback_dialog = FeedbackDialog("Success!", f"{selected_booking_id} has checked out successfully")
             self.feedback_dialog.exec()

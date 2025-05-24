@@ -20,7 +20,7 @@ class BookedRoomQueries:
 
     def set_check_out_booking(self, booking_id):
         sql = "UPDATE bookedrooms SET check_in_status=%s, actual_check_out_date=%s WHERE booking_id=%s"
-        values = ('checked out', datetime.now(), booking_id)
+        values = ('Finished', datetime.now(), booking_id)
 
         self.cursor.execute(sql, values)
         self.db.commit()
@@ -37,8 +37,8 @@ class BookedRoomQueries:
 
         sort_type_dict = {"Ascending": "ASC", "Descending": "DESC"}
 
-        view_type_dict = {"Bookings": "WHERE bookedrooms.check_in_status = 'in progress'",
-                          "Past Bookings": "WHERE bookedrooms.check_in_status = 'checked out'",
+        view_type_dict = {"Bookings": "WHERE bookedrooms.check_in_status = 'In Progress'",
+                          "Past Bookings": "WHERE bookedrooms.check_in_status = 'Finished'",
                           "All": ""}
 
         if search_input:
