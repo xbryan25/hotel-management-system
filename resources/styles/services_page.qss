@@ -74,3 +74,7 @@ QComboBox::down-arrow {
     padding-left: 20px;
     padding-right: 20px;
 }
+
+#page_number_lineedit{
+    color: #000000;
+}

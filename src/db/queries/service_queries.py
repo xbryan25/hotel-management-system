@@ -53,7 +53,7 @@ class ServiceQueries:
         else:
             return result[0]
 
-    def get_all_services(self, enable_pagination=False, max_services_per_page=20, current_page_number=1,
+    def get_all_services(self, enable_pagination=False, max_services_per_page=20, current_page=1,
                          view_type="Active Services", sort_by="Service Name", sort_type="Ascending",
                          search_input=None):
 
@@ -92,7 +92,7 @@ class ServiceQueries:
                 ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]}"""
 
         if enable_pagination:
-            sql += f""" LIMIT {max_services_per_page} OFFSET {max_services_per_page * (current_page_number - 1)}"""
+            sql += f""" LIMIT {max_services_per_page} OFFSET {max_services_per_page * (current_page - 1)}"""
 
         self.cursor.execute(sql, values)
 

@@ -58,7 +58,7 @@ class GuestQueries:
                                         - COALESCE(paid.total_paid, 0) AS SIGNED) AS remaining_balance
                                 FROM guests
                                 JOIN reservedrooms ON guests.guest_id = reservedrooms.guest_id
-                                  AND reservedrooms.reservation_status = 'pending'
+                                  AND reservedrooms.reservation_status = 'Pending'
                                 LEFT JOIN (
                                     SELECT guest_id, SUM(amount) AS total_paid
                                     FROM paidrooms
@@ -77,7 +77,7 @@ class GuestQueries:
                         FROM guests
                         LEFT JOIN reservedrooms ON guests.guest_id = reservedrooms.guest_id 
                         JOIN bookedrooms ON guests.guest_id = bookedrooms.guest_id
-                            AND bookedrooms.check_in_status = 'in progress'
+                            AND bookedrooms.check_in_status = 'In Progress'
                         LEFT JOIN paidrooms ON guests.guest_id = paidrooms.guest_id
                         GROUP BY guests.guest_id, guests.name, guests.phone_number, guests.last_visit_date, guests.visit_count
                         {search_input_query}
@@ -93,7 +93,7 @@ class GuestQueries:
                         LEFT JOIN (
                             SELECT guest_id, SUM(total_reservation_cost) AS total_cost
                             FROM reservedrooms
-                            WHERE reservation_status IN ('pending', 'confirmed')
+                            WHERE reservation_status IN ('Pending', 'Confirmed')
                             GROUP BY guest_id
                         ) AS reservations ON guests.guest_id = reservations.guest_id
                         
@@ -104,9 +104,9 @@ class GuestQueries:
                         ) AS payments ON guests.guest_id = payments.guest_id
                         
                         WHERE guests.guest_id IN (
-                            SELECT guest_id FROM reservedrooms WHERE reservation_status = 'pending'
+                            SELECT guest_id FROM reservedrooms WHERE reservation_status = 'Pending'
                             UNION
-                            SELECT guest_id FROM bookedrooms WHERE check_in_status = 'in progress'
+                            SELECT guest_id FROM bookedrooms WHERE check_in_status = 'In Progress'
                         )
                         
                         GROUP BY guests.guest_id, guests.name, guests.phone_number, guests.last_visit_date, guests.visit_count

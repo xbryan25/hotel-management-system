@@ -19,8 +19,11 @@ class ServicesPageController:
         self.prev_sort_type = None
         self.prev_search_input = None
 
-        self.current_page_number = 1
+        self.current_page = 1
         self.max_services_per_page = 16
+
+    def set_page_number_lineedit_validator(self, total_pages):
+        self.view.set_page_number_lineedit_validator(total_pages)
 
     def open_add_edit_service_dialog(self, dialog_type, index=None):
 
@@ -89,6 +92,27 @@ class ServicesPageController:
         self.view.next_page_button_pressed.connect(self.go_to_next_page)
         self.view.previous_page_button_pressed.connect(self.go_to_previous_page)
 
+        self.view.page_number_lineedit_changed.connect(self.change_page_number_lineedit)
+
+    def change_page_number_lineedit(self, page_number):
+
+        service_count = self.db_driver.service_queries.get_service_count(view_type=self.prev_view_type,
+                                                                         search_input=self.prev_search_input)
+        total_pages = max(self.total_pages(service_count), 1)
+
+        if not page_number:
+            self.current_page = 1
+        elif int(page_number) < 1:
+            self.current_page = 1
+            self.view.page_number_lineedit.setText(str(self.current_page))
+        elif int(page_number) > total_pages:
+            self.current_page = total_pages
+            self.view.page_number_lineedit.setText(str(self.current_page))
+        else:
+            self.current_page = int(page_number)
+
+        self.refresh_services_data()
+
     def update_prev_search_input(self, search_input):
         self.prev_search_input = search_input
 
@@ -96,14 +120,19 @@ class ServicesPageController:
         service_count = self.db_driver.service_queries.get_service_count(view_type=self.prev_view_type,
                                                                          search_input=self.prev_search_input)
 
-        if self.current_page_number + 1 <= self.total_pages(service_count):
-            self.current_page_number += 1
+        if self.current_page + 1 <= self.total_pages(service_count):
+            self.current_page += 1
+
+            self.view.page_number_lineedit.setText(str(self.current_page))
 
             self.refresh_services_data()
 
     def go_to_previous_page(self):
-        if self.current_page_number > 1:
-            self.current_page_number -= 1
+        if self.current_page > 1:
+            self.current_page -= 1
+
+            self.view.page_number_lineedit.setText(str(self.current_page))
+
             self.refresh_services_data()
 
     def total_pages(self, services_count):
@@ -125,7 +154,7 @@ class ServicesPageController:
     def set_models(self):
         services_data_from_db = self.db_driver.service_queries.get_all_services(enable_pagination=True,
                                                                                 max_services_per_page=self.max_services_per_page,
-                                                                                current_page_number=self.current_page_number,
+                                                                                current_page=self.current_page,
                                                                                 view_type=self.prev_view_type,
                                                                                 sort_by=self.prev_sort_by,
                                                                                 sort_type=self.prev_sort_type,
@@ -138,3 +167,9 @@ class ServicesPageController:
             self.view.set_table_views_column_widths()
         else:
             self.services_model.update_data(services_data_from_db)
+
+        service_count = self.db_driver.service_queries.get_service_count(view_type=self.prev_view_type,
+                                                                         search_input=self.prev_search_input)
+
+        self.set_page_number_lineedit_validator(self.total_pages(service_count))
+        self.view.update_of_page_number_label(self.total_pages(service_count))
