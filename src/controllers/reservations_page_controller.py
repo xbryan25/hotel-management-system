@@ -44,7 +44,7 @@ class ReservationsPageController:
         selected_reservation_status = self.db_driver.reserved_room_queries.get_specific_reservation_details('reservation_status',
                                                                                                             selected_reservation_id)
 
-        if selected_reservation_status == 'pending':
+        if selected_reservation_status == 'Pending':
             view_type = 'current'
         else:
             view_type = 'past'
@@ -93,7 +93,7 @@ class ReservationsPageController:
 
         selected_payment_status = index.sibling(index.row(), 5).data()
 
-        if selected_payment_status == "fully paid":
+        if selected_payment_status == "Fully Paid":
             selected_reservation_id = index.sibling(index.row(), 0).data()
 
             reservation_check_in_date = self.db_driver.reserved_room_queries.get_specific_reservation_details(

@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from pymysql.cursors import DictCursor
+
 
 class ReservedRoomQueries:
     def __init__(self, db, cursor):
@@ -26,7 +28,7 @@ class ReservedRoomQueries:
         sql = """SELECT COUNT(*) FROM reservedrooms WHERE reservedrooms.room_id=%s AND 
                     reservedrooms.reservation_status=%s"""
 
-        values = (room_id, 'pending')
+        values = (room_id, 'Pending')
 
         self.cursor.execute(sql, values)
 
@@ -78,8 +80,11 @@ class ReservedRoomQueries:
 
         values = (reservation_id,)
 
-        self.cursor.execute(sql, values)
-        result = self.cursor.fetchone()
+        # Used a DictCursor here as there are many results
+        with self.db.cursor(DictCursor) as dict_cursor:
+            dict_cursor.execute(sql, values)
+
+            result = dict_cursor.fetchone()
 
         return result if result else None
 
@@ -99,10 +104,10 @@ class ReservedRoomQueries:
 
         sort_type_dict = {"Ascending": "ASC", "Descending": "DESC"}
 
-        view_type_dict = {"Reservations": "WHERE reservedrooms.reservation_status = 'pending'",
-                          "Past Reservations": "WHERE reservedrooms.reservation_status IN ('confirmed', 'cancelled', 'expired')",
-                          "Billings": "WHERE reservedrooms.payment_status IN ('not paid', 'partially paid')",
-                          "Past Billings": "WHERE reservedrooms.payment_status = 'fully paid'",
+        view_type_dict = {"Reservations": "WHERE reservedrooms.reservation_status = 'Pending'",
+                          "Past Reservations": "WHERE reservedrooms.reservation_status IN ('Confirmed', 'Cancelled', 'Expired')",
+                          "Billings": "WHERE reservedrooms.payment_status IN ('Not Paid', 'Partially Paid')",
+                          "Past Billings": "WHERE reservedrooms.payment_status = 'Fully Paid'",
                           "All": ""}
 
         if search_input and billing_view_mode:
@@ -139,20 +144,20 @@ class ReservedRoomQueries:
                             reservedrooms.total_reservation_cost, 
                             CAST(
                                 CASE 
-                                    WHEN reservedrooms.payment_status = 'fully paid' THEN 0
+                                    WHEN reservedrooms.payment_status = 'Fully Paid' THEN 0
                                     ELSE reservedrooms.total_reservation_cost - COALESCE(SUM(paidrooms.amount), 0)
                                 END AS SIGNED
                             ) AS remaining_balance,
                             reservedrooms.payment_status
                             FROM reservedrooms 
                             JOIN guests ON reservedrooms.guest_id = guests.guest_id
-                            JOIN rooms ON reservedrooms.room_id = rooms.room_number
+                            JOIN rooms ON reservedrooms.room_id = rooms.room_id
                             LEFT JOIN paidrooms ON reservedrooms.guest_id = paidrooms.guest_id 
                                 AND reservedrooms.room_id = paidrooms.room_id
                                 AND paidrooms.transaction_date BETWEEN reservedrooms.reservation_date AND reservedrooms.check_in_date
                             {view_type_dict[view_type]} 
                             GROUP BY reservedrooms.reservation_id, guests.name, rooms.room_number,
-                                reservedrooms.total_reservation_cost
+                                reservedrooms.total_reservation_cost, reservedrooms.payment_status
                             {search_input_query}
                             ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]}"""
 

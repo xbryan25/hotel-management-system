@@ -25,7 +25,7 @@ class AddPaymentDialogController:
 
         payment_inputs.update({'guest_id': self.db_driver.reserved_room_queries.get_specific_reservation_details('guest_id', self.data_from_row['reservation_id'])})
 
-        payment_inputs.update({'room_number': self.db_driver.reserved_room_queries.get_specific_reservation_details('room_number', self.data_from_row['reservation_id'])})
+        payment_inputs.update({'room_id': self.db_driver.reserved_room_queries.get_specific_reservation_details('room_id', self.data_from_row['reservation_id'])})
 
         self.db_driver.paid_room_queries.add_paid_room(payment_inputs)
 

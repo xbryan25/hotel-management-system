@@ -11,9 +11,9 @@ class AvailedServiceQueries:
                     availedservices.avail_id
                     FROM availedservices
                     LEFT JOIN services ON availedservices.service_id = services.service_id
-                    WHERE avail_date=%s"""
+                    WHERE avail_date=%s AND avail_status=%s"""
 
-        values = (avail_date,)
+        values = (avail_date, 'Active')
 
         self.cursor.execute(sql, values)
 
@@ -53,7 +53,7 @@ class AvailedServiceQueries:
 
             values = (new_avail_id,
                       date_time_now,
-                      'active',
+                      'Active',
                       quantity,
                       guest_id,
                       service_id)
