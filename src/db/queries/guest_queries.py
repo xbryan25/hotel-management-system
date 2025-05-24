@@ -298,7 +298,7 @@ class GuestQueries:
 
     def get_guest_details(self, guest_id):
 
-        sql = f"""SELECT guests.guest_id, guests.name, guests.sex, guests.home_address, 
+        sql = f"""SELECT guests.guest_id, guests.name, guests.gender, guests.home_address, 
                         guests.email_address, guests.phone_number, guests.birth_date,
                         guests.government_id, guests.last_visit_date, guests.visit_count
                         FROM guests
@@ -345,7 +345,7 @@ class GuestQueries:
 
         # SQL avoids duplication of names
         sql = """INSERT INTO guests 
-                (guest_id, name, sex, home_address, email_address, phone_number, 
+                (guest_id, name, gender, home_address, email_address, phone_number, 
                 birth_date, government_id, visit_count) VALUES
                 (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
@@ -361,7 +361,7 @@ class GuestQueries:
 
         values = (new_guest_id,
                   guest_information["name"],
-                  guest_information["sex"],
+                  guest_information["gender"],
                   guest_information["home_address"],
                   guest_information["email_address"],
                   guest_information["phone_number"],
@@ -374,7 +374,7 @@ class GuestQueries:
 
     def update_guest(self, old_guest_id, guest_information):
         sql = """UPDATE guests 
-                SET guest_id=%s, name=%s, sex=%s, home_address=%s, email_address=%s, phone_number=%s, 
+                SET guest_id=%s, name=%s, gender=%s, home_address=%s, email_address=%s, phone_number=%s, 
                 birth_date=%s, government_id=%s, last_visit_date=%s, visit_count=%s WHERE 
                 guest_id=%s"""
 

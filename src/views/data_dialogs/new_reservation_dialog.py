@@ -163,7 +163,7 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         guest_inputs = {}
 
         guest_inputs.update({"name": f"{self.first_name_lineedit.text()} {self.last_name_lineedit.text()}"})
-        guest_inputs.update({"sex": self.sex_combobox.currentText()})
+        guest_inputs.update({"gender": self.gender_combobox.currentText()})
         guest_inputs.update({"birth_date": self.birth_date_dateedit.date().toPyDate()})
         guest_inputs.update({"home_address": self.home_address_lineedit.text()})
         guest_inputs.update({"email_address": self.first_name_lineedit.text()})
@@ -280,7 +280,7 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         self.primary_booker_label.setFont(QFont("Inter", 18, QFont.Weight.Bold))
         self.first_name_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
         self.last_name_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
-        self.sex_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
+        self.gender_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
         self.birth_date_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
         self.home_address_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
         self.email_address_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
@@ -288,7 +288,7 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
 
         self.first_name_lineedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.last_name_lineedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
-        self.sex_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+        self.gender_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.birth_date_dateedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.home_address_lineedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.email_address_lineedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))

@@ -138,17 +138,18 @@ class NewReservationDialogController:
         reservation_inputs = self.view.get_reservation_inputs()
         availed_services_inputs = self.view.get_availed_services_inputs(self.service_frames)
 
-        room_number = reservation_inputs["room_number"]
-
         self.db_driver.guest_queries.add_guest(guest_inputs)
 
         guest_id = self.db_driver.guest_queries.get_guest_id_from_name(guest_inputs["name"])
+        room_id = self.db_driver.room_queries.get_room_id_from_room_number(reservation_inputs["room_number"])
+
         reservation_inputs.update({"guest_id": guest_id})
+        reservation_inputs.update({"room_id": room_id})
 
         self.db_driver.reserved_room_queries.add_reserved_room(reservation_inputs)
         self.db_driver.availed_service_queries.add_availed_services(availed_services_inputs, guest_id)
 
-        self.db_driver.room_queries.set_room_status(room_number, 'reserved')
+        # self.db_driver.room_queries.set_room_status(room_number, 'reserved')
 
         self.success_dialog = FeedbackDialog("Reservation added successfully.", connected_view=self.view)
         self.success_dialog.exec()
