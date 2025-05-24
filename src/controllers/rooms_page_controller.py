@@ -147,7 +147,7 @@ class RoomsPageController:
     def change_page_number_lineedit(self, page_number):
 
         room_count = self.db_driver.room_queries.get_room_count("All", search_input=self.prev_search_input)
-        total_pages = self.total_pages(room_count)
+        total_pages = max(self.total_pages(room_count), 1)
 
         if not page_number:
             self.current_page = 1

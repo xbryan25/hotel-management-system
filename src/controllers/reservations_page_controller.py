@@ -98,7 +98,7 @@ class ReservationsPageController:
 
         reservation_count = self.db_driver.reserved_room_queries.get_reservation_count(view_type=self.prev_view_type,
                                                                                        search_input=self.prev_search_input)
-        total_pages = self.total_pages(reservation_count)
+        total_pages = max(reservation_count, 1)
 
         if not page_number:
             self.current_page = 1

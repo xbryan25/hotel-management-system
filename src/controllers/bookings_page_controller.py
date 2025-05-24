@@ -21,6 +21,9 @@ class BookingsPageController:
         self.current_page_number = 1
         self.max_bookings_per_page = 16
 
+    def set_page_number_lineedit_validator(self, total_pages):
+        self.view.set_page_number_lineedit_validator(total_pages)
+
     def connect_signals_to_slots(self):
         self.view.window_resized.connect(self.update_row_count)
 
@@ -36,6 +39,27 @@ class BookingsPageController:
 
         self.view.next_page_button_pressed.connect(self.go_to_next_page)
         self.view.previous_page_button_pressed.connect(self.go_to_previous_page)
+
+        self.view.page_number_lineedit_changed.connect(self.change_page_number_lineedit)
+
+    def change_page_number_lineedit(self, page_number):
+
+        booking_count = self.db_driver.booked_room_queries.get_booking_count(view_type=self.prev_view_type,
+                                                                             search_input=self.prev_search_input)
+        total_pages = max(self.total_pages(booking_count), 1)
+
+        if not page_number:
+            self.current_page = 1
+        elif int(page_number) < 1:
+            self.current_page = 1
+            self.view.page_number_lineedit.setText(str(self.current_page))
+        elif int(page_number) > total_pages:
+            self.current_page = total_pages
+            self.view.page_number_lineedit.setText(str(self.current_page))
+        else:
+            self.current_page = int(page_number)
+
+        self.refresh_bookings_data()
 
     def booking_check_out(self, index):
 
@@ -79,11 +103,16 @@ class BookingsPageController:
         if self.current_page_number + 1 <= self.total_pages(booking_count):
             self.current_page_number += 1
 
+            self.view.page_number_lineedit.setText(str(self.current_page))
+
             self.refresh_bookings_data()
 
     def go_to_previous_page(self):
         if self.current_page_number > 1:
             self.current_page_number -= 1
+
+            self.view.page_number_lineedit.setText(str(self.current_page))
+
             self.refresh_bookings_data()
 
     def total_pages(self, booking_count):
@@ -116,4 +145,10 @@ class BookingsPageController:
             self.view.set_table_views_column_widths()
         else:
             self.bookings_model.update_data(bookings_data_from_db)
+
+        booking_count = self.db_driver.booked_room_queries.get_booking_count(view_type=self.prev_view_type,
+                                                                             search_input=self.prev_search_input)
+
+        self.set_page_number_lineedit_validator(self.total_pages(booking_count))
+        self.view.update_of_page_number_label(self.total_pages(booking_count))
 
