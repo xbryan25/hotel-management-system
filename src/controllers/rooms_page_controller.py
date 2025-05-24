@@ -28,6 +28,9 @@ class RoomsPageController:
         self.max_rows_per_page = 5
         self.max_columns_per_page = 2
 
+    def set_page_number_lineedit_validator(self, total_pages):
+        self.view.set_page_number_lineedit_validator(total_pages)
+
     def set_models(self, max_room_per_page=5, current_page_number=1,
                    sort_by="room_number", sort_type="ASC", search_input=None):
 
@@ -45,6 +48,10 @@ class RoomsPageController:
             self.rooms_model = RoomsModel(rooms_data)
         else:
             self.rooms_model.update_data(rooms_data)
+
+        room_count = self.db_driver.room_queries.get_room_count("All", search_input=self.prev_search_input)
+        self.set_page_number_lineedit_validator(self.total_pages(room_count))
+        self.view.update_of_page_number_label(self.total_pages(room_count))
 
     def load_frames(self):
         if self.view_mode == "list_view":
@@ -135,6 +142,26 @@ class RoomsPageController:
         self.view.search_text_changed.connect(self.update_prev_search_input)
         self.view.search_text_changed.connect(lambda _: self.refresh_rooms_data())
 
+        self.view.page_number_lineedit_changed.connect(self.change_page_number_lineedit)
+
+    def change_page_number_lineedit(self, page_number):
+
+        room_count = self.db_driver.room_queries.get_room_count("All", search_input=self.prev_search_input)
+        total_pages = self.total_pages(room_count)
+
+        if not page_number:
+            self.current_page = 1
+        elif int(page_number) < 1:
+            self.current_page = 1
+            self.view.page_number_lineedit.setText(str(self.current_page))
+        elif int(page_number) > total_pages:
+            self.current_page = total_pages
+            self.view.page_number_lineedit.setText(str(self.current_page))
+        else:
+            self.current_page = int(page_number)
+
+        self.refresh_rooms_data()
+
     def update_prev_search_input(self, search_input):
         self.prev_search_input = search_input
 
@@ -143,6 +170,8 @@ class RoomsPageController:
 
         if self.current_page + 1 <= self.total_pages(room_count):
             self.current_page += 1
+
+            self.view.page_number_lineedit.setText(str(self.current_page))
 
             self.refresh_rooms_data()
             # print()
@@ -153,6 +182,9 @@ class RoomsPageController:
 
         if self.current_page > 1:
             self.current_page -= 1
+
+            self.view.page_number_lineedit.setText(str(self.current_page))
+
             self.refresh_rooms_data()
 
     def total_pages(self, room_count):
