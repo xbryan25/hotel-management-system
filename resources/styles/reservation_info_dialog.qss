@@ -20,3 +20,7 @@ QDialog{
 #right_button:disabled {
     background-color: #5182F5;
 }
+
+#check_in_date_time_edit, #check_out_date_time_edit{
+    color: #000000;
+}

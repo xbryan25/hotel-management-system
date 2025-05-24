@@ -28,14 +28,12 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
         self.dialog_state = 'not editable'
         self.view_type = view_type
 
-        self.update_current_date_and_time()
+        # self.update_current_date_and_time()
 
         self.connect_signals_to_slots()
 
         self.load_fonts()
         self.set_external_stylesheet()
-
-        self.show_add_service_button(False)
 
     def load_proceed_button(self):
         self.left_button.setVisible(False)
@@ -43,9 +41,6 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
     def hide_remaining_balance(self):
         self.remaining_balance_label.setVisible(False)
         self.remaining_balance_value_label.setVisible(False)
-
-    def show_add_service_button(self, state):
-        self.add_service_button.setVisible(state)
 
     def enable_all_editable_fields(self, service_frames, state):
         self.check_in_date_time_edit.setEnabled(state)
@@ -69,12 +64,28 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
         return {"check_in": self.check_in_date_time_edit.dateTime(),
                 "check_out": self.check_out_date_time_edit.dateTime()}
 
-    def update_current_date_and_time(self):
-        self.check_in_date_time_edit.setMinimumDateTime(QDateTime.currentDateTime().addDays(1))
-        self.check_in_date_time_edit.setDateTime(QDateTime.currentDateTime().addDays(1))
+    def update_current_date_and_time(self, previous_check_in_date, previous_check_out_date):
 
-        self.check_out_date_time_edit.setMinimumDateTime(QDateTime.currentDateTime().addDays(2))
-        self.check_out_date_time_edit.setDateTime(QDateTime.currentDateTime().addDays(2))
+        min_relaxed = QDateTime.fromString("2000-01-01T00:00:00", "yyyy-MM-ddTHH:mm:ss")
+        self.check_in_date_time_edit.setMinimumDateTime(min_relaxed)
+        self.check_out_date_time_edit.setMinimumDateTime(min_relaxed)
+
+        self.check_in_date_time_edit.setDateTime(previous_check_in_date)
+        self.check_out_date_time_edit.setDateTime(previous_check_out_date)
+
+        # Step 3: Compute desired minimums
+        min_check_in = QDateTime.currentDateTime().addDays(1)
+        min_check_out = QDateTime.currentDateTime().addDays(2)
+
+        if self.check_in_date_time_edit.dateTime() >= min_check_in:
+            self.check_in_date_time_edit.setMinimumDateTime(min_check_in)
+        else:
+            self.check_in_date_time_edit.setMinimumDateTime(previous_check_in_date)
+
+        if self.check_out_date_time_edit.dateTime() >= min_check_out:
+            self.check_out_date_time_edit.setMinimumDateTime(min_check_out)
+        else:
+            self.check_out_date_time_edit.setMinimumDateTime(previous_check_out_date)
 
     def update_check_out_date_time_edit_min_date(self):
         check_in_date_time_current_value = self.check_in_date_time_edit.dateTime()
@@ -312,6 +323,3 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
         self.room_number_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
 
         self.availed_services_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
-        self.add_service_button.setFont(QFont("Inter", 15, QFont.Weight.Bold))
-
-

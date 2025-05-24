@@ -2,7 +2,8 @@ from PyQt6.QtWidgets import QSizePolicy, QSpacerItem
 from PyQt6.QtCore import QDateTime
 
 from models import RoomsModel, ServicesModel, AvailedServicesModel
-from views import FeedbackDialog, ConfirmationDialog
+from views import FeedbackDialog, ConfirmationDialog, UpcomingReservationsDialog
+from controllers.upcoming_reservations_dialog_controller import UpcomingReservationsDialogController
 
 from datetime import datetime
 
@@ -34,6 +35,50 @@ class ReservationInfoDialogController:
 
         self.connect_signals_to_slots()
 
+        self.view.update_current_date_and_time(self.data_from_reservation['check_in_date'],
+                                               self.data_from_reservation['check_out_date'])
+
+    def check_reservation_dates(self):
+        current_check_in_date = self.data_from_reservation['check_in_date']
+        current_check_out_date = self.data_from_reservation['check_out_date']
+
+        new_check_in_date = self.view.check_in_date_time_edit.dateTime().toPyDateTime()
+        new_check_out_date = self.view.check_out_date_time_edit.dateTime().toPyDateTime()
+
+        room_id = self.db_driver.room_queries.get_room_id_from_room_number(self.view.room_number_combobox.currentText())
+
+        reservation_durations = self.db_driver.reserved_room_queries.get_all_check_in_and_check_out_of_room(room_id)
+
+        has_overlap = False
+
+        for existing_check_in, existing_check_out in reservation_durations:
+
+            # Skip the current reservation
+            if existing_check_in == current_check_in_date and existing_check_out == current_check_out_date:
+                continue
+
+            # Check for overlap
+            if new_check_in_date < existing_check_out and new_check_out_date > existing_check_in:
+
+                self.conflict_dialog = FeedbackDialog("Reservation conflict found.",
+                                                      f"Please recheck the reservations of '{self.view.room_number_combobox.currentText()}'.")
+                self.conflict_dialog.exec()
+
+                has_overlap = True
+                break
+
+        if not has_overlap:
+            self.edit_or_cancel_reservation('edit')
+
+    def open_upcoming_reservations_dialog(self):
+
+        self.upcoming_reservations_dialog = UpcomingReservationsDialog()
+        self.upcoming_reservations_dialog_controller = UpcomingReservationsDialogController(self.upcoming_reservations_dialog,
+                                                                                            self.db_driver,
+                                                                                            self.view.room_number_combobox.currentText())
+
+        self.upcoming_reservations_dialog.exec()
+
     def has_changes(self):
         current_data = {
             'check_in_date': self.view.check_in_date_time_edit.dateTime(),
@@ -51,7 +96,7 @@ class ReservationInfoDialogController:
             return
 
         # Compare selected room
-        if current_data['room_number'] != self.current_room_number:
+        if current_data['room_number'] != self.temp_current_room:
             self.view.enable_edit_reservation_button(True)
             return
 
@@ -104,12 +149,16 @@ class ReservationInfoDialogController:
 
             self.view.clicked_cancel_reservation_button.connect(lambda: self.edit_or_cancel_reservation('cancel'))
 
-            self.view.clicked_confirm_reservation_edit_button.connect(lambda: self.edit_or_cancel_reservation('edit'))
+            self.view.clicked_confirm_reservation_edit_button.connect(self.check_reservation_dates)
 
             self.view.spinbox_enabled.connect(self.update_total_reservation_cost)
             self.view.spinbox_enabled.connect(self.has_changes)
 
+            self.view.room_reservations_button.clicked.connect(self.open_upcoming_reservations_dialog)
+
         else:
+            self.view.room_reservations_button.clicked.connect(self.open_upcoming_reservations_dialog)
+
             self.view.clicked_proceed_button.connect(self.view.close)
 
     def edit_or_cancel_reservation(self, state):
@@ -127,7 +176,7 @@ class ReservationInfoDialogController:
 
             if self.confirmation_dialog.get_choice():
 
-                self.db_driver.reserved_room_queries.set_reservation_status('cancelled', self.selected_reservation_id)
+                self.db_driver.reserved_room_queries.set_reservation_status('Cancelled', self.selected_reservation_id)
                 # self.db_driver.room_queries.set_room_status(self.original_data["room_number"], "available")
 
                 amount_already_paid = self.data_from_reservation['total_reservation_cost'] - self.data_from_reservation['remaining_balance']
