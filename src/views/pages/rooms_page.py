@@ -455,7 +455,7 @@ class RoomsPage(QWidget, RoomsPageUI):
 
         self.rooms_label.setFont(QFont("Inter", 20, QFont.Weight.Bold))
 
-        self.unit_room_no_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
+        self.room_number_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
         self.room_type_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
         self.capacity_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
         self.rate_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))

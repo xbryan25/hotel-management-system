@@ -231,7 +231,7 @@ class RoomQueries:
             search_input_query = ""
             values = ()
 
-        if availability_status == "all":
+        if availability_status == "All":
             sql = f"SELECT COUNT(*) FROM rooms WHERE is_active=1 {search_input_query}"
         else:
             sql = f"SELECT COUNT(*) FROM rooms WHERE availability_status=%s AND is_active=1 {search_input_query}"
