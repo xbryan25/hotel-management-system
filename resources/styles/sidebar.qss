@@ -14,16 +14,27 @@ QListWidget {
 
 QListWidget::item {
     padding: 10px;
+    padding-left: 5px;
     margin: 0px;
     border: none;
 }
 
 QListWidget::item:selected {
-    background-color: rgb(114, 147, 224);
+    background-color: #7293e0;
     color: white;
     padding: 10px;
+    padding-left: 10px;
     margin: 0px;
-    border: none;
+    border-radius: 5px;
+}
+
+QListWidget::item:hover {
+    background-color: #6a7fb0;
+    color: white;
+    padding: 10px;
+    padding-left: 10px;
+    margin: 0px;
+    border-radius: 5px;
 }
 
 QListWidget::item:focus {
@@ -34,6 +45,7 @@ QListWidget::item:selected:focus {
     outline: none;
     border: none;
 }
+
 
 QPushButton::pressed{
     background-color: rgb(25, 79, 204);

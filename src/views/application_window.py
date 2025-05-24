@@ -19,12 +19,13 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
 
         self.collapsed_sidebar_frame.setVisible(False)
 
+        self.load_fonts()
+        self.apply_fonts()
+
         self.initialize_sidebar()
         self.add_icon_to_toggle_sidebar_button()
 
         self.set_external_stylesheet()
-        self.load_fonts()
-        self.apply_fonts()
 
         self.setup_toggle_sidebar_button()
         self.add_signals_to_sidebar_items()
@@ -117,7 +118,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
             # For expanded buttons list widget (icons and text)
             item_expanded = QListWidgetItem()
             item_expanded.setIcon(QIcon(sidebar_item.get("icon")))
-            item_expanded.setText(sidebar_item.get("name"))
+            item_expanded.setText(f" {sidebar_item.get("name")}")
+            item_expanded.setFont(QFont("Inter", 14, QFont.Weight.Bold))
             # item_expanded.setSizeHint(QSize(50, 50))
 
             self.expanded_buttons_list_widget.addItem(item_expanded)
