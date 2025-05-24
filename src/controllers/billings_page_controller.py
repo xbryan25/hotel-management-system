@@ -22,6 +22,9 @@ class BillingsPageController:
         self.current_page_number = 1
         self.max_billings_per_page = 16
 
+    def set_page_number_lineedit_validator(self, total_pages):
+        self.view.set_page_number_lineedit_validator(total_pages)
+
     def update_row_count(self):
         current_max_billings_per_page = self.view.get_max_rows_of_billings_table_view()
 
@@ -49,6 +52,27 @@ class BillingsPageController:
         self.view.next_page_button_pressed.connect(self.go_to_next_page)
         self.view.previous_page_button_pressed.connect(self.go_to_previous_page)
 
+        self.view.page_number_lineedit_changed.connect(self.change_page_number_lineedit)
+
+    def change_page_number_lineedit(self, page_number):
+
+        guest_count = self.db_driver.guest_queries.get_guest_count(show_type=self.prev_show_type,
+                                                                   search_input=self.prev_search_input)
+        total_pages = max(self.total_pages(guest_count), 1)
+
+        if not page_number:
+            self.current_page = 1
+        elif int(page_number) < 1:
+            self.current_page = 1
+            self.view.page_number_lineedit.setText(str(self.current_page))
+        elif int(page_number) > total_pages:
+            self.current_page = total_pages
+            self.view.page_number_lineedit.setText(str(self.current_page))
+        else:
+            self.current_page = int(page_number)
+
+        self.refresh_billings_data()
+
     def open_add_payment_dialog(self, index):
         data_from_row = {"reservation_id": index.sibling(index.row(), 0).data(),
                          "remaining_balance": index.sibling(index.row(), 4).data()}
@@ -71,11 +95,16 @@ class BillingsPageController:
         if self.current_page_number + 1 <= self.total_pages(billings_count):
             self.current_page_number += 1
 
+            self.view.page_number_lineedit.setText(str(self.current_page))
+
             self.refresh_billings_data()
 
     def go_to_previous_page(self):
         if self.current_page_number > 1:
             self.current_page_number -= 1
+
+            self.view.page_number_lineedit.setText(str(self.current_page))
+
             self.refresh_billings_data()
 
     def total_pages(self, billings_count):
@@ -110,3 +139,10 @@ class BillingsPageController:
             self.view.set_table_views_column_widths()
         else:
             self.billings_model.update_data(billings_data_from_db)
+
+        billings_count = self.db_driver.reserved_room_queries.get_reservation_count(view_type=self.prev_view_type,
+                                                                                    search_input=self.prev_search_input,
+                                                                                    billing_view_mode=True)
+
+        self.set_page_number_lineedit_validator(self.total_pages(billings_count))
+        self.view.update_of_page_number_label(self.total_pages(billings_count))
