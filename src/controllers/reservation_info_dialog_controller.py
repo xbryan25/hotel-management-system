@@ -1,8 +1,9 @@
 from PyQt6.QtWidgets import QSizePolicy, QSpacerItem
 from PyQt6.QtCore import QDateTime
 
-from models import AvailableRoomsModel, ServicesModel, AvailedServicesModel
-from views import FeedbackDialog, ConfirmationDialog
+from models import RoomsModel, ServicesModel, AvailedServicesModel
+from views import FeedbackDialog, ConfirmationDialog, UpcomingReservationsDialog
+from controllers.upcoming_reservations_dialog_controller import UpcomingReservationsDialogController
 
 from datetime import datetime
 
@@ -19,10 +20,13 @@ class ReservationInfoDialogController:
 
         self.get_data_from_reservation()
 
-        if self.view_type == 'current':
-            self.set_room_number_to_available(set_type="temporary")
-        else:
+        if self.view_type != 'current':
             self.setup_past_view_mode()
+
+        self.original_room_number = self.db_driver.room_queries.get_room_number_from_room_id(
+            self.data_from_reservation['room_id'])
+
+        self.temp_current_room = self.original_room_number
 
         self.set_models()
         self.load_data_from_reservation()
@@ -31,15 +35,50 @@ class ReservationInfoDialogController:
 
         self.connect_signals_to_slots()
 
-        self.temp_current_room = self.data_from_reservation[8]
+        self.view.update_current_date_and_time(self.data_from_reservation['check_in_date'],
+                                               self.data_from_reservation['check_out_date'],
+                                               mode='same_room')
 
-        self.original_data = {
-            'check_in_date': self.view.check_in_date_time_edit.dateTime(),
-            'check_out_date': self.view.check_out_date_time_edit.dateTime(),
-            'room_number': self.view.room_number_combobox.currentText(),
-            'availed_services': self.availed_services_model.get_all(),
-            'total_reservation_cost': self.data_from_reservation[5]
-        }
+    def check_reservation_dates(self):
+        current_check_in_date = self.data_from_reservation['check_in_date']
+        current_check_out_date = self.data_from_reservation['check_out_date']
+
+        new_check_in_date = self.view.check_in_date_time_edit.dateTime().toPyDateTime()
+        new_check_out_date = self.view.check_out_date_time_edit.dateTime().toPyDateTime()
+
+        room_id = self.db_driver.room_queries.get_room_id_from_room_number(self.view.room_number_combobox.currentText())
+
+        reservation_durations = self.db_driver.reserved_room_queries.get_all_check_in_and_check_out_of_room(room_id)
+
+        has_overlap = False
+
+        for existing_check_in, existing_check_out in reservation_durations:
+
+            # Skip the current reservation
+            if existing_check_in == current_check_in_date and existing_check_out == current_check_out_date:
+                continue
+
+            # Check for overlap
+            if new_check_in_date < existing_check_out and new_check_out_date > existing_check_in:
+
+                self.conflict_dialog = FeedbackDialog("Reservation conflict found.",
+                                                      f"Please recheck the reservations of '{self.view.room_number_combobox.currentText()}'.")
+                self.conflict_dialog.exec()
+
+                has_overlap = True
+                break
+
+        if not has_overlap:
+            self.edit_or_cancel_reservation('edit')
+
+    def open_upcoming_reservations_dialog(self):
+
+        self.upcoming_reservations_dialog = UpcomingReservationsDialog()
+        self.upcoming_reservations_dialog_controller = UpcomingReservationsDialogController(self.upcoming_reservations_dialog,
+                                                                                            self.db_driver,
+                                                                                            self.view.room_number_combobox.currentText())
+
+        self.upcoming_reservations_dialog.exec()
 
     def has_changes(self):
         current_data = {
@@ -50,15 +89,15 @@ class ReservationInfoDialogController:
         }
 
         # Compare datetime
-        if current_data['check_in_date'] != self.original_data['check_in_date']:
+        if current_data['check_in_date'] != self.data_from_reservation['check_in_date']:
             self.view.enable_edit_reservation_button(True)
             return
-        if current_data['check_out_date'] != self.original_data['check_out_date']:
+        if current_data['check_out_date'] != self.data_from_reservation['check_out_date']:
             self.view.enable_edit_reservation_button(True)
             return
 
         # Compare selected room
-        if current_data['room_number'] != self.original_data['room_number']:
+        if current_data['room_number'] != self.original_room_number:
             self.view.enable_edit_reservation_button(True)
             return
 
@@ -99,6 +138,7 @@ class ReservationInfoDialogController:
         if self.view_type == 'current':
             self.view.room_type_changed.connect(self.update_models)
 
+            self.view.room_changed.connect(self.update_current_date_and_time)
             self.view.room_changed.connect(lambda current_room: self.update_total_reservation_cost(current_room=current_room))
             self.view.room_changed.connect(self.has_changes)
 
@@ -111,13 +151,25 @@ class ReservationInfoDialogController:
 
             self.view.clicked_cancel_reservation_button.connect(lambda: self.edit_or_cancel_reservation('cancel'))
 
-            self.view.clicked_confirm_reservation_edit_button.connect(lambda: self.edit_or_cancel_reservation('edit'))
+            self.view.clicked_confirm_reservation_edit_button.connect(self.check_reservation_dates)
 
             self.view.spinbox_enabled.connect(self.update_total_reservation_cost)
             self.view.spinbox_enabled.connect(self.has_changes)
 
+            self.view.room_reservations_button.clicked.connect(self.open_upcoming_reservations_dialog)
+
         else:
+            self.view.room_reservations_button.clicked.connect(self.open_upcoming_reservations_dialog)
+
             self.view.clicked_proceed_button.connect(self.view.close)
+
+    def update_current_date_and_time(self, room_number):
+        if room_number != self.original_room_number:
+            self.view.update_current_date_and_time(mode='different_room')
+        else:
+            self.view.update_current_date_and_time(self.data_from_reservation['check_in_date'],
+                                                   self.data_from_reservation['check_out_date'],
+                                                   mode='same_room')
 
     def edit_or_cancel_reservation(self, state):
 
@@ -134,10 +186,10 @@ class ReservationInfoDialogController:
 
             if self.confirmation_dialog.get_choice():
 
-                self.db_driver.reserved_room_queries.set_reservation_status('cancelled', self.selected_reservation_id)
-                self.db_driver.room_queries.set_room_status(self.original_data["room_number"], "available")
+                self.db_driver.reserved_room_queries.set_reservation_status('Cancelled', self.selected_reservation_id)
+                # self.db_driver.room_queries.set_room_status(self.original_data["room_number"], "available")
 
-                amount_already_paid = self.original_data['total_reservation_cost'] - self.data_from_reservation[9]
+                amount_already_paid = self.data_from_reservation['total_reservation_cost'] - self.data_from_reservation['remaining_balance']
 
                 if amount_already_paid > 0:
                     self.feedback_dialog = FeedbackDialog("Since partial payments have been done,",
@@ -147,8 +199,8 @@ class ReservationInfoDialogController:
                     self.db_driver.paid_room_queries.add_paid_room({'payment_type': 'Cash',
                                                                     'amount': amount_already_paid * -1,
                                                                     'transaction_date': datetime.now(),
-                                                                    'guest_id': self.data_from_reservation[7],
-                                                                    'room_number': self.data_from_reservation[8]})
+                                                                    'guest_id': self.data_from_reservation['guest_id'],
+                                                                    'room_id': self.data_from_reservation['room_id']})
 
                 self.feedback_dialog = FeedbackDialog("Reservation cancelled successfully.", connected_view=self.view)
                 self.feedback_dialog.exec()
@@ -166,29 +218,31 @@ class ReservationInfoDialogController:
                 reservation_inputs = self.view.get_reservation_inputs()
                 modified_availed_services_inputs = self.view.get_modified_availed_services_inputs(self.service_frames)
                 new_availed_services_inputs = self.view.get_new_availed_services_inputs(self.service_frames)
+                room_id = self.db_driver.room_queries.get_room_id_from_room_number(reservation_inputs["room_number"])
 
                 date_time_now = datetime.now()
 
-                # self.db_driver.reserved_room_queries.update_reserved_room(reservation_inputs)
-                #
+                reservation_inputs.update({"room_id": room_id})
+
                 self.db_driver.availed_service_queries.update_availed_services(modified_availed_services_inputs,
                                                                                date_time_now)
 
                 self.db_driver.availed_service_queries.add_availed_services(new_availed_services_inputs,
-                                                                            self.data_from_reservation[7])
+                                                                            self.data_from_reservation['guest_id'],
+                                                                            date_time_now)
 
                 self.db_driver.reserved_room_queries.update_reserved_room(self.selected_reservation_id,
                                                                           reservation_inputs,
                                                                           date_time_now)
 
                 new_total = int(reservation_inputs['total_reservation_cost'])
-                amount_already_paid = self.original_data['total_reservation_cost'] - self.data_from_reservation[9]
+                amount_already_paid = self.data_from_reservation['total_reservation_cost'] - self.data_from_reservation['remaining_balance']
 
-                if amount_already_paid > 0:
-                    self.db_driver.reserved_room_queries.set_payment_status(self.selected_reservation_id, 'partially paid')
-                else:
+                if amount_already_paid > 0 and amount_already_paid != self.data_from_reservation['total_reservation_cost']:
+                    self.db_driver.reserved_room_queries.set_payment_status(self.selected_reservation_id, 'Partially Paid')
+                elif amount_already_paid == 0:
                     self.db_driver.reserved_room_queries.set_payment_status(self.selected_reservation_id,
-                                                                            'not paid')
+                                                                            'Not Paid')
 
                 # For refund
                 if new_total < amount_already_paid:
@@ -201,17 +255,22 @@ class ReservationInfoDialogController:
                     self.db_driver.paid_room_queries.add_paid_room({'payment_type': 'Cash',
                                                                     'amount': amount_to_refund * -1,
                                                                     'transaction_date': date_time_now,
-                                                                    'guest_id': self.data_from_reservation[7],
-                                                                    'room_number': self.data_from_reservation[8]})
+                                                                    'guest_id': self.data_from_reservation['guest_id'],
+                                                                    'room_id': self.data_from_reservation['room_id']})
 
-                    self.db_driver.reserved_room_queries.set_payment_status(self.selected_reservation_id, 'fully paid')
+                    self.db_driver.reserved_room_queries.set_payment_status(self.selected_reservation_id, 'Fully Paid')
 
-                if self.original_data['room_number'] != reservation_inputs["room_number"]:
-                    # Set old room number to 'available'
-                    self.set_room_number_to_available()
+                if self.original_room_number != reservation_inputs["room_number"]:
 
-                    # Set new room number to be 'reserved'
-                    self.db_driver.room_queries.set_room_status(reservation_inputs["room_number"], "reserved")
+                    # TODO: Cancel reservation
+                    pass
+
+
+                    # # Set old room number to 'available'
+                    # self.set_room_number_to_available()
+                    #
+                    # # Set new room number to be 'reserved'
+                    # self.db_driver.room_queries.set_room_status(reservation_inputs["room_number"], "reserved")
 
                 self.feedback_dialog = FeedbackDialog("Reservation edited successfully.", connected_view=self.view)
                 self.feedback_dialog.exec()
@@ -224,8 +283,11 @@ class ReservationInfoDialogController:
         self.edit_state = state
 
     def setup_past_view_mode(self):
+        # booking = self.db_driver.booked_rooms_queries.find_booking_by_guest_and_room()
+
         self.view.load_proceed_button()
         self.view.hide_remaining_balance()
+        # self.view.load_booking_details()
 
     def update_total_reservation_cost(self, current_room=None):
 
@@ -239,7 +301,7 @@ class ReservationInfoDialogController:
 
         hours = seconds / 3600
 
-        current_room_cost = self.available_room_numbers_model.get_cost_of_room(self.temp_current_room)
+        current_room_cost = self.room_numbers_model.get_cost_of_room(self.temp_current_room)
 
         total_room_cost = (((hours-1)//24) + 1) * current_room_cost
 
@@ -300,44 +362,40 @@ class ReservationInfoDialogController:
         self.data_from_reservation = self.db_driver.reserved_room_queries.get_reservation_details(
             self.selected_reservation_id)
 
-    def set_room_number_to_available(self, set_type=None):
-        self.db_driver.room_queries.set_room_status(self.data_from_reservation[8], "available", set_type=set_type)
-
     def load_data_from_reservation(self):
 
-        guest_name = self.db_driver.guest_queries.get_name_from_guest_id(self.data_from_reservation[7])
-        room_type = self.db_driver.room_queries.get_room_type(self.data_from_reservation[8])
+        guest_name = self.db_driver.guest_queries.get_name_from_guest_id(self.data_from_reservation['guest_id'])
+        room_type = self.db_driver.room_queries.get_room_type(self.original_room_number)
 
         self.view.reservation_id_value_label.setText(self.selected_reservation_id)
-        self.view.reservation_status_value_label.setText(self.data_from_reservation[6])
-        self.view.payment_status_value_label.setText(self.data_from_reservation[4])
-        self.view.total_reservation_cost_value_label.setText(f"₱{self.data_from_reservation[5]}")
+        self.view.reservation_status_value_label.setText(self.data_from_reservation['reservation_status'])
+        self.view.payment_status_value_label.setText(self.data_from_reservation['payment_status'])
+        self.view.total_reservation_cost_value_label.setText(f"₱{self.data_from_reservation['total_reservation_cost']}")
 
-        self.view.guest_id_value_label.setText(self.data_from_reservation[7])
+        self.view.guest_id_value_label.setText(self.data_from_reservation['guest_id'])
         self.view.guest_name_value_label.setText(guest_name)
 
-        self.view.check_in_date_time_edit.setDateTime(QDateTime(self.data_from_reservation[2]))
-        self.view.check_out_date_time_edit.setDateTime(QDateTime(self.data_from_reservation[3]))
+        self.view.check_in_date_time_edit.setDateTime(QDateTime(self.data_from_reservation['check_in_date']))
+        self.view.check_out_date_time_edit.setDateTime(QDateTime(self.data_from_reservation['check_out_date']))
 
-        self.view.remaining_balance_value_label.setText(f"₱{self.data_from_reservation[9]}")
+        self.view.remaining_balance_value_label.setText(f"₱{self.data_from_reservation['remaining_balance']}")
 
-        self.view.room_number_combobox.setCurrentText(self.data_from_reservation[8])
+        self.view.room_number_combobox.setCurrentText(self.original_room_number)
         self.view.room_type_combobox.setCurrentText(room_type)
 
     def set_models(self):
-        available_rooms = self.db_driver.room_queries.get_available_rooms()
+        all_rooms = self.db_driver.room_queries.get_all_rooms(enable_pagination=False)
 
-        # list(available_rooms) makes a copy of available_rooms so that it won't be affected
-        self.available_room_numbers_model = AvailableRoomsModel(available_rooms, 0)
-        self.available_room_types_model = AvailableRoomsModel(list(available_rooms), 1)
+        self.room_numbers_model = RoomsModel(all_rooms, model_type='nrd_room_numbers')
+        self.room_types_model = RoomsModel(all_rooms, model_type='nrd_room_types')
 
-        self.view.room_number_combobox.setModel(self.available_room_numbers_model)
+        self.view.room_number_combobox.setModel(self.room_numbers_model)
 
         self.view.room_type_combobox.blockSignals(True)
-        self.view.room_type_combobox.setModel(self.available_room_types_model)
+        self.view.room_type_combobox.setModel(self.room_types_model)
         self.view.room_type_combobox.blockSignals(False)
 
-        availed_services = self.db_driver.availed_service_queries.get_availed_services_from_avail_date(self.data_from_reservation[1])
+        availed_services = self.db_driver.availed_service_queries.get_availed_services_from_avail_date(self.data_from_reservation['last_modified'])
         self.availed_services_model = AvailedServicesModel(availed_services)
 
         available_services = self.db_driver.service_queries.get_all_services()
@@ -346,8 +404,8 @@ class ReservationInfoDialogController:
     def update_models(self, room_type):
 
         if room_type == "-":
-            available_rooms_from_room_type = self.db_driver.room_queries.get_available_rooms()
+            rooms_from_room_type = self.db_driver.room_queries.get_all_rooms(enable_pagination=False)
         else:
-            available_rooms_from_room_type = self.db_driver.room_queries.get_available_rooms(room_type)
+            rooms_from_room_type = self.db_driver.room_queries.get_rooms_from_room_type(room_type)
 
-        self.available_room_numbers_model.set_rooms(available_rooms_from_room_type)
+        self.room_numbers_model.update_data(rooms_from_room_type)

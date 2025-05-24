@@ -6,11 +6,23 @@ class BookedRoomQueries:
         self.db = db
         self.cursor = cursor
 
-    def get_num_of_bookings_from_room(self, room_number):
-        sql = """SELECT COUNT(*) FROM bookedrooms WHERE bookedrooms.room_number=%s AND 
+    def find_booking_by_guest_and_room(self, guest_id, room_id, check_in_date, check_out_date):
+        sql = """SELECT * FROM bookedrooms WHERE bookedrooms.guest_id=%s AND bookedrooms.room_id=%s AND 
+                bookedrooms.check_in_date=%s AND bookedrooms.check_out_date=%s"""
+
+        values = (guest_id, room_id, check_in_date, check_out_date)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        return result[0] if result else None
+
+    def get_num_of_bookings_from_room(self, room_id):
+        sql = """SELECT COUNT(*) FROM bookedrooms WHERE bookedrooms.room_id=%s AND 
                     bookedrooms.check_in_status=%s"""
 
-        values = (room_number, 'in progress')
+        values = (room_id, 'In Progress')
 
         self.cursor.execute(sql, values)
 
@@ -20,7 +32,7 @@ class BookedRoomQueries:
 
     def set_check_out_booking(self, booking_id):
         sql = "UPDATE bookedrooms SET check_in_status=%s, actual_check_out_date=%s WHERE booking_id=%s"
-        values = ('checked out', datetime.now(), booking_id)
+        values = ('Finished', datetime.now(), booking_id)
 
         self.cursor.execute(sql, values)
         self.db.commit()
@@ -37,15 +49,15 @@ class BookedRoomQueries:
 
         sort_type_dict = {"Ascending": "ASC", "Descending": "DESC"}
 
-        view_type_dict = {"Bookings": "WHERE bookedrooms.check_in_status = 'in progress'",
-                          "Past Bookings": "WHERE bookedrooms.check_in_status = 'checked out'",
+        view_type_dict = {"Bookings": "WHERE bookedrooms.check_in_status = 'In Progress'",
+                          "Past Bookings": "WHERE bookedrooms.check_in_status = 'Finished'",
                           "All": ""}
 
         if search_input:
             search_input_query = """ AND 
                         (bookedrooms.booking_id LIKE %s OR 
                         guests.name LIKE %s OR 
-                        bookedrooms.room_number LIKE %s OR 
+                        rooms.room_number LIKE %s OR 
                         rooms.room_type LIKE %s OR
                         DATE_FORMAT(actual_check_in_date, '%%Y-%%m-%%d') LIKE %s OR
                         DATE_FORMAT(check_out_date, '%%Y-%%m-%%d') LIKE %s OR
@@ -61,7 +73,7 @@ class BookedRoomQueries:
                         bookedrooms.actual_check_in_date, bookedrooms.check_out_date, bookedrooms.check_in_status
                         FROM bookedrooms
                         JOIN guests ON bookedrooms.guest_id = guests.guest_id
-                        JOIN rooms ON bookedrooms.room_number = rooms.room_number
+                        JOIN rooms ON bookedrooms.room_id = rooms.room_id
                         {view_type_dict[view_type]}
                         {search_input_query}
                         ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]}"""
@@ -86,7 +98,7 @@ class BookedRoomQueries:
             search_input_query = """ AND 
                         (bookedrooms.booking_id LIKE %s OR 
                         guests.name LIKE %s OR 
-                        bookedrooms.room_number LIKE %s OR 
+                        rooms.room_number LIKE %s OR 
                         rooms.room_type LIKE %s OR
                         DATE_FORMAT(actual_check_in_date, '%%Y-%%m-%%d') LIKE %s OR
                         DATE_FORMAT(check_out_date, '%%Y-%%m-%%d') LIKE %s OR
@@ -101,7 +113,7 @@ class BookedRoomQueries:
         sql = f"""SELECT COUNT(*)
                     FROM bookedrooms
                     JOIN guests ON bookedrooms.guest_id = guests.guest_id
-                    JOIN rooms ON bookedrooms.room_number = rooms.room_number
+                    JOIN rooms ON bookedrooms.room_id = rooms.room_id
                     {view_type_dict[view_type]}
                     {search_input_query}"""
 
@@ -129,7 +141,7 @@ class BookedRoomQueries:
         if check_type not in ["check_in", "check_out"]:
             raise ValueError(f"Invalid check_type: {check_type}. Must be 'check_in' or 'check_out'.")
 
-        sql = f"""SELECT bookedrooms.booking_id, guests.name, bookedrooms.room_number,  bookedrooms.{check_type}_date
+        sql = f"""SELECT bookedrooms.booking_id, guests.name, bookedrooms.room_id,  bookedrooms.{check_type}_date
                 FROM bookedrooms 
                 JOIN guests ON bookedrooms.guest_id = guests.guest_id
                 WHERE bookedrooms.{check_type}_date = CURDATE();"""
@@ -161,7 +173,7 @@ class BookedRoomQueries:
     def add_booked_room(self, booked_room_information):
         sql = """INSERT INTO bookedrooms
                 (booking_id, check_in_status, check_in_date, check_out_date, actual_check_in_date, 
-                actual_check_out_date, guest_id, room_number) VALUES
+                actual_check_out_date, guest_id, room_id) VALUES
                 (%s, %s, %s, %s, %s, %s, %s, %s)"""
 
         latest_booking_id = self.get_latest_booking_id()
@@ -175,14 +187,14 @@ class BookedRoomQueries:
                   booked_room_information["actual_check_in_date"],
                   booked_room_information["actual_check_out_date"],
                   booked_room_information["guest_id"],
-                  booked_room_information["room_number"])
+                  booked_room_information["room_id"])
 
         self.cursor.execute(sql, values)
         self.db.commit()
 
     def update_booked_room(self, old_booking_id, booked_room_information):
         sql = """UPDATE bookedrooms SET booking_id=%s, check_in_status=%s, check_in_date=%s, check_out_date=%s, 
-        guest_id=%s, room_number=%s
+        guest_id=%s, room_id=%s
         WHERE booking_id=%s;"""
 
         values = (booked_room_information[0],

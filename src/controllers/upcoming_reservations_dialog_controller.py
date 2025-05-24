@@ -17,7 +17,9 @@ class UpcomingReservationsDialogController:
         self.view.setup_reservations_label(self.room_number)
 
     def load_reservation_dates(self):
-        reservation_dates = self.db_driver.reserved_room_queries.get_all_check_in_and_check_out_of_room(self.room_number)
+        room_id = self.db_driver.room_queries.get_room_id_from_room_number(self.room_number)
+
+        reservation_dates = self.db_driver.reserved_room_queries.get_all_check_in_and_check_out_of_room(room_id)
 
         for i in range(len(reservation_dates)):
             date_label = QLabel(parent=self.view.reservation_dates_scroll_area_contents)

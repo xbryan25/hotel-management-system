@@ -1,18 +1,20 @@
 from datetime import datetime
 
+from pymysql.cursors import DictCursor
+
 
 class ReservedRoomQueries:
     def __init__(self, db, cursor):
         self.db = db
         self.cursor = cursor
 
-    def get_all_check_in_and_check_out_of_room(self, room_number):
+    def get_all_check_in_and_check_out_of_room(self, room_id):
         sql = """SELECT reservedrooms.check_in_date, reservedrooms.check_out_date FROM reservedrooms 
-                    WHERE reservedrooms.room_number=%s AND 
+                    WHERE reservedrooms.room_id=%s AND 
                     (NOW() < reservedrooms.check_in_date OR
                         NOW() BETWEEN reservedrooms.check_in_date AND reservedrooms.check_out_date)"""
 
-        values = (room_number,)
+        values = (room_id,)
 
         self.cursor.execute(sql, values)
 
@@ -22,11 +24,11 @@ class ReservedRoomQueries:
 
         return list_result
 
-    def get_num_of_reservations_from_room(self, room_number):
-        sql = """SELECT COUNT(*) FROM reservedrooms WHERE reservedrooms.room_number=%s AND 
+    def get_num_of_reservations_from_room(self, room_id):
+        sql = """SELECT COUNT(*) FROM reservedrooms WHERE reservedrooms.room_id=%s AND 
                     reservedrooms.reservation_status=%s"""
 
-        values = (room_number, 'pending')
+        values = (room_id, 'Pending')
 
         self.cursor.execute(sql, values)
 
@@ -50,7 +52,7 @@ class ReservedRoomQueries:
 
     def get_specific_reservation_details(self, column, reservation_id):
         allowed_columns = {'reservation_date', 'check_in_date', 'check_out_date', 'payment_status',
-                           'total_reservation_cost', 'reservation_status', 'guest_id', 'room_number'}
+                           'total_reservation_cost', 'reservation_status', 'guest_id', 'room_id'}
 
         if column not in allowed_columns:
             raise ValueError(f"Invalid column name: {column}")
@@ -67,19 +69,22 @@ class ReservedRoomQueries:
         # TODO: Convert to dictionary soon
 
         sql = f"""SELECT r.reservation_date, r.last_modified, r.check_in_date, r.check_out_date, r.payment_status, 
-                    r.total_reservation_cost, r.reservation_status, r.guest_id, r.room_number,
+                    r.total_reservation_cost, r.reservation_status, r.guest_id, r.room_id,
                     CAST(r.total_reservation_cost - COALESCE(SUM(p.amount), 0) AS SIGNED) AS remaining_balance
                     FROM reservedrooms r
                     JOIN guests ON r.guest_id = guests.guest_id
-                    LEFT JOIN paidrooms p ON r.room_number = p.room_number
+                    LEFT JOIN paidrooms p ON r.room_id = p.room_id
                     AND p.transaction_date BETWEEN r.reservation_date AND r.check_in_date
                     WHERE r.reservation_id = %s
                     GROUP BY r.reservation_id"""
 
         values = (reservation_id,)
 
-        self.cursor.execute(sql, values)
-        result = self.cursor.fetchone()
+        # Used a DictCursor here as there are many results
+        with self.db.cursor(DictCursor) as dict_cursor:
+            dict_cursor.execute(sql, values)
+
+            result = dict_cursor.fetchone()
 
         return result if result else None
 
@@ -89,7 +94,7 @@ class ReservedRoomQueries:
 
         sort_by_dict = {"Reservation ID": "reservedrooms.reservation_id",
                         "Name": "guests.name",
-                        "Room No.": "reservedrooms.room_number",
+                        "Room No.": "rooms.room_number",
                         "Room Type": "rooms.room_type",
                         "Check-In Date": "reservedrooms.check_in_date",
                         "Check-Out Date": "reservedrooms.check_out_date",
@@ -99,17 +104,17 @@ class ReservedRoomQueries:
 
         sort_type_dict = {"Ascending": "ASC", "Descending": "DESC"}
 
-        view_type_dict = {"Reservations": "WHERE reservedrooms.reservation_status = 'pending'",
-                          "Past Reservations": "WHERE reservedrooms.reservation_status IN ('confirmed', 'cancelled', 'expired')",
-                          "Billings": "WHERE reservedrooms.payment_status IN ('not paid', 'partially paid')",
-                          "Past Billings": "WHERE reservedrooms.payment_status = 'fully paid'",
+        view_type_dict = {"Reservations": "WHERE reservedrooms.reservation_status = 'Pending'",
+                          "Past Reservations": "WHERE reservedrooms.reservation_status IN ('Confirmed', 'Cancelled', 'Expired')",
+                          "Billings": "WHERE reservedrooms.payment_status IN ('Not Paid', 'Partially Paid')",
+                          "Past Billings": "WHERE reservedrooms.payment_status = 'Fully Paid'",
                           "All": ""}
 
         if search_input and billing_view_mode:
             search_input_query = """ HAVING 
                         reservedrooms.reservation_id LIKE %s OR 
                         guests.name LIKE %s OR 
-                        reservedrooms.room_number LIKE %s OR 
+                        rooms.room_number LIKE %s OR 
                         reservedrooms.total_reservation_cost LIKE %s OR
                         CAST(reservedrooms.total_reservation_cost - COALESCE(SUM(paidrooms.amount), 0) AS CHAR) LIKE %s
             """
@@ -120,7 +125,7 @@ class ReservedRoomQueries:
             search_input_query = """ AND 
                         (reservedrooms.reservation_id LIKE %s OR 
                         guests.name LIKE %s OR 
-                        reservedrooms.room_number LIKE %s OR 
+                        rooms.room_number LIKE %s OR 
                         rooms.room_type LIKE %s OR
                         DATE_FORMAT(check_in_date, '%%Y-%%m-%%d') LIKE %s OR
                         DATE_FORMAT(check_out_date, '%%Y-%%m-%%d') LIKE %s OR
@@ -135,23 +140,24 @@ class ReservedRoomQueries:
 
         if billing_view_mode:
 
-            sql = f"""SELECT reservedrooms.reservation_id, guests.name, reservedrooms.room_number, 
+            sql = f"""SELECT reservedrooms.reservation_id, guests.name, rooms.room_number, 
                             reservedrooms.total_reservation_cost, 
                             CAST(
                                 CASE 
-                                    WHEN reservedrooms.payment_status = 'fully paid' THEN 0
+                                    WHEN reservedrooms.payment_status = 'Fully Paid' THEN 0
                                     ELSE reservedrooms.total_reservation_cost - COALESCE(SUM(paidrooms.amount), 0)
                                 END AS SIGNED
                             ) AS remaining_balance,
                             reservedrooms.payment_status
                             FROM reservedrooms 
                             JOIN guests ON reservedrooms.guest_id = guests.guest_id
+                            JOIN rooms ON reservedrooms.room_id = rooms.room_id
                             LEFT JOIN paidrooms ON reservedrooms.guest_id = paidrooms.guest_id 
-                                AND reservedrooms.room_number = paidrooms.room_number
+                                AND reservedrooms.room_id = paidrooms.room_id
                                 AND paidrooms.transaction_date BETWEEN reservedrooms.reservation_date AND reservedrooms.check_in_date
                             {view_type_dict[view_type]} 
-                            GROUP BY reservedrooms.reservation_id, guests.name, reservedrooms.room_number,
-                                reservedrooms.total_reservation_cost
+                            GROUP BY reservedrooms.reservation_id, guests.name, rooms.room_number,
+                                reservedrooms.total_reservation_cost, reservedrooms.payment_status
                             {search_input_query}
                             ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]}"""
 
@@ -161,7 +167,7 @@ class ReservedRoomQueries:
                             reservedrooms.reservation_status
                             FROM reservedrooms 
                             JOIN guests ON reservedrooms.guest_id = guests.guest_id
-                            JOIN rooms ON reservedrooms.room_number = rooms.room_number
+                            JOIN rooms ON reservedrooms.room_id = rooms.room_id
                             {view_type_dict[view_type]}
                             {search_input_query}
                             ORDER BY {sort_by_dict[sort_by]} {sort_type_dict[sort_type]}"""
@@ -190,7 +196,7 @@ class ReservedRoomQueries:
             search_input_query = """ HAVING 
                         reservedrooms.reservation_id LIKE %s OR 
                         guests.name LIKE %s OR 
-                        reservedrooms.room_number LIKE %s OR 
+                        rooms.room_number LIKE %s OR 
                         reservedrooms.total_reservation_cost LIKE %s 
                         CAST(reservedrooms.total_reservation_cost - COALESCE(SUM(paidrooms.amount), 0) AS CHAR) AS remaining_balance,
             """
@@ -201,7 +207,7 @@ class ReservedRoomQueries:
             search_input_query = """ AND
                         (reservedrooms.reservation_id LIKE %s OR 
                         guests.name LIKE %s OR 
-                        reservedrooms.room_number LIKE %s OR 
+                        rooms.room_number LIKE %s OR 
                         rooms.room_type LIKE %s OR
                         DATE_FORMAT(check_in_date, '%%Y-%%m-%%d') LIKE %s OR
                         DATE_FORMAT(check_out_date, '%%Y-%%m-%%d') LIKE %s OR
@@ -219,7 +225,7 @@ class ReservedRoomQueries:
                             SELECT reservedrooms.reservation_id
                             FROM reservedrooms 
                             JOIN guests ON reservedrooms.guest_id = guests.guest_id
-                            LEFT JOIN paidrooms ON reservedrooms.room_number = paidrooms.room_number
+                            LEFT JOIN paidrooms ON reservedrooms.room_id = paidrooms.room_id
                                 AND paidrooms.transaction_date BETWEEN reservedrooms.reservation_date AND reservedrooms.check_in_date
                             {view_type_dict[view_type]} 
                             GROUP BY reservedrooms.reservation_id
@@ -229,7 +235,7 @@ class ReservedRoomQueries:
             sql = f"""SELECT COUNT(*)
                         FROM reservedrooms 
                         JOIN guests ON reservedrooms.guest_id = guests.guest_id
-                        JOIN rooms ON reservedrooms.room_number = rooms.room_number
+                        JOIN rooms ON reservedrooms.room_id = rooms.room_id
                         {view_type_dict[view_type]}
                         {search_input_query}"""
 
@@ -255,7 +261,7 @@ class ReservedRoomQueries:
     def add_reserved_room(self, reserved_room_information):
         sql = """INSERT INTO reservedrooms
                 (reservation_id, reservation_date, last_modified, check_in_date, check_out_date, payment_status, 
-                total_reservation_cost, reservation_status, guest_id, room_number) VALUES
+                total_reservation_cost, reservation_status, guest_id, room_id) VALUES
                 (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
         latest_reservation_id = self.get_latest_reservation_id()
@@ -271,7 +277,7 @@ class ReservedRoomQueries:
                   reserved_room_information["total_reservation_cost"],
                   reserved_room_information["reservation_status"],
                   reserved_room_information["guest_id"],
-                  reserved_room_information["room_number"])
+                  reserved_room_information["room_id"])
 
         self.cursor.execute(sql, values)
         self.db.commit()
@@ -282,14 +288,14 @@ class ReservedRoomQueries:
             date_time_now = datetime.now()
 
         sql = """UPDATE reservedrooms SET last_modified=%s, check_in_date=%s, check_out_date=%s, 
-                    total_reservation_cost=%s, room_number=%s
+                    total_reservation_cost=%s, room_id=%s
                     WHERE reservation_id=%s;"""
 
         values = (date_time_now,
                   reserved_room_information['check_in_date'],
                   reserved_room_information['check_out_date'],
                   reserved_room_information['total_reservation_cost'],
-                  reserved_room_information['room_number'],
+                  reserved_room_information['room_id'],
                   reservation_id)
 
         self.cursor.execute(sql, values)

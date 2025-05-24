@@ -43,8 +43,9 @@ class NewReservationDialogController:
         self.view.selected_reservation_duration.connect(self.check_reservation_dates)
 
     def check_reservation_dates(self, new_check_in_date, new_check_out_date):
-        reservation_durations = self.db_driver.reserved_room_queries.get_all_check_in_and_check_out_of_room(
-            self.view.rooms_combobox.currentText())
+        room_id = self.db_driver.room_queries.get_room_id_from_room_number(self.view.rooms_combobox.currentText())
+
+        reservation_durations = self.db_driver.reserved_room_queries.get_all_check_in_and_check_out_of_room(room_id)
 
         has_overlap = False
 
@@ -56,7 +57,7 @@ class NewReservationDialogController:
                     (reservation_duration[0] < new_check_in_date < reservation_duration[1])):
 
                 self.conflict_dialog = FeedbackDialog("Reservation conflict found.",
-                                                      f"Please recheck the reservations of {self.view.rooms_combobox.currentText()}.")
+                                                      f"Please recheck the reservations of '{self.view.rooms_combobox.currentText()}'.")
                 self.conflict_dialog.exec()
 
                 has_overlap = True
@@ -110,8 +111,6 @@ class NewReservationDialogController:
     def set_models(self):
         all_rooms = self.db_driver.room_queries.get_all_rooms(enable_pagination=False)
 
-        # nrd = new_reservation_dialog
-
         self.room_numbers_model = RoomsModel(all_rooms, model_type='nrd_room_numbers')
         self.room_types_model = RoomsModel(all_rooms, model_type='nrd_room_types')
 
@@ -138,17 +137,18 @@ class NewReservationDialogController:
         reservation_inputs = self.view.get_reservation_inputs()
         availed_services_inputs = self.view.get_availed_services_inputs(self.service_frames)
 
-        room_number = reservation_inputs["room_number"]
-
         self.db_driver.guest_queries.add_guest(guest_inputs)
 
         guest_id = self.db_driver.guest_queries.get_guest_id_from_name(guest_inputs["name"])
+        room_id = self.db_driver.room_queries.get_room_id_from_room_number(reservation_inputs["room_number"])
+
         reservation_inputs.update({"guest_id": guest_id})
+        reservation_inputs.update({"room_id": room_id})
 
         self.db_driver.reserved_room_queries.add_reserved_room(reservation_inputs)
         self.db_driver.availed_service_queries.add_availed_services(availed_services_inputs, guest_id)
 
-        self.db_driver.room_queries.set_room_status(room_number, 'reserved')
+        # self.db_driver.room_queries.set_room_status(room_number, 'reserved')
 
         self.success_dialog = FeedbackDialog("Reservation added successfully.", connected_view=self.view)
         self.success_dialog.exec()

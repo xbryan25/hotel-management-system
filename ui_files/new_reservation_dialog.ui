@@ -52,7 +52,113 @@
      </property>
      <widget class="QWidget" name="choose_rooms_page">
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="10" column="0" colspan="2">
+       <property name="horizontalSpacing">
+        <number>6</number>
+       </property>
+       <item row="0" column="0" rowspan="2" colspan="4">
+        <widget class="QFrame" name="group_frame">
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <property name="lineWidth">
+          <number>0</number>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_6">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="reservation_details_label">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>45</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Reservation Details</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="room_reservations_button">
+            <property name="minimumSize">
+             <size>
+              <width>25</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>40</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="text">
+             <string>i</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="5" column="2" colspan="2">
+        <widget class="QLabel" name="rooms_label">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Rooms</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="2" colspan="2">
+        <widget class="QLabel" name="check_out_label">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Check Out</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="0" colspan="2">
         <spacer name="vs_1">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -68,12 +174,37 @@
          </property>
         </spacer>
        </item>
-       <item row="2" column="0" colspan="2">
+       <item row="5" column="0" colspan="2">
+        <widget class="QLabel" name="room_type_filter_label">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Room Type Filter</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0" colspan="2">
         <widget class="QLabel" name="check_in_label">
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>40</height>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>30</height>
           </size>
          </property>
          <property name="text">
@@ -87,87 +218,7 @@
        <item row="6" column="2" colspan="2">
         <widget class="QComboBox" name="rooms_combobox"/>
        </item>
-       <item row="5" column="2">
-        <widget class="QLabel" name="rooms_label">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Rooms</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0" colspan="2">
-        <widget class="QLabel" name="room_type_filter_label">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Room Type Filter</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="3">
-        <widget class="QPushButton" name="room_reservations_button">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="cursor">
-          <cursorShape>PointingHandCursor</cursorShape>
-         </property>
-         <property name="text">
-          <string>Room Reservations</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0" colspan="2">
-        <spacer name="verticalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Fixed</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
        <item row="4" column="0" colspan="2">
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Fixed</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="6" column="0" colspan="2">
-        <widget class="QComboBox" name="room_type_filter_combobox"/>
-       </item>
-       <item row="9" column="0" colspan="2">
-        <widget class="QSpinBox" name="num_of_guests_spinbox"/>
-       </item>
-       <item row="3" column="0" colspan="2">
         <widget class="QDateTimeEdit" name="check_in_date_time_edit">
          <property name="currentSection">
           <enum>QDateTimeEdit::MonthSection</enum>
@@ -180,12 +231,21 @@
          </property>
         </widget>
        </item>
-       <item row="8" column="0" colspan="2">
+       <item row="6" column="0" colspan="2">
+        <widget class="QComboBox" name="room_type_filter_combobox"/>
+       </item>
+       <item row="7" column="0" colspan="2">
         <widget class="QLabel" name="num_of_guests_label">
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>40</height>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>30</height>
           </size>
          </property>
          <property name="text">
@@ -193,46 +253,7 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="2">
-        <widget class="QLabel" name="check_out_label">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Check Out</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="2" colspan="2">
-        <widget class="QDateTimeEdit" name="check_out_date_time_edit">
-         <property name="displayFormat">
-          <string>MMMM dd, yyyy h:mm AP</string>
-         </property>
-         <property name="calendarPopup">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0" colspan="3">
-        <widget class="QLabel" name="reservation_details_label">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>45</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Reservation Details</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="2">
+       <item row="2" column="0" colspan="2">
         <spacer name="verticalSpacer_5">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -248,19 +269,32 @@
          </property>
         </spacer>
        </item>
+       <item row="4" column="2" colspan="2">
+        <widget class="QDateTimeEdit" name="check_out_date_time_edit">
+         <property name="displayFormat">
+          <string>MMMM dd, yyyy h:mm AP</string>
+         </property>
+         <property name="calendarPopup">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0" colspan="2">
+        <widget class="QSpinBox" name="num_of_guests_spinbox"/>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="primary_booker_page">
       <layout class="QGridLayout" name="gridLayout_4">
        <item row="4" column="0">
-        <widget class="QLabel" name="sex_label">
+        <widget class="QLabel" name="gender_label">
          <property name="text">
-          <string>Sex</string>
+          <string>Gender</string>
          </property>
         </widget>
        </item>
        <item row="5" column="0">
-        <widget class="QComboBox" name="sex_combobox">
+        <widget class="QComboBox" name="gender_combobox">
          <item>
           <property name="text">
            <string>Male</string>
@@ -380,7 +414,7 @@
         </widget>
        </item>
        <item row="1" column="0">
-        <spacer name="verticalSpacer_4">
+        <spacer name="vs_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
@@ -425,8 +459,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>492</width>
-            <height>288</height>
+            <width>532</width>
+            <height>298</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="services_scroll_area_grid_layout"/>
@@ -600,7 +634,7 @@
     </widget>
    </item>
    <item row="0" column="0" colspan="2">
-    <spacer name="verticalSpacer">
+    <spacer name="vs_3">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>

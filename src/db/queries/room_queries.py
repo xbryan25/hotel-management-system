@@ -5,9 +5,29 @@ class RoomQueries:
         self.db = db
         self.cursor = cursor
 
-    def get_room_details(self, room_number):
-        sql = "SELECT * FROM rooms WHERE room_number=%s;"
+    def get_room_id_from_room_number(self, room_number):
+        sql = "SELECT rooms.room_id FROM rooms WHERE room_number=%s AND is_active=1;"
         values = (room_number,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        return result[0] if result else None
+
+    def get_room_number_from_room_id(self, room_id):
+        sql = "SELECT rooms.room_number FROM rooms WHERE room_id=%s AND is_active=1;"
+        values = (room_id,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        return result[0] if result else None
+
+    def get_room_details(self, room_number):
+        sql = "SELECT * FROM rooms WHERE rooms.room_number=%s AND rooms.is_active=%s;"
+        values = (room_number, 1)
 
         self.cursor.execute(sql, values)
 
@@ -15,8 +35,18 @@ class RoomQueries:
 
         return result if result else None
 
+    def check_if_image_is_used_by_many_rooms(self, image_file_name):
+        sql = "SELECT CASE WHEN COUNT(*) > 1 THEN 1 ELSE 0 END FROM rooms WHERE image_file_name = %s AND is_active = 1"
+        values = (image_file_name,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        return True if result[0] else False
+
     def check_if_room_number_exists(self, room_number):
-        sql = "SELECT 1 FROM rooms WHERE room_number=%s LIMIT 1;"
+        sql = "SELECT 1 FROM rooms WHERE rooms.room_number=%s AND rooms.is_active = 1 LIMIT 1;"
         values = (room_number,)
 
         self.cursor.execute(sql, values)
@@ -26,8 +56,8 @@ class RoomQueries:
         return result[0] if result else None
 
     def get_room_image(self, room_number):
-        sql = "SELECT rooms.image_file_name FROM rooms WHERE rooms.room_number=%s"
-        values = (room_number,)
+        sql = "SELECT rooms.image_file_name FROM rooms WHERE rooms.room_number=%s AND rooms.is_active=%s"
+        values = (room_number, 1)
 
         self.cursor.execute(sql, values)
 
@@ -48,10 +78,10 @@ class RoomQueries:
         else:
             return False
 
-    def set_room_status(self, room_number, room_status, set_type="final"):
+    def set_room_status(self, room_id, room_status, set_type="final"):
 
-        sql = """UPDATE rooms SET rooms.availability_status=%s WHERE rooms.room_number=%s;"""
-        values = (room_status, room_number)
+        sql = """UPDATE rooms SET rooms.availability_status=%s WHERE rooms.room_id=%s;"""
+        values = (room_status, room_id)
 
         self.cursor.execute(sql, values)
 
@@ -62,21 +92,21 @@ class RoomQueries:
 
     def refresh_all_room_status(self):
         sql = """SELECT 
-                  r.room_number,
+                  r.room_id,
                   COALESCE(
                     CASE
-                      WHEN rr.reservation_status = 'confirmed' AND br.check_in_status != 'checked out' THEN 'occupied'
-                      WHEN rr.reservation_status = 'pending' THEN 'reserved'
+                      WHEN rr.reservation_status = 'confirmed' AND br.check_in_status != 'Finished' THEN 'Occupied'
+                      WHEN rr.reservation_status = 'pending' THEN 'Reserved'
                     END,
                     'available'
                   ) AS current_status
                 FROM rooms r
                 LEFT JOIN reservedrooms rr 
-                  ON r.room_number = rr.room_number
+                  ON r.room_id = rr.room_id
                   AND NOW() BETWEEN rr.check_in_date AND rr.check_out_date
                   AND rr.reservation_status IN ('pending', 'confirmed')
                 LEFT JOIN bookedrooms br
-                  ON r.room_number = br.room_number
+                  ON r.room_id = br.room_id
                   AND NOW() BETWEEN br.check_in_date AND br.check_out_date
                 WHERE r.is_active = 1;"""
 
@@ -91,7 +121,7 @@ class RoomQueries:
                 self.set_room_status(result[i][0], result[i][1], set_type="final")
 
     def get_all_room_status(self):
-        sql = "SELECT rooms.room_number, rooms.availability_status FROM rooms WHERE rooms.is_active=1"
+        sql = "SELECT rooms.room_id, rooms.availability_status FROM rooms WHERE rooms.is_active=1"
 
         self.cursor.execute(sql)
 
@@ -99,9 +129,9 @@ class RoomQueries:
 
         return result
 
-    def get_room_type(self, room_number):
-        sql = "SELECT rooms.room_type FROM rooms WHERE rooms.room_number=%s"
-        values = (room_number,)
+    def get_room_type(self, room_id):
+        sql = "SELECT rooms.room_type FROM rooms WHERE rooms.room_id=%s"
+        values = (room_id,)
 
         self.cursor.execute(sql, values)
 
@@ -109,16 +139,16 @@ class RoomQueries:
 
         return result[0] if result else None
 
-    def get_latest_room_number(self):
+    def get_latest_room_id(self):
 
-        self.cursor.execute("""SELECT room_number FROM rooms
-            ORDER BY CAST(SUBSTRING(room_number, 6) AS UNSIGNED) DESC LIMIT 1;
+        self.cursor.execute("""SELECT room_id FROM rooms
+            ORDER BY CAST(SUBSTRING(room_id, 6) AS UNSIGNED) DESC LIMIT 1;
         """)
 
         result = self.cursor.fetchone()
 
         if not result:
-            return "room-0000"
+            return "room-000000"
         else:
             return result[0]
 
@@ -127,8 +157,8 @@ class RoomQueries:
         sql = f"""SELECT rooms.room_number, rooms.room_type, rooms.daily_rate, rooms.availability_status, 
                         rooms.capacity
                         FROM rooms
-                        WHERE rooms.room_type=%s
-                        ORDER BY rooms.room_number ASC;"""
+                        WHERE rooms.room_type=%s AND rooms.is_active=1
+                        ORDER BY rooms.room_id ASC;"""
 
         values = (room_type,)
 
@@ -192,8 +222,9 @@ class RoomQueries:
         return list_result
 
     def get_room_count(self, availability_status, search_input=None):
-        if availability_status not in ["all", "available", "reserved", "occupied"]:
-            raise ValueError(f"Invalid availability status: {availability_status}. Must be 'all', 'available', 'reserved', or 'occupied'.")
+        if availability_status not in ["All", "Available", "Reserved", "Occupied", "Maintenance", "Not Available"]:
+            raise ValueError(f"Invalid availability status: {availability_status}.\n"
+                             "Must be 'All', 'Available', 'Reserved', 'Occupied', or 'Maintenance', or 'Not Available'.")
 
         if search_input:
             search_input_query = """AND (
@@ -210,7 +241,7 @@ class RoomQueries:
             search_input_query = ""
             values = ()
 
-        if availability_status == "all":
+        if availability_status == "All":
             sql = f"SELECT COUNT(*) FROM rooms WHERE is_active=1 {search_input_query}"
         else:
             sql = f"SELECT COUNT(*) FROM rooms WHERE availability_status=%s AND is_active=1 {search_input_query}"
@@ -224,14 +255,15 @@ class RoomQueries:
 
     def add_room(self, room_information):
         sql = """INSERT INTO rooms
-                (room_number, room_type, daily_rate, availability_status, capacity, is_active, image_file_name) VALUES
-                (%s, %s, %s, %s, %s, %s, %s)"""
+                (room_id, room_number, room_type, daily_rate, availability_status, capacity, is_active, image_file_name) VALUES
+                (%s, %s, %s, %s, %s, %s, %s, %s)"""
 
-        # latest_room_number = self.get_latest_room_number()
-        #
-        # new_room_number = f"room-{int(latest_room_number[6:]) + 1:04}"
+        latest_room_id = self.get_latest_room_id()
 
-        values = (room_information['room_number'],
+        new_room_id = f"room-{int(latest_room_id[6:]) + 1:06}"
+
+        values = (new_room_id,
+                  room_information['room_number'],
                   room_information['room_type'],
                   room_information['daily_rate'],
                   'available',
@@ -244,7 +276,7 @@ class RoomQueries:
 
     def update_room(self, old_room_number, room_information):
         sql = """UPDATE rooms SET room_number=%s, room_type=%s, daily_rate=%s,
-        capacity=%s, image_file_name=%s WHERE room_number=%s"""
+        capacity=%s, image_file_name=%s WHERE room_number=%s AND is_active=1"""
 
         values = (room_information['room_number'],
                   room_information['room_type'],
@@ -258,8 +290,8 @@ class RoomQueries:
 
     def delete_room(self, room_number):
 
-        sql = "DELETE FROM rooms WHERE room_number=%s"
-        values = (room_number)
+        sql = "UPDATE rooms SET is_active=%s, image_file_name=%s WHERE room_number=%s"
+        values = (0, None, room_number)
 
         self.cursor.execute(sql, values)
         self.db.commit()

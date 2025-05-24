@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QDialog, QSpacerItem, QFrame, QHBoxLayout, QLabel, QCheckBox, QSizePolicy, QSpinBox
-from PyQt6.QtGui import QCursor, QFont, QIntValidator
-from PyQt6.QtCore import pyqtSignal, QDateTime, Qt
+from PyQt6.QtGui import QCursor, QFont, QRegularExpressionValidator
+from PyQt6.QtCore import pyqtSignal, QDateTime, Qt, QRegularExpression
 
 from datetime import datetime
 import os
@@ -28,10 +28,10 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
         self.room_label.setText(f"Edit {room_number}")
         self.right_button.setText("Edit room")
 
-        self.room_daily_rate_spinbox.setValue(room_details[2])
-        self.room_capacity_spinbox.setValue(room_details[4])
-        self.room_type_value_combobox.setCurrentText(room_details[1])
-        self.room_number_lineedit.setText(room_number.replace("room-", ""))
+        self.room_daily_rate_spinbox.setValue(room_details[3])
+        self.room_capacity_spinbox.setValue(room_details[5])
+        self.room_type_value_combobox.setCurrentText(room_details[2])
+        self.room_number_lineedit.setText(room_number)
 
     def update_chosen_image_label(self, filename):
         self.chosen_image_label.setText(self.truncate_filename_preserving_ext(filename))
@@ -46,9 +46,11 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
 
     def set_room_number_lineedit_validator(self):
 
-        validator = QIntValidator(1000, 9999)
+        regex = QRegularExpression("^[a-zA-Z0-9]*$")
+        validator = QRegularExpressionValidator(regex)
+
         self.room_number_lineedit.setValidator(validator)
-        self.room_number_lineedit.setMaxLength(4)
+        self.room_number_lineedit.setMaxLength(6)
 
     def confirm_room_addition(self, room_number):
         header_message = "Are you sure you to add this room?"
@@ -58,7 +60,7 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
         self.confirmation_dialog.exec()
 
         if self.confirmation_dialog.get_choice():
-            self.clicked_add_edit_room_button.emit("room-" + room_number)
+            self.clicked_add_edit_room_button.emit(room_number)
 
     def validate_form_completion(self):
         has_chosen_image = True
@@ -75,7 +77,7 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
         if not room_type:
             has_room_type = False
 
-        if len(room_number) != 4 and self.room_number_lineedit.isVisible():
+        if len(room_number) != 6 and self.room_number_lineedit.isVisible():
             is_proper_room_number = False
 
         if has_chosen_image and has_room_type and is_proper_room_number:
@@ -92,7 +94,7 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
 
             elif not is_proper_room_number:
                 header_message = "Room number is not in the proper format."
-                subheader_message = "Format: room-XXXX"
+                subheader_message = "Format: XXXXXX"
 
             elif not has_chosen_image:
                 header_message = "Image has not been chosen."
@@ -108,7 +110,7 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
     def get_room_detail_inputs(self):
         room_detail_inputs = {}
 
-        room_detail_inputs.update({"room_number": "room-" + self.room_number_lineedit.text()})
+        room_detail_inputs.update({"room_number": self.room_number_lineedit.text()})
         room_detail_inputs.update({"room_type": self.room_type_value_combobox.currentText()})
         room_detail_inputs.update({"daily_rate": self.room_daily_rate_spinbox.value()})
         room_detail_inputs.update({"capacity": self.room_capacity_spinbox.value()})
@@ -142,7 +144,6 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
         self.room_capacity_spinbox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
 
         self.room_number_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
-        self.room_leading_text_label.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.room_number_lineedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
 
         self.room_image_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
