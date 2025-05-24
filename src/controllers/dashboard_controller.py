@@ -89,13 +89,13 @@ class DashboardController:
             str(self.db_driver.booked_room_queries.get_count_all_booked_room_today('check_out')))
 
         self.view.available_rooms_frame_num_label.setText(
-            str(self.db_driver.room_queries.get_room_count('available')))
+            str(self.db_driver.room_queries.get_room_count('Available')))
 
         self.view.reserved_rooms_frame_num_label.setText(
-            str(self.db_driver.room_queries.get_room_count('reserved')))
+            str(self.db_driver.room_queries.get_room_count('Reserved')))
 
         self.view.booked_rooms_frame_num_label.setText(
-            str(self.db_driver.room_queries.get_room_count('occupied')))
+            str(self.db_driver.room_queries.get_room_count('Occupied')))
 
     def update_rooms_view(self, room_status):
 

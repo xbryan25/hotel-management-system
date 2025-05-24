@@ -20,7 +20,7 @@ class PaidRoomQueries:
 
     def add_paid_room(self, paid_room_information):
         sql = """INSERT INTO paidrooms
-                (payment_id, payment_type, amount, transaction_date, guest_id, room_number) VALUES
+                (payment_id, payment_type, amount, transaction_date, guest_id, room_id) VALUES
                 (%s, %s, %s, %s, %s, %s)"""
 
         latest_payment_id = self.get_latest_payment_id()
@@ -32,13 +32,13 @@ class PaidRoomQueries:
                   paid_room_information['amount'],
                   paid_room_information['transaction_date'],
                   paid_room_information['guest_id'],
-                  paid_room_information['room_number'])
+                  paid_room_information['room_id'])
 
         self.cursor.execute(sql, values)
         self.db.commit()
 
     def update_paid_room(self, old_payment_id, paid_room_information):
-        sql = """UPDATE paidrooms SET payment_id=%s, payment_type=%s, amount=%s, transaction_date=%s, guest_id=%s, room_number=%s
+        sql = """UPDATE paidrooms SET payment_id=%s, payment_type=%s, amount=%s, transaction_date=%s, guest_id=%s, room_id=%s
         WHERE payment_id=%s;"""
 
         values = (paid_room_information[0],
