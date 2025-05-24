@@ -36,7 +36,8 @@ class ReservationInfoDialogController:
         self.connect_signals_to_slots()
 
         self.view.update_current_date_and_time(self.data_from_reservation['check_in_date'],
-                                               self.data_from_reservation['check_out_date'])
+                                               self.data_from_reservation['check_out_date'],
+                                               mode='same_room')
 
     def check_reservation_dates(self):
         current_check_in_date = self.data_from_reservation['check_in_date']
@@ -96,7 +97,7 @@ class ReservationInfoDialogController:
             return
 
         # Compare selected room
-        if current_data['room_number'] != self.temp_current_room:
+        if current_data['room_number'] != self.original_room_number:
             self.view.enable_edit_reservation_button(True)
             return
 
@@ -137,6 +138,7 @@ class ReservationInfoDialogController:
         if self.view_type == 'current':
             self.view.room_type_changed.connect(self.update_models)
 
+            self.view.room_changed.connect(self.update_current_date_and_time)
             self.view.room_changed.connect(lambda current_room: self.update_total_reservation_cost(current_room=current_room))
             self.view.room_changed.connect(self.has_changes)
 
@@ -160,6 +162,14 @@ class ReservationInfoDialogController:
             self.view.room_reservations_button.clicked.connect(self.open_upcoming_reservations_dialog)
 
             self.view.clicked_proceed_button.connect(self.view.close)
+
+    def update_current_date_and_time(self, room_number):
+        if room_number != self.original_room_number:
+            self.view.update_current_date_and_time(mode='different_room')
+        else:
+            self.view.update_current_date_and_time(self.data_from_reservation['check_in_date'],
+                                                   self.data_from_reservation['check_out_date'],
+                                                   mode='same_room')
 
     def edit_or_cancel_reservation(self, state):
 
@@ -218,7 +228,8 @@ class ReservationInfoDialogController:
                                                                                date_time_now)
 
                 self.db_driver.availed_service_queries.add_availed_services(new_availed_services_inputs,
-                                                                            self.data_from_reservation['guest_id'])
+                                                                            self.data_from_reservation['guest_id'],
+                                                                            date_time_now)
 
                 self.db_driver.reserved_room_queries.update_reserved_room(self.selected_reservation_id,
                                                                           reservation_inputs,
@@ -227,11 +238,11 @@ class ReservationInfoDialogController:
                 new_total = int(reservation_inputs['total_reservation_cost'])
                 amount_already_paid = self.data_from_reservation['total_reservation_cost'] - self.data_from_reservation['remaining_balance']
 
-                if amount_already_paid > 0:
-                    self.db_driver.reserved_room_queries.set_payment_status(self.selected_reservation_id, 'partially paid')
-                else:
+                if amount_already_paid > 0 and amount_already_paid != self.data_from_reservation['total_reservation_cost']:
+                    self.db_driver.reserved_room_queries.set_payment_status(self.selected_reservation_id, 'Partially Paid')
+                elif amount_already_paid == 0:
                     self.db_driver.reserved_room_queries.set_payment_status(self.selected_reservation_id,
-                                                                            'not paid')
+                                                                            'Not Paid')
 
                 # For refund
                 if new_total < amount_already_paid:
@@ -247,7 +258,7 @@ class ReservationInfoDialogController:
                                                                     'guest_id': self.data_from_reservation['guest_id'],
                                                                     'room_id': self.data_from_reservation['room_id']})
 
-                    self.db_driver.reserved_room_queries.set_payment_status(self.selected_reservation_id, 'fully paid')
+                    self.db_driver.reserved_room_queries.set_payment_status(self.selected_reservation_id, 'Fully Paid')
 
                 if self.original_room_number != reservation_inputs["room_number"]:
 

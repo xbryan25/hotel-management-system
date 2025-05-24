@@ -2,6 +2,10 @@ QDialog{
     background-color: #f6f6f6;
 }
 
+QComboBox QAbstractItemView {
+    color: black;
+}
+
 #left_button, #right_button{
     padding: 5px;
     border: 2px solid black;

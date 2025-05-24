@@ -64,28 +64,35 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
         return {"check_in": self.check_in_date_time_edit.dateTime(),
                 "check_out": self.check_out_date_time_edit.dateTime()}
 
-    def update_current_date_and_time(self, previous_check_in_date, previous_check_out_date):
+    def update_current_date_and_time(self, previous_check_in_date=None, previous_check_out_date=None, mode='different_room'):
 
-        min_relaxed = QDateTime.fromString("2000-01-01T00:00:00", "yyyy-MM-ddTHH:mm:ss")
-        self.check_in_date_time_edit.setMinimumDateTime(min_relaxed)
-        self.check_out_date_time_edit.setMinimumDateTime(min_relaxed)
+        if mode == 'different_room':
+            self.check_in_date_time_edit.setDateTime(QDateTime.currentDateTime().addDays(1))
+            self.check_in_date_time_edit.setMinimumDateTime(QDateTime.currentDateTime().addDays(1))
 
-        self.check_in_date_time_edit.setDateTime(previous_check_in_date)
-        self.check_out_date_time_edit.setDateTime(previous_check_out_date)
+            self.check_out_date_time_edit.setDateTime(QDateTime.currentDateTime().addDays(2))
+            self.check_out_date_time_edit.setMinimumDateTime(QDateTime.currentDateTime().addDays(2))
 
-        # Step 3: Compute desired minimums
-        min_check_in = QDateTime.currentDateTime().addDays(1)
-        min_check_out = QDateTime.currentDateTime().addDays(2)
+        elif mode == 'same_room' and previous_check_in_date and previous_check_out_date:
+            min_relaxed = QDateTime.fromString("2000-01-01T00:00:00", "yyyy-MM-ddTHH:mm:ss")
+            self.check_in_date_time_edit.setMinimumDateTime(min_relaxed)
+            self.check_out_date_time_edit.setMinimumDateTime(min_relaxed)
 
-        if self.check_in_date_time_edit.dateTime() >= min_check_in:
-            self.check_in_date_time_edit.setMinimumDateTime(min_check_in)
-        else:
-            self.check_in_date_time_edit.setMinimumDateTime(previous_check_in_date)
+            self.check_in_date_time_edit.setDateTime(previous_check_in_date)
+            self.check_out_date_time_edit.setDateTime(previous_check_out_date)
 
-        if self.check_out_date_time_edit.dateTime() >= min_check_out:
-            self.check_out_date_time_edit.setMinimumDateTime(min_check_out)
-        else:
-            self.check_out_date_time_edit.setMinimumDateTime(previous_check_out_date)
+            min_check_in = QDateTime.currentDateTime().addDays(1)
+            min_check_out = QDateTime.currentDateTime().addDays(2)
+
+            if self.check_in_date_time_edit.dateTime() >= min_check_in:
+                self.check_in_date_time_edit.setMinimumDateTime(min_check_in)
+            else:
+                self.check_in_date_time_edit.setMinimumDateTime(previous_check_in_date)
+
+            if self.check_out_date_time_edit.dateTime() >= min_check_out:
+                self.check_out_date_time_edit.setMinimumDateTime(min_check_out)
+            else:
+                self.check_out_date_time_edit.setMinimumDateTime(previous_check_out_date)
 
     def update_check_out_date_time_edit_min_date(self):
         check_in_date_time_current_value = self.check_in_date_time_edit.dateTime()
