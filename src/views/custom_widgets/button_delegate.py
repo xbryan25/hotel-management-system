@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QStyledItemDelegate, QStyleOptionButton, QApplication, QStyle
-from PyQt6.QtCore import Qt, pyqtSignal, QModelIndex, QSize
+from PyQt6.QtCore import Qt, pyqtSignal, QModelIndex, QSize, QEvent
 from PyQt6.QtGui import QMouseEvent, QCursor, QIcon, QColor, QBrush
 
 
@@ -62,7 +62,7 @@ class ButtonDelegate(QStyledItemDelegate):
         button_rect = option.rect
 
         if button_rect.contains(event.pos()):
-            if event.type() == QMouseEvent.Type.MouseButtonRelease:
+            if event.type() == QEvent.Type.MouseButtonRelease:
                 if button_rect.contains(event.pos()):
                     self.clicked.emit(index)
                     return True

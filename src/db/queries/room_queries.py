@@ -77,6 +77,12 @@ class RoomQueries:
             return True
         else:
             return False
+        
+    def get_available_rooms(self):
+        query = "SELECT * FROM rooms WHERE availability_status = %s"
+        values = ('available',)
+        self.cursor.execute(query, values)
+        return self.cursor.fetchall()
 
     def set_room_status(self, room_id, room_status, set_type="final"):
 
