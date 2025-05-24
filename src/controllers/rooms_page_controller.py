@@ -4,6 +4,8 @@ from models import RoomsModel
 from views import AddEditRoomDialog, ConfirmationDialog, FeedbackDialog
 from controllers.add_edit_room_dialog_controller import AddEditRoomDialogController
 
+import os
+
 
 class RoomsPageController:
     def __init__(self, page_widget, db_driver):
@@ -74,17 +76,19 @@ class RoomsPageController:
 
         if num_of_reservations == 0 and num_of_bookings == 0:
             header_message = "Are you sure you want to delete this room?"
-            subheader_message = "Connected reservations and bookings will also be removed."
+            subheader_message = "This action cannot be undone."
             self.confirmation_dialog = ConfirmationDialog(header_message, subheader_message)
 
             self.confirmation_dialog.exec()
 
             if self.confirmation_dialog.get_choice():
+                self.delete_room_image(room_number)
+
                 self.db_driver.room_queries.delete_room(room_number)
 
                 self.refresh_rooms_data()
 
-                self.success_dialog = FeedbackDialog(f"{room_number} deleted successfully.")
+                self.success_dialog = FeedbackDialog(f"Room {room_number} deleted successfully.")
                 self.success_dialog.exec()
 
         else:
@@ -97,6 +101,15 @@ class RoomsPageController:
             self.feedback_dialog = FeedbackDialog("Room can't be deleted.", subheader_message)
 
             self.feedback_dialog.exec()
+
+    def delete_room_image(self, room_number):
+        room_image_name = self.db_driver.room_queries.get_room_image(room_number)
+
+        file_path = "../resources/icons/rooms_page/room_images/" + room_image_name
+
+        # Check if file exists before deleting
+        if os.path.exists(file_path) and not self.db_driver.room_queries.check_if_image_is_used_by_many_rooms(room_image_name):
+            os.remove(file_path)
 
     def connect_signals_to_slots(self):
 
@@ -192,7 +205,7 @@ class RoomsPageController:
             self.load_data()
 
     def check_if_underflow_contents(self):
-        if self.rooms_model.get_len_of_data() == 0:
+        if self.rooms_model.get_len_of_data() == 0 and self.current_page > 1:
             self.go_to_previous_page()
             return True
 

@@ -25,6 +25,16 @@ class RoomQueries:
 
         return result if result else None
 
+    def check_if_image_is_used_by_many_rooms(self, image_file_name):
+        sql = "SELECT CASE WHEN COUNT(*) > 1 THEN 1 ELSE 0 END FROM rooms WHERE image_file_name = %s AND is_active = 1"
+        values = (image_file_name,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        return True if result[0] else False
+
     def check_if_room_number_exists(self, room_number):
         sql = "SELECT 1 FROM rooms WHERE rooms.room_number=%s AND rooms.is_active = 1 LIMIT 1;"
         values = (room_number,)
@@ -268,10 +278,10 @@ class RoomQueries:
         self.cursor.execute(sql, values)
         self.db.commit()
 
-    def delete_room(self, room_id):
+    def delete_room(self, room_number):
 
-        sql = "UPDATE rooms SET is_active=%s WHERE room_id=%s"
-        values = (0, room_id)
+        sql = "UPDATE rooms SET is_active=%s, image_file_name=%s WHERE room_number=%s"
+        values = (0, None, room_number)
 
         self.cursor.execute(sql, values)
         self.db.commit()

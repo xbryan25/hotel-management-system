@@ -60,7 +60,7 @@ class AddEditRoomDialogController:
     def add_or_edit_room(self, room_number):
 
         if self.db_driver.room_queries.check_if_room_number_exists(room_number) and self.room_number != room_number:
-            self.feedback_dialog = FeedbackDialog(f"{room_number} already exists. Try again.")
+            self.feedback_dialog = FeedbackDialog(f"Room {room_number} already exists. Try again.")
             self.feedback_dialog.exec()
             return
 
