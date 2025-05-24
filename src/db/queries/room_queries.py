@@ -95,8 +95,8 @@ class RoomQueries:
                   r.room_id,
                   COALESCE(
                     CASE
-                      WHEN rr.reservation_status = 'confirmed' AND br.check_in_status != 'checked out' THEN 'occupied'
-                      WHEN rr.reservation_status = 'pending' THEN 'reserved'
+                      WHEN rr.reservation_status = 'confirmed' AND br.check_in_status != 'Finished' THEN 'Occupied'
+                      WHEN rr.reservation_status = 'pending' THEN 'Reserved'
                     END,
                     'available'
                   ) AS current_status
