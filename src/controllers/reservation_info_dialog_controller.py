@@ -283,8 +283,11 @@ class ReservationInfoDialogController:
         self.edit_state = state
 
     def setup_past_view_mode(self):
+        # booking = self.db_driver.booked_rooms_queries.find_booking_by_guest_and_room()
+
         self.view.load_proceed_button()
         self.view.hide_remaining_balance()
+        # self.view.load_booking_details()
 
     def update_total_reservation_cost(self, current_room=None):
 

@@ -6,6 +6,18 @@ class BookedRoomQueries:
         self.db = db
         self.cursor = cursor
 
+    def find_booking_by_guest_and_room(self, guest_id, room_id, check_in_date, check_out_date):
+        sql = """SELECT * FROM bookedrooms WHERE bookedrooms.guest_id=%s AND bookedrooms.room_id=%s AND 
+                bookedrooms.check_in_date=%s AND bookedrooms.check_out_date=%s"""
+
+        values = (guest_id, room_id, check_in_date, check_out_date)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        return result[0] if result else None
+
     def get_num_of_bookings_from_room(self, room_id):
         sql = """SELECT COUNT(*) FROM bookedrooms WHERE bookedrooms.room_id=%s AND 
                     bookedrooms.check_in_status=%s"""
