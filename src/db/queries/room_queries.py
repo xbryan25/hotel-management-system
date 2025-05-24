@@ -5,9 +5,19 @@ class RoomQueries:
         self.db = db
         self.cursor = cursor
 
-    def get_room_details(self, room_id):
-        sql = "SELECT * FROM rooms WHERE room_id=%s;"
+    def get_room_number_from_room_id(self, room_id):
+        sql = "SELECT rooms.room_number FROM rooms WHERE room_id=%s AND is_active=1;"
         values = (room_id,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        return result[0] if result else None
+
+    def get_room_details(self, room_number):
+        sql = "SELECT * FROM rooms WHERE rooms.room_number=%s AND rooms.is_active=%s;"
+        values = (room_number, 1)
 
         self.cursor.execute(sql, values)
 
@@ -16,7 +26,7 @@ class RoomQueries:
         return result if result else None
 
     def check_if_room_number_exists(self, room_number):
-        sql = "SELECT 1 FROM rooms WHERE room_number=%s AND is_active = 1 LIMIT 1;"
+        sql = "SELECT 1 FROM rooms WHERE rooms.room_number=%s AND rooms.is_active = 1 LIMIT 1;"
         values = (room_number,)
 
         self.cursor.execute(sql, values)
@@ -25,9 +35,9 @@ class RoomQueries:
 
         return result[0] if result else None
 
-    def get_room_image(self, room_id):
-        sql = "SELECT rooms.image_file_name FROM rooms WHERE rooms.room_id=%s"
-        values = (room_id,)
+    def get_room_image(self, room_number):
+        sql = "SELECT rooms.image_file_name FROM rooms WHERE rooms.room_number=%s AND rooms.is_active=%s"
+        values = (room_number, 1)
 
         self.cursor.execute(sql, values)
 
@@ -118,7 +128,7 @@ class RoomQueries:
         result = self.cursor.fetchone()
 
         if not result:
-            return "room-0000"
+            return "room-000000"
         else:
             return result[0]
 
@@ -226,7 +236,7 @@ class RoomQueries:
     def add_room(self, room_information):
         sql = """INSERT INTO rooms
                 (room_id, room_number, room_type, daily_rate, availability_status, capacity, is_active, image_file_name) VALUES
-                (%s, %s, %s, %s, %s, %s, %s)"""
+                (%s, %s, %s, %s, %s, %s, %s, %s)"""
 
         latest_room_id = self.get_latest_room_id()
 
@@ -244,16 +254,16 @@ class RoomQueries:
         self.cursor.execute(sql, values)
         self.db.commit()
 
-    def update_room(self, old_room_id, room_information):
+    def update_room(self, old_room_number, room_information):
         sql = """UPDATE rooms SET room_number=%s, room_type=%s, daily_rate=%s,
-        capacity=%s, image_file_name=%s WHERE room_id=%s"""
+        capacity=%s, image_file_name=%s WHERE room_number=%s AND is_active=1"""
 
         values = (room_information['room_number'],
                   room_information['room_type'],
                   room_information['daily_rate'],
                   room_information['capacity'],
                   room_information['image_file_name'],
-                  old_room_id)
+                  old_room_number)
 
         self.cursor.execute(sql, values)
         self.db.commit()

@@ -150,22 +150,6 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="1">
-       <widget class="QLabel" name="room_leading_text_label">
-        <property name="minimumSize">
-         <size>
-          <width>60</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>room-</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="0">
        <widget class="QLabel" name="room_daily_rate_label">
         <property name="minimumSize">
@@ -201,9 +185,6 @@
          </size>
         </property>
        </spacer>
-      </item>
-      <item row="5" column="2">
-       <widget class="QLineEdit" name="room_number_lineedit"/>
       </item>
       <item row="4" column="1" colspan="2">
        <widget class="QLabel" name="room_number_label">
@@ -286,6 +267,9 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item row="5" column="1" colspan="2">
+       <widget class="QLineEdit" name="room_number_lineedit"/>
       </item>
      </layout>
     </widget>
