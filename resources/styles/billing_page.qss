@@ -59,3 +59,7 @@ QComboBox::down-arrow {
 #billings_table_view QHeaderView::section{
     color: black;
 }
+
+#page_number_lineedit{
+    color: #000000;
+}

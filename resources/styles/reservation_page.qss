@@ -27,7 +27,7 @@ QFrame#inner_buttons_and_sections_frame{
     background-color: white;
 }
 
-#current_date_label, #reservation_and_bookings_label{
+#current_date_label, #reservation_and_bookings_label, #page_number_lineedit{
     color: #000000;
 }
 

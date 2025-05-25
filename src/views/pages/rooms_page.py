@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QWidget, QSpacerItem, QSizePolicy, QFrame
-from PyQt6.QtGui import QIcon, QFontDatabase, QFont, QPixmap
+from PyQt6.QtGui import QIcon, QFontDatabase, QFont, QPixmap, QIntValidator
 from PyQt6.QtCore import QSize, pyqtSignal, Qt, QTimer, QThread
 
 from views.custom_widgets import ListRoomsFrame, GridRoomsFrame
@@ -17,6 +17,7 @@ class RoomsPage(QWidget, RoomsPageUI):
     change_view_mode = pyqtSignal(str)
     clicked_add_room_button = pyqtSignal()
     search_text_changed = pyqtSignal(str)
+    page_number_lineedit_changed = pyqtSignal(str)
 
     def __init__(self):
         super().__init__()
@@ -45,6 +46,15 @@ class RoomsPage(QWidget, RoomsPageUI):
 
         self.image_cache = {}
 
+    def update_of_page_number_label(self, total_pages):
+        total_pages = max(total_pages, 1)
+
+        self.of_page_number_label.setText(f"of {total_pages}")
+
+    def set_page_number_lineedit_validator(self, total_pages):
+        validator = QIntValidator(1, total_pages)
+        self.page_number_lineedit.setValidator(validator)
+
     def add_timer_to_search_lineedit(self):
         self.timer = QTimer()
 
@@ -68,6 +78,8 @@ class RoomsPage(QWidget, RoomsPageUI):
 
         self.search_lineedit.textChanged.connect(self.start_debounce_timer)
         self.timer.timeout.connect(self.on_debounced_text_changed)
+
+        self.page_number_lineedit.textChanged.connect(self.page_number_lineedit_changed.emit)
 
     def switch_to_list_view(self):
         self.rooms_view_stacked_widget.setCurrentWidget(self.list_view_widget)
@@ -187,7 +199,7 @@ class RoomsPage(QWidget, RoomsPageUI):
 
         self.clear_dummy_grid_frames(current_max_rows, current_max_columns)
 
-        reusable_frames = self.extract_existing_grid_room_frames(current_max_rows, current_max_columns)
+        reusable_frames = self.extract_existing_grid_room_frames()
 
         counter = 0
         for row in range(new_max_grid_rooms_frame_rows):
@@ -224,10 +236,8 @@ class RoomsPage(QWidget, RoomsPageUI):
         # for column in range(new_max_grid_rooms_frame_columns):
         #     self.grid_view_grid_layout.setColumnStretch(column, 1)
 
-    def extract_existing_grid_room_frames(self, rows, columns):
+    def extract_existing_grid_room_frames(self):
         reusable_frames = []
-
-
         for i in reversed(range(self.grid_view_grid_layout.count())):
             item = self.grid_view_grid_layout.itemAt(i)
             widget = item.widget()
@@ -467,6 +477,9 @@ class RoomsPage(QWidget, RoomsPageUI):
         self.sort_by_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.sort_type_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.add_room_button.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+
+        self.page_number_lineedit.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.of_page_number_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
 
         self.previous_page_button.setFont(QFont("Inter", 11, QFont.Weight.Normal))
         self.next_page_button.setFont(QFont("Inter", 11, QFont.Weight.Normal))

@@ -60,3 +60,7 @@ QTableView{
     background-color: #FFFFFF;
     color: #000000;
 }
+
+#page_number_lineedit{
+    color: #000000;
+}

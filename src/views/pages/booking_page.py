@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QWidget, QTableView, QHeaderView
-from PyQt6.QtGui import QFont
+from PyQt6.QtGui import QFont, QIntValidator
 from PyQt6.QtCore import pyqtSignal, QModelIndex, Qt, QTimer
 
 from ui import BookingPageUI
@@ -13,6 +13,7 @@ class BookingPage(QWidget, BookingPageUI):
     search_text_changed = pyqtSignal(str)
     next_page_button_pressed = pyqtSignal()
     previous_page_button_pressed = pyqtSignal()
+    page_number_lineedit_changed = pyqtSignal(str)
 
     def __init__(self):
         super().__init__()
@@ -29,6 +30,15 @@ class BookingPage(QWidget, BookingPageUI):
 
         self.set_table_views_button_delegate()
         self.disable_table_views_selection_mode()
+
+    def update_of_page_number_label(self, total_pages):
+        total_pages = max(total_pages, 1)
+
+        self.of_page_number_label.setText(f"of {total_pages}")
+
+    def set_page_number_lineedit_validator(self, total_pages):
+        validator = QIntValidator(1, total_pages)
+        self.page_number_lineedit.setValidator(validator)
 
     def add_timer_to_search_lineedit(self):
         self.timer = QTimer()
@@ -111,6 +121,8 @@ class BookingPage(QWidget, BookingPageUI):
         self.next_page_button.clicked.connect(self.next_page_button_pressed.emit)
         self.previous_page_button.clicked.connect(self.previous_page_button_pressed.emit)
 
+        self.page_number_lineedit.textChanged.connect(self.page_number_lineedit_changed.emit)
+
     def get_max_rows_of_bookings_table_view(self):
         self.bookings_table_view.updateGeometry()
         QApplication.processEvents()
@@ -147,6 +159,9 @@ class BookingPage(QWidget, BookingPageUI):
 
         self.bookings_table_view.setFont(QFont("Inter", 10, QFont.Weight.Normal))
         self.bookings_table_view.horizontalHeader().setFont(QFont("Inter", 14, QFont.Weight.Bold))
+
+        self.page_number_lineedit.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.of_page_number_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
 
         self.previous_page_button.setFont(QFont("Inter", 11, QFont.Weight.Normal))
         self.next_page_button.setFont(QFont("Inter", 11, QFont.Weight.Normal))
