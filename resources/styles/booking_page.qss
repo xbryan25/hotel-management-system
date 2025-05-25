@@ -61,6 +61,10 @@ QComboBox::down-arrow {
     color: #000000;
 }
 
+#bookings_table_view QHeaderView::section{
+    color: black;
+}
+
 #bookings_table_view_frame{
     border: 1px solid #CCC;
     background-color: white;

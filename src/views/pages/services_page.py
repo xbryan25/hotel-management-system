@@ -90,7 +90,8 @@ class ServicesPage(QWidget, ServicesPageUI):
             QHeaderView::section {
                 background-color: #FFFFFF;
                 border: none;
-                outline: none; 
+                outline: none;
+                padding-top: 10px; 
             }
         """)
 
