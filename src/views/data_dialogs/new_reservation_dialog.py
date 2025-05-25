@@ -90,6 +90,22 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         checkbox.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         checkbox.setText("")
         checkbox.setObjectName(f"{service[1].replace(" ", "_")}_checkbox")
+        checkbox.setStyleSheet("""
+            QCheckBox::indicator {
+                width: 16px;
+                height: 16px;
+                border: 1px solid #888888;
+                background-color: #f0f0f0;
+            }
+            
+            QCheckBox::indicator:checked {
+                image: url(../resources/icons/check.svg);
+            }
+            
+            QCheckBox::indicator:checked:hover, QCheckBox::indicator:unchecked:hover {
+                background-color: #e0e0e0;
+            }
+        """)
         h_layout.addWidget(checkbox)
 
         spinbox = QSpinBox(parent=frame)
@@ -175,8 +191,8 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         guest_inputs.update({"birth_date": self.birth_date_dateedit.date().toPyDate()})
         guest_inputs.update({"home_address": self.home_address_lineedit.text()})
         guest_inputs.update({"email_address": self.first_name_lineedit.text()})
-        guest_inputs.update({"government_id": self.government_id_lineedit.text()})
-        guest_inputs.update({"phone_number": "1123123"})
+        guest_inputs.update({"government_id": self.government_id_number_lineedit.text()})
+        guest_inputs.update({"phone_number": self.phone_number_lineedit.text()})
 
         return guest_inputs
 
