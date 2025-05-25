@@ -36,9 +36,9 @@ class ServiceQueries:
         values = (service_name,)
 
         self.cursor.execute(sql, values)
-        result = self.cursor.fetchall()
+        result = self.cursor.fetchone()
 
-        return True if result else False
+        return result[0] if result else None
 
     def get_latest_service_id(self):
 

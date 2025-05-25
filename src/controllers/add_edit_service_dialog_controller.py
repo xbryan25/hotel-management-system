@@ -24,28 +24,23 @@ class AddEditServiceDialogController:
         self.view.clicked_right_button.connect(self.add_or_edit_service)
 
     def add_or_edit_service(self):
-        if self.dialog_type == "add_service":
-            self.add_service()
-        else:
-            self.edit_service()
-
-    def add_service(self):
         service_inputs = self.view.get_service_inputs()
 
-        if self.db_driver.service_queries.does_service_name_exist(service_inputs['service_name']):
-            self.fail_dialog = FeedbackDialog("Service name already exists.", "Please input another service name.")
-            self.fail_dialog.exec()
+        service_name_existence = self.db_driver.service_queries.does_service_name_exist(service_inputs['service_name'])
 
-        else:
+        if not service_name_existence and self.dialog_type == "add_service":
             self.db_driver.service_queries.add_service(service_inputs)
 
             self.success_dialog = FeedbackDialog("Service added successfully.", connected_view=self.view)
             self.success_dialog.exec()
+        elif (((not service_name_existence) or (service_name_existence and self.view.service_name_lineedit.text().strip() == ''))
+              and self.dialog_type == "edit_service"):
 
-    def edit_service(self):
-        service_inputs = self.view.get_service_inputs()
+            self.db_driver.service_queries.update_service(self.service_id, service_inputs)
 
-        self.db_driver.service_queries.update_service(self.service_id, service_inputs)
+            self.success_dialog = FeedbackDialog("Service updated successfully.", connected_view=self.view)
+            self.success_dialog.exec()
 
-        self.success_dialog = FeedbackDialog("Service updated successfully.", connected_view=self.view)
-        self.success_dialog.exec()
+        elif service_name_existence:
+            self.fail_dialog = FeedbackDialog("Service name already exists.", "Please input another service name.")
+            self.fail_dialog.exec()

@@ -107,7 +107,9 @@ class InitializeDatabase:
         rate INT NOT NULL, 
         is_active TINYINT NOT NULL,
         
-        PRIMARY KEY (service_id)
+        PRIMARY KEY (service_id),
+        
+        UNIQUE KEY UC_service_name (service_name)
         )""")
 
         self.cursor.execute(f"""CREATE TABLE IF NOT EXISTS availedservices(
