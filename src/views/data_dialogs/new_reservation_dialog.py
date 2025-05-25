@@ -71,8 +71,6 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         self.total_cost_value_label.setText(f"{room_cost + service_cost}")
 
     def create_service_frame(self, service):
-        # TODO: Make this into a file, I guess?
-
 
         frame = QFrame(parent=self.services_scroll_area_contents)
         frame.setFrameShape(QFrame.Shape.StyledPanel)
@@ -100,6 +98,16 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         spinbox.setMinimum(1)
         spinbox.setMaximum(99)
         spinbox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+        spinbox.setStyleSheet("""
+            QSpinBox {
+                background-color: #d9d9d9; 
+                color: #000000;
+            }
+            QSpinBox:disabled {
+                background-color: #f0f0f0;  
+                color: #888888;             
+            }
+        """)
         h_layout.addWidget(spinbox)
 
         checkbox.checkStateChanged.connect(lambda _, f=frame: self.enable_spinbox(f))
@@ -203,7 +211,7 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
                   self.last_name_lineedit.text(),
                   self.home_address_lineedit.text(),
                   self.first_name_lineedit.text(),
-                  self.government_id_lineedit.text()]
+                  self.government_id_number_lineedit.text()]
 
         for value in values:
             if not value:
@@ -284,7 +292,8 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         self.birth_date_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
         self.home_address_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
         self.email_address_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
-        self.government_id_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
+        self.phone_number_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
+        self.government_id_number_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
 
         self.first_name_lineedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.last_name_lineedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
@@ -292,7 +301,8 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         self.birth_date_dateedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.home_address_lineedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.email_address_lineedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
-        self.government_id_lineedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+        self.phone_number_lineedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+        self.government_id_number_lineedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
 
         self.additional_service_label.setFont(QFont("Inter", 18, QFont.Weight.Bold))
 

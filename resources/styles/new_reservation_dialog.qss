@@ -49,12 +49,108 @@ QDialog{
     color: #FFFFFF;
 }
 
-#check_in_date_time_edit, #check_out_date_time_edit, #num_of_guests_spinbox{
-    color: black;
+#first_name_lineedit,
+#last_name_lineedit, #home_address_lineedit,
+#email_address_lineedit, #phone_number_lineedit,
+#government_id_number_lineedit{
+    color: #000000;
 }
 
-#room_type_filter_combobox, #rooms_combobox{
+#room_type_filter_combobox, #rooms_combobox, #gender_combobox, #check_in_date_time_edit, #check_out_date_time_edit,
+#num_of_guests_spinbox, #birth_date_dateedit{
     background-color: #d9d9d9;
-    color: black;
+    color: #000000;
 }
 
+QCalendarWidget QWidget {
+    background-color: #bdbbbb;
+    color: white;
+    font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+    font-size: 10pt;
+    font-weight: normal;
+}
+
+QCalendarWidget QSpinBox {
+    background: transparent;
+    color: #000000;
+}
+
+QCalendarWidget QAbstractItemView {
+    selection-background-color: #0078d7;
+    selection-color: white;
+    gridline-color: #cccccc;
+}
+
+QCalendarWidget QAbstractItemView:hover {
+    background-color: #e0e0e0;
+}
+
+QCalendarWidget QToolButton {
+    background-color: #bfbfbf;
+    color: #FFFFFF;
+    border: none;
+}
+
+QCalendarWidget QTableView QHeaderView::section {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    height: 25px;
+}
+
+QCalendarWidget QAbstractItemView::item:disabled {
+    color: #999999;
+    background-color: transparent;
+}
+
+QScrollBar:vertical {
+    background: #f0f0f0;
+    width: 12px;
+    margin: 0px 0px 0px 0px;
+    border: none;
+}
+
+QScrollBar::handle:vertical {
+    background: #c0c0c0;
+    min-height: 20px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #a0a0a0;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+QScrollBar:horizontal {
+    background: #f0f0f0;
+    height: 12px;
+    margin: 0px 0px 0px 0px;
+    border: none;
+}
+
+QScrollBar::handle:horizontal {
+    background: #c0c0c0;
+    min-width: 20px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #a0a0a0;
+}
+
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    width: 0px;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: none;
+}

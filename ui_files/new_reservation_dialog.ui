@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>880</width>
-    <height>430</height>
+    <height>480</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>880</width>
-    <height>430</height>
+    <height>480</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>880</width>
-    <height>430</height>
+    <height>480</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -117,7 +117,7 @@
          </layout>
         </widget>
        </item>
-       <item row="5" column="2" colspan="2">
+       <item row="4" column="2" colspan="2">
         <widget class="QLabel" name="rooms_label">
          <property name="minimumSize">
           <size>
@@ -136,64 +136,7 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="2" colspan="2">
-        <widget class="QLabel" name="check_out_label">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Check Out</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0" colspan="2">
-        <spacer name="vs_1">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="5" column="0" colspan="2">
-        <widget class="QLabel" name="room_type_filter_label">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Room Type Filter</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0" colspan="2">
+       <item row="2" column="0" colspan="2">
         <widget class="QLabel" name="check_in_label">
          <property name="minimumSize">
           <size>
@@ -215,10 +158,67 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="2" colspan="2">
-        <widget class="QComboBox" name="rooms_combobox"/>
+       <item row="2" column="2" colspan="2">
+        <widget class="QLabel" name="check_out_label">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Check Out</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         </property>
+        </widget>
        </item>
        <item row="4" column="0" colspan="2">
+        <widget class="QLabel" name="room_type_filter_label">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Room Type Filter</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0" colspan="2">
+        <spacer name="vs_1">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Expanding</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="5" column="2" colspan="2">
+        <widget class="QComboBox" name="rooms_combobox"/>
+       </item>
+       <item row="3" column="0" colspan="2">
         <widget class="QDateTimeEdit" name="check_in_date_time_edit">
          <property name="currentSection">
           <enum>QDateTimeEdit::MonthSection</enum>
@@ -231,10 +231,10 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="0" colspan="2">
+       <item row="5" column="0" colspan="2">
         <widget class="QComboBox" name="room_type_filter_combobox"/>
        </item>
-       <item row="7" column="0" colspan="2">
+       <item row="6" column="0" colspan="2">
         <widget class="QLabel" name="num_of_guests_label">
          <property name="minimumSize">
           <size>
@@ -253,8 +253,35 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0" colspan="2">
-        <spacer name="verticalSpacer_5">
+       <item row="3" column="2" colspan="2">
+        <widget class="QDateTimeEdit" name="check_out_date_time_edit">
+         <property name="displayFormat">
+          <string>MMMM dd, yyyy h:mm AP</string>
+         </property>
+         <property name="calendarPopup">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0" colspan="2">
+        <widget class="QSpinBox" name="num_of_guests_spinbox">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="primary_booker_page">
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="11" column="0" colspan="2">
+        <widget class="QLineEdit" name="government_id_number_lineedit"/>
+       </item>
+       <item row="9" column="1">
+        <widget class="QLineEdit" name="phone_number_lineedit"/>
+       </item>
+       <item row="1" column="0">
+        <spacer name="vs_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
@@ -269,32 +296,11 @@
          </property>
         </spacer>
        </item>
-       <item row="4" column="2" colspan="2">
-        <widget class="QDateTimeEdit" name="check_out_date_time_edit">
-         <property name="displayFormat">
-          <string>MMMM dd, yyyy h:mm AP</string>
-         </property>
-         <property name="calendarPopup">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="0" colspan="2">
-        <widget class="QSpinBox" name="num_of_guests_spinbox"/>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="primary_booker_page">
-      <layout class="QGridLayout" name="gridLayout_4">
-       <item row="4" column="0">
-        <widget class="QLabel" name="gender_label">
-         <property name="text">
-          <string>Gender</string>
-         </property>
-        </widget>
-       </item>
        <item row="5" column="0">
         <widget class="QComboBox" name="gender_combobox">
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
          <item>
           <property name="text">
            <string>Male</string>
@@ -317,13 +323,17 @@
          </item>
         </widget>
        </item>
-       <item row="9" column="1">
-        <widget class="QLineEdit" name="government_id_lineedit"/>
-       </item>
        <item row="4" column="1">
         <widget class="QLabel" name="birth_date_label">
          <property name="text">
           <string>Birth Date</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="gender_label">
+         <property name="text">
+          <string>Gender</string>
          </property>
         </widget>
        </item>
@@ -337,24 +347,15 @@
          </property>
         </widget>
        </item>
-       <item row="10" column="0">
-        <spacer name="vs_4">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Fixed</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
        <item row="3" column="0">
         <widget class="QLineEdit" name="first_name_lineedit"/>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLabel" name="email_address_label">
+         <property name="text">
+          <string>Email Address</string>
+         </property>
+        </widget>
        </item>
        <item row="2" column="1">
         <widget class="QLabel" name="last_name_label">
@@ -366,20 +367,6 @@
        <item row="3" column="1">
         <widget class="QLineEdit" name="last_name_lineedit"/>
        </item>
-       <item row="8" column="0">
-        <widget class="QLabel" name="email_address_label">
-         <property name="text">
-          <string>Email Address</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="1">
-        <widget class="QLabel" name="government_id_label">
-         <property name="text">
-          <string>Government ID</string>
-         </property>
-        </widget>
-       </item>
        <item row="9" column="0">
         <widget class="QLineEdit" name="email_address_lineedit"/>
        </item>
@@ -387,16 +374,6 @@
         <widget class="QLabel" name="first_name_label">
          <property name="text">
           <string>First Name</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="QDateEdit" name="birth_date_dateedit">
-         <property name="displayFormat">
-          <string>MMMM dd, yyyy</string>
-         </property>
-         <property name="calendarPopup">
-          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -413,21 +390,29 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <spacer name="vs_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
+       <item row="5" column="1">
+        <widget class="QDateEdit" name="birth_date_dateedit">
+         <property name="displayFormat">
+          <string>MMMM dd, yyyy</string>
          </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Fixed</enum>
+         <property name="calendarPopup">
+          <bool>true</bool>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>20</height>
-          </size>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="QLabel" name="phone_number_label">
+         <property name="text">
+          <string>Phone Number</string>
          </property>
-        </spacer>
+        </widget>
+       </item>
+       <item row="10" column="0">
+        <widget class="QLabel" name="government_id_number_label">
+         <property name="text">
+          <string>Government ID Number</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -459,8 +444,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>532</width>
-            <height>298</height>
+            <width>65</width>
+            <height>18</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="services_scroll_area_grid_layout"/>
