@@ -20,12 +20,16 @@ class AddEditServiceDialog(QDialog, AddEditServiceDialogUI):
         self.load_fonts()
         self.set_external_stylesheet()
 
+        self.dialog_type = 'add_service'
+
     def load_edit_service_view(self, service_id, service_details):
         self.service_label.setText(f"Edit {service_id}")
         self.right_button.setText("Edit Service")
 
         self.service_name_lineedit.setPlaceholderText(service_details[1])
         self.rate_spinbox.setValue(service_details[2])
+
+        self.dialog_type = 'edit_service'
 
     def validate_form_completion(self):
 
@@ -37,7 +41,7 @@ class AddEditServiceDialog(QDialog, AddEditServiceDialogUI):
             self.warning_dialog.exec()
 
     def confirm_service(self):
-        header_message = "Are you sure you want to add this service?"
+        header_message = f"Are you sure you want to {self.dialog_type.replace('_service', '')} this service?"
         subheader_message = "Double check all input fields before proceeding."
         self.confirmation_dialog = ConfirmationDialog(header_message, subheader_message)
 
@@ -51,6 +55,9 @@ class AddEditServiceDialog(QDialog, AddEditServiceDialogUI):
 
         service_inputs.update({"service_name": self.service_name_lineedit.text() if self.service_name_lineedit.text() != ''
                                                 else self.service_name_lineedit.placeholderText().strip()})
+
+        service_inputs.update(
+            {"old_service_name": self.service_name_lineedit.placeholderText().strip()})
 
         service_inputs.update({"rate": self.rate_spinbox.value()})
 
