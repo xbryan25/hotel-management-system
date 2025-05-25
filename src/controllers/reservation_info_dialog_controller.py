@@ -322,8 +322,13 @@ class ReservationInfoDialogController:
         self.service_frames.clear()
 
         for i, service in enumerate(services):
+            is_service_availed = self.availed_services_model.is_service_availed(service[0])
+            is_service_active = self.db_driver.service_queries.get_service_active_status(service[0])
 
-            if self.availed_services_model.is_service_availed(service[0]):
+            if not is_service_availed and not is_service_active:
+                continue
+
+            if is_service_availed:
                 frame = self.view.create_service_frame(self.availed_services_model.get_availed_service_details(service[0]),
                                                        self.edit_state,
                                                        service_type='availed')
@@ -398,8 +403,8 @@ class ReservationInfoDialogController:
         availed_services = self.db_driver.availed_service_queries.get_availed_services_from_avail_date(self.data_from_reservation['last_modified'])
         self.availed_services_model = AvailedServicesModel(availed_services)
 
-        available_services = self.db_driver.service_queries.get_all_services()
-        self.services_model = ServicesModel(available_services)
+        all_services = self.db_driver.service_queries.get_all_services(view_type="All")
+        self.services_model = ServicesModel(all_services)
 
     def update_models(self, room_type):
 

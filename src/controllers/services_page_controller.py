@@ -44,7 +44,7 @@ class ServicesPageController:
 
         selected_service_id = index.sibling(index.row(), 0).data()
 
-        if self.db_driver.service_queries.get_service_active_status(selected_service_id) == 'active':
+        if self.db_driver.service_queries.get_service_active_status(selected_service_id):
             delete_or_restore = "Delete"
             is_active = False
         else:
