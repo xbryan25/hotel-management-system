@@ -1,11 +1,12 @@
 from PyQt6.QtWidgets import QDialog, QSpacerItem, QFrame, QHBoxLayout, QLabel, QCheckBox, QSizePolicy, QSpinBox
-from PyQt6.QtGui import QCursor, QFont
-from PyQt6.QtCore import pyqtSignal, QDateTime, Qt
+from PyQt6.QtGui import QCursor, QFont, QRegularExpressionValidator
+from PyQt6.QtCore import pyqtSignal, QDateTime, Qt, QRegularExpression
 
 from datetime import datetime
 
 from ui import NewReservationDialogUI
-from views import ConfirmationDialog, FeedbackDialog
+from views import ConfirmationDialog, FeedbackDialog, IssuesDialog
+from utils import InputValidators
 
 
 class NewReservationDialog(QDialog, NewReservationDialogUI):
@@ -28,6 +29,25 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
 
         self.load_fonts()
         self.set_external_stylesheet()
+
+        self.set_phone_number_lineedit_validator()
+        self.set_lineedits_max_length()
+
+    def set_phone_number_lineedit_validator(self):
+
+        regex = QRegularExpression("^[0-9]*$")
+        validator = QRegularExpressionValidator(regex)
+
+        self.phone_number_lineedit.setValidator(validator)
+        self.phone_number_lineedit.setMaxLength(11)
+
+    def set_lineedits_max_length(self):
+        self.first_name_lineedit.setMaxLength(127)
+        self.last_name_lineedit.setMaxLength(127)
+
+        self.home_address_lineedit.setMaxLength(255)
+        self.email_address_lineedit.setMaxLength(255)
+        self.government_id_number_lineedit.setMaxLength(255)
 
     def get_check_in_check_out_date_and_time(self):
         return {"check_in": self.check_in_date_time_edit.dateTime(),
@@ -71,8 +91,6 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         self.total_cost_value_label.setText(f"{room_cost + service_cost}")
 
     def create_service_frame(self, service):
-        # TODO: Make this into a file, I guess?
-
 
         frame = QFrame(parent=self.services_scroll_area_contents)
         frame.setFrameShape(QFrame.Shape.StyledPanel)
@@ -92,6 +110,22 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         checkbox.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         checkbox.setText("")
         checkbox.setObjectName(f"{service[1].replace(" ", "_")}_checkbox")
+        checkbox.setStyleSheet("""
+            QCheckBox::indicator {
+                width: 16px;
+                height: 16px;
+                border: 1px solid #888888;
+                background-color: #f0f0f0;
+            }
+            
+            QCheckBox::indicator:checked {
+                image: url(../resources/icons/check.svg);
+            }
+            
+            QCheckBox::indicator:checked:hover, QCheckBox::indicator:unchecked:hover {
+                background-color: #e0e0e0;
+            }
+        """)
         h_layout.addWidget(checkbox)
 
         spinbox = QSpinBox(parent=frame)
@@ -100,6 +134,16 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         spinbox.setMinimum(1)
         spinbox.setMaximum(99)
         spinbox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+        spinbox.setStyleSheet("""
+            QSpinBox {
+                background-color: #d9d9d9; 
+                color: #000000;
+            }
+            QSpinBox:disabled {
+                background-color: #f0f0f0;  
+                color: #888888;             
+            }
+        """)
         h_layout.addWidget(spinbox)
 
         checkbox.checkStateChanged.connect(lambda _, f=frame: self.enable_spinbox(f))
@@ -166,9 +210,9 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         guest_inputs.update({"gender": self.gender_combobox.currentText()})
         guest_inputs.update({"birth_date": self.birth_date_dateedit.date().toPyDate()})
         guest_inputs.update({"home_address": self.home_address_lineedit.text()})
-        guest_inputs.update({"email_address": self.first_name_lineedit.text()})
-        guest_inputs.update({"government_id": self.government_id_lineedit.text()})
-        guest_inputs.update({"phone_number": "1123123"})
+        guest_inputs.update({"email_address": self.email_address_lineedit.text()})
+        guest_inputs.update({"government_id": self.government_id_number_lineedit.text()})
+        guest_inputs.update({"phone_number": self.phone_number_lineedit.text()})
 
         return guest_inputs
 
@@ -197,24 +241,32 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         return availed_services_inputs
 
     def validate_form_completion(self):
-        is_valid = True
 
-        values = [self.first_name_lineedit.text(),
-                  self.last_name_lineedit.text(),
-                  self.home_address_lineedit.text(),
-                  self.first_name_lineedit.text(),
-                  self.government_id_lineedit.text()]
+        guest_inputs = {"First name": self.first_name_lineedit.text(),
+                        "Last name": self.last_name_lineedit.text(),
+                        "Home address": self.home_address_lineedit.text(),
+                        "Email address": self.email_address_lineedit.text(),
+                        "Phone number": self.phone_number_lineedit.text(),
+                        "Government ID number": self.government_id_number_lineedit.text()}
 
-        for value in values:
-            if not value:
-                is_valid = False
-                break
+        issues = ""
 
-        if is_valid:
+        for guest_input in guest_inputs:
+
+            if guest_inputs[guest_input] and guest_input == "Email address" and not InputValidators.is_valid_email(guest_inputs[guest_input]):
+                issues += f"- {guest_input} is invalid.\n"
+
+            elif guest_inputs[guest_input] and guest_input == "Phone number" and not InputValidators.is_valid_phone_number(guest_inputs[guest_input]):
+                issues += f"- {guest_input} is invalid.\n        Format: 09XXXXXXXXX\n"
+
+            elif not guest_inputs[guest_input]:
+                issues += f"- {guest_input} is empty.\n"
+
+        if not issues:
             self.page_change("right_button")
         else:
-            self.warning_dialog = FeedbackDialog("At least one of the fields is blank. Please recheck.")
-            self.warning_dialog.exec()
+            self.issues_dialog = IssuesDialog("Issues found:", issues)
+            self.issues_dialog.exec()
 
     def confirm_reservation(self):
         header_message = "Are you sure you want to make this reservation?"
@@ -284,7 +336,8 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         self.birth_date_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
         self.home_address_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
         self.email_address_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
-        self.government_id_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
+        self.phone_number_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
+        self.government_id_number_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
 
         self.first_name_lineedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.last_name_lineedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
@@ -292,7 +345,8 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         self.birth_date_dateedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.home_address_lineedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.email_address_lineedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
-        self.government_id_lineedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+        self.phone_number_lineedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+        self.government_id_number_lineedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
 
         self.additional_service_label.setFont(QFont("Inter", 18, QFont.Weight.Bold))
 

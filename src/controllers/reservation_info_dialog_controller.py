@@ -173,8 +173,6 @@ class ReservationInfoDialogController:
 
     def edit_or_cancel_reservation(self, state):
 
-        # TODO: Cancel reservation
-
         if state == 'cancel':
 
             # Cancel reservation
@@ -192,7 +190,7 @@ class ReservationInfoDialogController:
                 amount_already_paid = self.data_from_reservation['total_reservation_cost'] - self.data_from_reservation['remaining_balance']
 
                 if amount_already_paid > 0:
-                    self.feedback_dialog = FeedbackDialog("Since partial payments have been done,",
+                    self.feedback_dialog = FeedbackDialog("Since payments have been done,",
                                                           f"the refund will be ₱{amount_already_paid}.")
                     self.feedback_dialog.exec()
 

@@ -24,6 +24,7 @@ from .upcoming_reservations_dialog_ui import Ui_Dialog as UpcomingReservationsDi
 # Popup dialogs
 from .confirmation_dialog_ui import Ui_Dialog as ConfirmationDialogUI
 from .feedback_dialog_ui import Ui_Dialog as FeedbackDialogUI
+from .issues_dialog_ui import Ui_Dialog as IssuesDialogUI
 
 # Custom frames
 from .grid_rooms_frame_ui import Ui_Frame as GridRoomsFrameUI
