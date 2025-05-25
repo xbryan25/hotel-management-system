@@ -100,6 +100,7 @@ class Ui_Dialog(object):
         self.gridLayout_2.addItem(spacerItem2, 1, 0, 1, 1)
         self.room_number_lineedit = QtWidgets.QLineEdit(parent=self.contents_frame)
         self.room_number_lineedit.setObjectName("room_number_lineedit")
+        self.room_number_lineedit.setPlaceholderText("6-digit room number")
         self.gridLayout_2.addWidget(self.room_number_lineedit, 5, 1, 1, 2)
         self.gridLayout.addWidget(self.contents_frame, 1, 0, 1, 1)
 
