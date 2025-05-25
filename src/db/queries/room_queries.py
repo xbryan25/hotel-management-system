@@ -192,7 +192,7 @@ class RoomQueries:
         if sort_by == "status" and enable_pagination:
             sort_by = "availability_status"
 
-        if search_input and enable_pagination:
+        if search_input:
             search_input_query = """ AND (
                       rooms.room_number LIKE %s OR
                       rooms.room_type LIKE %s OR

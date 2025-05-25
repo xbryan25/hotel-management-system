@@ -6,8 +6,7 @@ from ui import DashboardPageUI
 
 
 class DashboardPage(QWidget, DashboardPageUI):
-
-    clicked_new_reservation_button = pyqtSignal()
+    changed_reservations_combobox = pyqtSignal(str)
     changed_room_status = pyqtSignal(str)
 
     def __init__(self):
@@ -44,7 +43,7 @@ class DashboardPage(QWidget, DashboardPageUI):
         self.apply_shadow(self.rooms_frame)
 
     def connect_signals_to_slots(self):
-        self.reservation_list_frame_add_reservation_button.clicked.connect(self.clicked_new_reservation_button.emit)
+        self.reservations_combobox.currentTextChanged.connect(self.changed_reservations_combobox.emit)
         self.rooms_frame_status_combobox.currentTextChanged.connect(self.changed_room_status.emit)
 
     def disable_table_views_selection_mode(self):
@@ -182,11 +181,9 @@ class DashboardPage(QWidget, DashboardPageUI):
         self.recent_check_out_frame_table_view.horizontalHeader().setFont(QFont("Inter", 12, QFont.Weight.DemiBold))
 
         # reservation_list_frame
-        self.reservation_list_frame_label.setFont(QFont("Inter", 16, QFont.Weight.ExtraBold))
-        self.reservation_list_frame_add_reservation_button.setFont(
-            QFont("Inter", 10, QFont.Weight.Normal))
-        self.reservation_list_frame_search_lineedit.setFont(QFont("Inter", 10, QFont.Weight.Normal))
-        self.reservation_list_frame_status_combobox.setFont(QFont("Inter", 10, QFont.Weight.Normal))
+        self.next_label.setFont(QFont("Inter", 16, QFont.Weight.ExtraBold))
+        self.reservations_combobox.setFont(QFont("Inter", 16, QFont.Weight.ExtraBold))
+        self.reservations_label.setFont(QFont("Inter", 16, QFont.Weight.ExtraBold))
         self.reservation_list_frame_table_view.setFont(QFont("Inter", 9, QFont.Weight.Normal))
         self.reservation_list_frame_table_view.horizontalHeader().setFont(QFont("Inter", 12, QFont.Weight.DemiBold))
 

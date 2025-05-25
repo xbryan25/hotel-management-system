@@ -25,21 +25,9 @@ class DashboardController:
         self.sync_timer_to_next_minute()
 
     def connect_signals_to_slots(self):
-        self.view.clicked_new_reservation_button.connect(self.open_new_reservation_dialog)
 
-        self.view.changed_room_status.connect(self.update_rooms_view)
-
-    def open_new_reservation_dialog(self):
-        if self.db_driver.room_queries.has_available_room():
-            self.new_reservation_dialog = NewReservationDialog()
-            self.new_reservation_dialog_controller = NewReservationDialogController(self.new_reservation_dialog, self.db_driver)
-
-            self.new_reservation_dialog.exec()
-
-        else:
-            self.no_room_dialog = FeedbackDialog(header_message="No more available rooms.",
-                                                 subheader_message="Please try again later.")
-            self.no_room_dialog.exec()
+        self.view.changed_reservations_combobox.connect(self.refresh_reservations_view)
+        self.view.changed_room_status.connect(self.refresh_rooms_view)
 
     def update_date_and_time(self):
 
@@ -68,7 +56,12 @@ class DashboardController:
     def set_models(self):
         recent_check_in_initial_data = self.db_driver.booked_room_queries.get_all_booked_room_today("check_in")
         recent_check_out_initial_data = self.db_driver.booked_room_queries.get_all_booked_room_today("check_out")
-        reservations_initial_data = self.db_driver.reserved_room_queries.get_all_reservations()
+        reservations_initial_data = self.db_driver.reserved_room_queries.get_all_reservations(enable_pagination=True,
+                                                                                              max_reservations_per_page=5,
+                                                                                              view_type="Reservations",
+                                                                                              sort_by="Check-In Date",
+                                                                                              sort_type="Ascending")
+
         rooms_initial_data = self.db_driver.room_queries.get_all_rooms()
 
         self.recent_check_in_table_model = RecentStaysModel(recent_check_in_initial_data)
@@ -97,7 +90,19 @@ class DashboardController:
         self.view.booked_rooms_frame_num_label.setText(
             str(self.db_driver.room_queries.get_room_count('Occupied')))
 
-    def update_rooms_view(self, room_status):
+    def refresh_rooms_view(self, room_status):
 
-        rooms_initial_data = self.db_driver.room_queries.get_all_rooms(room_status)
+        if room_status == "All status":
+            room_status = None
+
+        rooms_initial_data = self.db_driver.room_queries.get_all_rooms(search_input=room_status)
         self.rooms_model.update_data(rooms_initial_data)
+
+    def refresh_reservations_view(self, max_rows):
+        reservations_data = self.db_driver.reserved_room_queries.get_all_reservations(enable_pagination=True,
+                                                                                      max_reservations_per_page=int(max_rows),
+                                                                                      view_type="Reservations",
+                                                                                      sort_by="Check-In Date",
+                                                                                      sort_type="Ascending")
+
+        self.reservation_table_model.update_data(reservations_data)

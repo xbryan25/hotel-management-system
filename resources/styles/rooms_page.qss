@@ -27,6 +27,7 @@ QFrame {
 }
 
 #rooms_view_stacked_widget{
+    border: 1px solid #CCC;
     background-color: white;
     border-radius: 10px;
 }
