@@ -57,7 +57,7 @@ QDialog{
 }
 
 #room_type_filter_combobox, #rooms_combobox, #gender_combobox, #check_in_date_time_edit, #check_out_date_time_edit,
-#num_of_guests_spinbox, #birth_date_dateedit{
+#guest_count_spinbox, #birth_date_dateedit{
     background-color: #d9d9d9;
     color: #000000;
 }

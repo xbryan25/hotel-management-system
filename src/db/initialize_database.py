@@ -50,6 +50,7 @@ class InitializeDatabase:
         payment_status ENUM('Not Paid', 'Partially Paid', 'Fully Paid') NOT NULL,
         total_reservation_cost INT NOT NULL,
         reservation_status ENUM('Pending', 'Confirmed', 'Cancelled', 'Expired') NOT NULL,
+        guest_count SMALLINT NOT NULL,
         guest_id VARCHAR(12) NOT NULL, 
         room_id VARCHAR(11) NOT NULL, 
         
