@@ -27,7 +27,7 @@ class DashboardController:
     def connect_signals_to_slots(self):
 
         self.view.changed_reservations_combobox.connect(self.refresh_reservations_view)
-        self.view.changed_room_status.connect(self.update_rooms_view)
+        self.view.changed_room_status.connect(self.refresh_rooms_view)
 
     def update_date_and_time(self):
 
@@ -61,6 +61,7 @@ class DashboardController:
                                                                                               view_type="Reservations",
                                                                                               sort_by="Check-In Date",
                                                                                               sort_type="Ascending")
+
         rooms_initial_data = self.db_driver.room_queries.get_all_rooms()
 
         self.recent_check_in_table_model = RecentStaysModel(recent_check_in_initial_data)
@@ -89,9 +90,12 @@ class DashboardController:
         self.view.booked_rooms_frame_num_label.setText(
             str(self.db_driver.room_queries.get_room_count('Occupied')))
 
-    def update_rooms_view(self, room_status):
+    def refresh_rooms_view(self, room_status):
 
-        rooms_initial_data = self.db_driver.room_queries.get_all_rooms(room_status)
+        if room_status == "All status":
+            room_status = None
+
+        rooms_initial_data = self.db_driver.room_queries.get_all_rooms(search_input=room_status)
         self.rooms_model.update_data(rooms_initial_data)
 
     def refresh_reservations_view(self, max_rows):
