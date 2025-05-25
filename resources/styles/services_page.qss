@@ -66,6 +66,11 @@ QComboBox::down-arrow {
     color: black;
 }
 
+#service_table_view_frame{
+    background-color: white;
+    border-radius: 10px;
+}
+
 #add_service_button{
     background-color: #194FCC;
     color: white;

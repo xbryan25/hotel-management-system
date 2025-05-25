@@ -60,6 +60,11 @@ QComboBox::down-arrow {
     color: black;
 }
 
+#billings_table_view_frame{
+    background-color: white;
+    border-radius: 10px;
+}
+
 #page_number_lineedit{
     color: #000000;
 }

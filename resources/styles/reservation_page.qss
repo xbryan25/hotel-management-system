@@ -64,18 +64,28 @@ QFrame#inner_buttons_and_sections_frame{
     border-radius: 5px;
 }
 
-
 #reservations_table_view{
     border: none;
     background-color: #FFFFFF;
     color: black;
 }
 
-#reservations_table_view QHeaderView::section{
+#reservations_table_view QHeaderView::section {
+    background-color: #FFFFFF;
     color: black;
+    border: none;
+    padding: 5px;
 }
 
-#search_bar_frame, #actions_frame, #reservations_list_label_and_actions_frame, #reservations_table_view_frame, #sections_frame {
+#reservations_table_view_frame {
+    border: 1px solid #CCC;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-color: #FFFFFF;
+}
+
+
+#search_bar_frame, #actions_frame, #reservations_list_label_and_actions_frame, #sections_frame {
     border: none;
 }
 

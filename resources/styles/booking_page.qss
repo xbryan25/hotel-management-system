@@ -56,12 +56,14 @@ QComboBox::down-arrow {
 
 #bookings_table_view{
     border: none;
+    border-radius: 10px;
     background-color: #FFFFFF;
     color: #000000;
 }
 
-#bookings_table_view QHeaderView::section{
-    color: #000000;
+#bookings_table_view_frame{
+    background-color: white;
+    border-radius: 10px;
 }
 
 #page_number_lineedit{
