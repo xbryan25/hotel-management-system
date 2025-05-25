@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QWidget, QTableView, QHeaderView, QApplication
-from PyQt6.QtGui import QFont, QIntValidator
+from PyQt6.QtWidgets import QWidget, QTableView, QHeaderView, QApplication, QGraphicsDropShadowEffect
+from PyQt6.QtGui import QFont, QIntValidator, QColor
 from PyQt6.QtCore import pyqtSignal, QModelIndex, Qt, QTimer
 
 from ui import BillingPageUI
@@ -29,6 +29,20 @@ class BillingPage(QWidget, BillingPageUI):
 
         self.set_external_stylesheet()
         self.load_fonts()
+
+        self.apply_shadow_to_frames()
+
+    @staticmethod
+    def apply_shadow(widget):
+        shadow = QGraphicsDropShadowEffect()
+        shadow.setBlurRadius(15)
+        shadow.setOffset(5, 5)
+        shadow.setColor(QColor(0, 0, 0, 160))
+        widget.setGraphicsEffect(shadow)
+
+    def apply_shadow_to_frames(self):
+        self.apply_shadow(self.billings_table_view_frame)
+        self.apply_shadow(self.actions_frame)
 
     def update_of_page_number_label(self, total_pages):
         total_pages = max(total_pages, 1)

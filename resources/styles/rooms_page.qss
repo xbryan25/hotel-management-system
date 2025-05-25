@@ -26,6 +26,11 @@ QFrame {
     border: none;
 }
 
+#rooms_view_stacked_widget{
+    background-color: white;
+    border-radius: 10px;
+}
+
 
 #unit_room_no_label, #room_type_label, #capacity_label, #rate_label, #status_label, #action_label, #page_number_lineedit{
     color: #000000;
@@ -74,3 +79,7 @@ QFrame {
     border-radius: 5px;
 }
 
+#list_view_button, #grid_view_button{
+    background-color: white;
+    border-radius: 4px;
+}

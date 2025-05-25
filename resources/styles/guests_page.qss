@@ -56,6 +56,11 @@ QComboBox::down-arrow {
     border-radius: 5px;
 }
 
+#guest_table_view_frame{
+    background-color: white;
+    border-radius: 10px;
+}
+
 QTableView{
     background-color: #FFFFFF;
     color: #000000;

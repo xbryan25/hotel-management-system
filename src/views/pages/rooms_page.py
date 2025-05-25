@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QWidget, QSpacerItem, QSizePolicy, QFrame
-from PyQt6.QtGui import QIcon, QFontDatabase, QFont, QPixmap, QIntValidator
+from PyQt6.QtWidgets import QWidget, QSpacerItem, QSizePolicy, QFrame, QGraphicsDropShadowEffect
+from PyQt6.QtGui import QIcon, QFontDatabase, QFont, QPixmap, QIntValidator, QColor
 from PyQt6.QtCore import QSize, pyqtSignal, Qt, QTimer, QThread
 
 from views.custom_widgets import ListRoomsFrame, GridRoomsFrame
@@ -44,7 +44,26 @@ class RoomsPage(QWidget, RoomsPageUI):
 
         self.set_icons()
 
+        self.apply_shadow_to_frames()
+
         self.image_cache = {}
+
+    @staticmethod
+    def apply_shadow(widget):
+        shadow = QGraphicsDropShadowEffect()
+        shadow.setBlurRadius(15)
+        shadow.setOffset(5, 5)
+        shadow.setColor(QColor(0, 0, 0, 160))
+        widget.setGraphicsEffect(shadow)
+
+    def apply_shadow_to_frames(self):
+        self.apply_shadow(self.actions_frame) #include
+
+        #self.apply_shadow(self.page_buttons_frame)
+        #self.apply_shadow(self.page_number_frame)
+        #self.apply_shadow(self.search_bar_frame) #dont include
+        self.apply_shadow(self.rooms_view_stacked_widget)
+
 
     def update_of_page_number_label(self, total_pages):
         total_pages = max(total_pages, 1)
