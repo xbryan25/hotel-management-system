@@ -5,6 +5,16 @@ class ServiceQueries:
         self.db = db
         self.cursor = cursor
 
+    def get_service_id_from_service_name(self, service_name):
+        sql = "SELECT services.service_id FROM services WHERE service_name=%s;"
+        values = (service_name,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        return result[0] if result else None
+
     def get_service_details(self, service_id):
         sql = "SELECT * FROM services WHERE service_id=%s;"
         values = (service_id,)
@@ -29,7 +39,7 @@ class ServiceQueries:
         self.cursor.execute(sql, values)
         result = self.cursor.fetchone()[0]
 
-        return 'active' if result == 1 else 'inactive'
+        return True if result == 1 else False
 
     def does_service_name_exist(self, service_name):
         sql = "SELECT 1 FROM services WHERE service_name = %s LIMIT 1;"
