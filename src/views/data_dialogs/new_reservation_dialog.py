@@ -31,6 +31,7 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         self.set_external_stylesheet()
 
         self.set_phone_number_lineedit_validator()
+        self.set_lineedits_max_length()
 
     def set_phone_number_lineedit_validator(self):
 
@@ -39,6 +40,14 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
 
         self.phone_number_lineedit.setValidator(validator)
         self.phone_number_lineedit.setMaxLength(11)
+
+    def set_lineedits_max_length(self):
+        self.first_name_lineedit.setMaxLength(127)
+        self.last_name_lineedit.setMaxLength(127)
+
+        self.home_address_lineedit.setMaxLength(255)
+        self.email_address_lineedit.setMaxLength(255)
+        self.government_id_number_lineedit.setMaxLength(255)
 
     def get_check_in_check_out_date_and_time(self):
         return {"check_in": self.check_in_date_time_edit.dateTime(),
