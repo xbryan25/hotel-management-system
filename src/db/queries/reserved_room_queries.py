@@ -10,11 +10,11 @@ class ReservedRoomQueries:
 
     def get_all_check_in_and_check_out_of_room(self, room_id):
         sql = """SELECT reservedrooms.check_in_date, reservedrooms.check_out_date FROM reservedrooms 
-                    WHERE reservedrooms.room_id=%s AND 
+                    WHERE reservedrooms.room_id=%s AND reservedrooms.reservation_status = %s AND
                     (NOW() < reservedrooms.check_in_date OR
                         NOW() BETWEEN reservedrooms.check_in_date AND reservedrooms.check_out_date)"""
 
-        values = (room_id,)
+        values = (room_id, 'Pending')
 
         self.cursor.execute(sql, values)
 
