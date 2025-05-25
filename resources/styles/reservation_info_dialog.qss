@@ -6,6 +6,16 @@ QComboBox QAbstractItemView {
     color: black;
 }
 
+QSpinBox {
+    background-color: #d9d9d9;
+    color: #000000;
+}
+
+QSpinBox:disabled {
+    background-color: #f0f0f0;
+    color: #888888;
+}
+
 #left_button, #right_button{
     padding: 5px;
     border: 2px solid black;
@@ -28,3 +38,4 @@ QComboBox QAbstractItemView {
 #check_in_date_time_edit, #check_out_date_time_edit{
     color: #000000;
 }
+

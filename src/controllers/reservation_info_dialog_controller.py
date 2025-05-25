@@ -31,13 +31,20 @@ class ReservationInfoDialogController:
         self.set_models()
         self.load_data_from_reservation()
 
-        self.create_service_frames(self.services_model.get_all())
-
         self.connect_signals_to_slots()
+
+        self.create_service_frames(self.services_model.get_all())
 
         self.view.update_current_date_and_time(self.data_from_reservation['check_in_date'],
                                                self.data_from_reservation['check_out_date'],
                                                mode='same_room')
+
+        self.set_guest_count_spinbox_max_value(self.original_room_number)
+
+    def set_guest_count_spinbox_max_value(self, current_room):
+        max_capacity = self.db_driver.room_queries.get_capacity_from_room_number(current_room)
+
+        self.view.set_guest_count_spinbox_max_value(max_capacity)
 
     def check_reservation_dates(self):
         current_check_in_date = self.data_from_reservation['check_in_date']
@@ -85,19 +92,25 @@ class ReservationInfoDialogController:
             'check_in_date': self.view.check_in_date_time_edit.dateTime(),
             'check_out_date': self.view.check_out_date_time_edit.dateTime(),
             'room_number': self.view.room_number_combobox.currentText(),
-            'availed_services': self.get_services_from_frames()
+            'availed_services': self.get_services_from_frames(),
+            'guest_count': self.view.guest_count_spinbox.value()
         }
 
         # Compare datetime
         if current_data['check_in_date'] != self.data_from_reservation['check_in_date']:
             self.view.enable_edit_reservation_button(True)
             return
+
         if current_data['check_out_date'] != self.data_from_reservation['check_out_date']:
             self.view.enable_edit_reservation_button(True)
             return
 
         # Compare selected room
         if current_data['room_number'] != self.original_room_number:
+            self.view.enable_edit_reservation_button(True)
+            return
+
+        if current_data['guest_count'] != self.data_from_reservation['guest_count']:
             self.view.enable_edit_reservation_button(True)
             return
 
@@ -138,6 +151,7 @@ class ReservationInfoDialogController:
         if self.view_type == 'current':
             self.view.room_type_changed.connect(self.update_models)
 
+            self.view.room_changed.connect(self.set_guest_count_spinbox_max_value)
             self.view.room_changed.connect(self.update_current_date_and_time)
             self.view.room_changed.connect(lambda current_room: self.update_total_reservation_cost(current_room=current_room))
             self.view.room_changed.connect(self.has_changes)
@@ -157,6 +171,8 @@ class ReservationInfoDialogController:
             self.view.spinbox_enabled.connect(self.has_changes)
 
             self.view.room_reservations_button.clicked.connect(self.open_upcoming_reservations_dialog)
+
+            self.view.guest_count_changed.connect(self.has_changes)
 
         else:
             self.view.room_reservations_button.clicked.connect(self.open_upcoming_reservations_dialog)
@@ -385,6 +401,8 @@ class ReservationInfoDialogController:
 
         self.view.room_number_combobox.setCurrentText(self.original_room_number)
         self.view.room_type_combobox.setCurrentText(room_type)
+
+        self.view.guest_count_spinbox.setValue(self.data_from_reservation['guest_count'])
 
     def set_models(self):
         all_rooms = self.db_driver.room_queries.get_all_rooms(enable_pagination=False)

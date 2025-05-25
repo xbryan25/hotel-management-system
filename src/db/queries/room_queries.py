@@ -5,6 +5,16 @@ class RoomQueries:
         self.db = db
         self.cursor = cursor
 
+    def get_capacity_from_room_number(self, room_number):
+        sql = "SELECT rooms.capacity FROM rooms WHERE room_number=%s AND is_active=1;"
+        values = (room_number,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        return result[0] if result else None
+
     def get_room_id_from_room_number(self, room_number):
         sql = "SELECT rooms.room_id FROM rooms WHERE room_number=%s AND is_active=1;"
         values = (room_number,)

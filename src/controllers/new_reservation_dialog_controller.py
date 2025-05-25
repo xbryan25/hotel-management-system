@@ -28,10 +28,17 @@ class NewReservationDialogController:
 
         self.upcoming_reservations_dialog.exec()
 
+    def set_guest_count_spinbox_max_value(self, current_room):
+        max_capacity = self.db_driver.room_queries.get_capacity_from_room_number(current_room)
+
+        self.view.set_guest_count_spinbox_max_value(max_capacity)
+
     def connect_signals_to_slots(self):
         self.view.room_type_changed.connect(self.update_models)
 
         self.view.room_changed.connect(self.calculate_room_cost)
+        self.view.room_changed.connect(self.set_guest_count_spinbox_max_value)
+
         self.view.date_time_changed.connect(self.calculate_room_cost)
 
         self.view.spinbox_enabled.connect(lambda: self.update_total_service_cost(self.service_frames))

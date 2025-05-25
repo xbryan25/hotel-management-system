@@ -33,6 +33,9 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         self.set_phone_number_lineedit_validator()
         self.set_lineedits_max_length()
 
+    def set_guest_count_spinbox_max_value(self, max_value):
+        self.guest_count_spinbox.setMaximum(max_value)
+
     def set_phone_number_lineedit_validator(self):
 
         regex = QRegularExpression("^[0-9]*$")
@@ -227,6 +230,7 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         reservation_inputs.update({"room_number": self.rooms_combobox.currentText()})
         reservation_inputs.update({"total_reservation_cost": self.total_cost_value_label.text()})
         reservation_inputs.update({"reservation_status": "pending"})
+        reservation_inputs.update({"guest_count": int(self.guest_count_spinbox.value())})
 
         return reservation_inputs
 
@@ -321,13 +325,13 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         self.check_out_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
         self.room_type_filter_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
         self.rooms_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
-        self.num_of_guests_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
+        self.guest_count_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
 
         self.check_in_date_time_edit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.check_out_date_time_edit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.room_type_filter_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
         self.rooms_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
-        self.num_of_guests_spinbox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+        self.guest_count_spinbox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
 
         self.primary_booker_label.setFont(QFont("Inter", 18, QFont.Weight.Bold))
         self.first_name_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
@@ -349,16 +353,3 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         self.government_id_number_lineedit.setFont(QFont("Inter", 12, QFont.Weight.Normal))
 
         self.additional_service_label.setFont(QFont("Inter", 18, QFont.Weight.Bold))
-
-
-
-        # self.search_lineedit.setFont(QFont("Inter", 16, QFont.Weight.Normal))
-        #
-        # self.sort_by_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
-        # self.sort_type_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
-        #
-        # self.guest_table_view.setFont(QFont("Inter", 10, QFont.Weight.Normal))
-        # self.guest_table_view.horizontalHeader().setFont(QFont("Inter", 14, QFont.Weight.Bold))
-        #
-        # self.previous_page_button.setFont(QFont("Inter", 11, QFont.Weight.Normal))
-        # self.next_page_button.setFont(QFont("Inter", 11, QFont.Weight.Normal))
