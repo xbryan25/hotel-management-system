@@ -1,12 +1,12 @@
 
 
 class GuestInfoModel:
-    def __init__(self, guest_id, name, sex, home_address, email_address, phone_number, birth_date, government_id,
+    def __init__(self, guest_id, name, gender, home_address, email_address, phone_number, birth_date, government_id,
                  last_visit_date, total_visit_count, total_amount_due):
 
         self.guest_id = guest_id
         self.name = name
-        self.sex = sex
+        self.gender = gender
         self.home_address = home_address
         self.email_address = email_address
         self.phone_number = phone_number
@@ -23,7 +23,7 @@ class GuestInfoModel:
         return {
             "guest_id": self.guest_id,
             "name": self.name,
-            "sex": self.sex,
+            "gender": self.gender,
             "home_address": self.home_address,
             "email_address": self.email_address,
             "phone_number": self.phone_number,
@@ -55,7 +55,7 @@ class GuestInfoModel:
         return cls(
             guest_id=data[0],
             name=data[1],
-            sex=data[2],
+            gender=data[2],
             home_address=data[3],
             email_address=data[4],
             phone_number=data[5],

@@ -56,6 +56,10 @@ QComboBox::down-arrow {
     border-radius: 5px;
 }
 
+#guests_table_view QHeaderView::section{
+    color: black;
+}
+
 #guest_table_view_frame{
     border: 1px solid #CCC;
     background-color: white;

@@ -6,209 +6,28 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>425</width>
-    <height>540</height>
+    <width>450</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>425</width>
-    <height>540</height>
+    <width>450</width>
+    <height>600</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>425</width>
-    <height>540</height>
+    <width>600</width>
+    <height>600</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="1" rowspan="8">
-    <widget class="QStackedWidget" name="information_stacked_widget">
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
-     </property>
-     <property name="lineWidth">
-      <number>0</number>
-     </property>
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
-     <widget class="QWidget" name="view_mode_widget">
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="QLabel" name="guest_id_value_label">
-         <property name="text">
-          <string>-</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="name_value_label">
-         <property name="text">
-          <string>-</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="sex_value_label">
-         <property name="text">
-          <string>-</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="home_address_value_label">
-         <property name="text">
-          <string>-</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="email_address_value_label">
-         <property name="text">
-          <string>-</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="phone_number_value_label">
-         <property name="text">
-          <string>-</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="birth_date_value_label">
-         <property name="text">
-          <string>-</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="government_id_value_label">
-         <property name="text">
-          <string>-</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="edit_mode_widget">
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="QLineEdit" name="guest_id_lineedit">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>27</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="name_lineedit">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>27</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="sex_lineedit">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>27</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="home_address_lineedit">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>27</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="email_address_lineedit">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>27</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="phone_number_lineedit">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>27</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="birth_date_lineedit">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>27</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="government_id_lineedit">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>27</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </widget>
-   </item>
-   <item row="15" column="0" colspan="2">
-    <widget class="QFrame" name="frame">
+   <item row="16" column="0" colspan="2">
+    <widget class="QFrame" name="button_frame">
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -251,38 +70,30 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="0" colspan="2">
-    <widget class="QLabel" name="guest_details_label">
-     <property name="text">
-      <string>Guest Details</string>
-     </property>
-    </widget>
-   </item>
    <item row="3" column="0">
-    <widget class="QLabel" name="name_label">
-     <property name="text">
-      <string>Name</string>
+    <widget class="QLabel" name="guest_id_label">
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>32</height>
+      </size>
      </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="sex_label">
      <property name="text">
-      <string>Sex</string>
+      <string>Guest ID</string>
      </property>
     </widget>
    </item>
    <item row="6" column="0">
-    <widget class="QLabel" name="email_address_label">
-     <property name="text">
-      <string>Email Address</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0">
     <widget class="QLabel" name="home_address_label">
      <property name="text">
       <string>Home Address</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="email_address_label">
+     <property name="text">
+      <string>Email Address</string>
      </property>
     </widget>
    </item>
@@ -302,69 +113,61 @@
      </property>
     </spacer>
    </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="guest_id_label">
+   <item row="12" column="0">
+    <widget class="QLabel" name="last_visit_date_label">
      <property name="minimumSize">
       <size>
-       <width>200</width>
-       <height>0</height>
+       <width>0</width>
+       <height>32</height>
       </size>
      </property>
-     <property name="text">
-      <string>Guest ID</string>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="0">
-    <widget class="QLabel" name="government_id_label">
-     <property name="text">
-      <string>Government ID</string>
-     </property>
-    </widget>
-   </item>
-   <item row="11" column="0">
-    <widget class="QLabel" name="last_visit_date_label">
      <property name="text">
       <string>Last Visit Date</string>
      </property>
     </widget>
    </item>
-   <item row="11" column="1">
-    <widget class="QLabel" name="last_visit_date_value_label">
+   <item row="10" column="0">
+    <widget class="QLabel" name="government_id_number_label">
      <property name="text">
-      <string>-</string>
+      <string>Government ID Number</string>
      </property>
     </widget>
    </item>
-   <item row="12" column="0">
+   <item row="13" column="0">
     <widget class="QLabel" name="total_visit_count_label">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>32</height>
+      </size>
+     </property>
      <property name="text">
       <string>Total Visit Count</string>
      </property>
     </widget>
    </item>
-   <item row="12" column="1">
+   <item row="13" column="1">
     <widget class="QLabel" name="total_visit_count_value_label">
      <property name="text">
       <string>-</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="0">
+   <item row="12" column="1">
+    <widget class="QLabel" name="last_visit_date_value_label">
+     <property name="text">
+      <string>-</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
     <widget class="QLabel" name="phone_number_label">
      <property name="text">
       <string>Phone Number</string>
      </property>
     </widget>
    </item>
-   <item row="8" column="0">
-    <widget class="QLabel" name="birth_date_label">
-     <property name="text">
-      <string>Birth Date</string>
-     </property>
-    </widget>
-   </item>
-   <item row="14" column="0" colspan="2">
+   <item row="15" column="0" colspan="2">
     <spacer name="vs_3">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -380,7 +183,7 @@
      </property>
     </spacer>
    </item>
-   <item row="10" column="0" colspan="2">
+   <item row="11" column="0" colspan="2">
     <spacer name="vs_2">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -396,15 +199,246 @@
      </property>
     </spacer>
    </item>
-   <item row="13" column="0">
+   <item row="9" column="0">
+    <widget class="QLabel" name="birth_date_label">
+     <property name="text">
+      <string>Birth Date</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="name_label">
+     <property name="text">
+      <string>Name</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="2">
+    <widget class="QLabel" name="guest_details_label">
+     <property name="text">
+      <string>Guest Details</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="gender_label">
+     <property name="text">
+      <string>Gender</string>
+     </property>
+    </widget>
+   </item>
+   <item row="14" column="0">
     <widget class="QLabel" name="total_amount_due_label">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>32</height>
+      </size>
+     </property>
      <property name="text">
       <string>Total Amount Due</string>
      </property>
     </widget>
    </item>
-   <item row="13" column="1">
+   <item row="14" column="1">
     <widget class="QLabel" name="total_amount_due_value_label">
+     <property name="text">
+      <string>-</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1" rowspan="7">
+    <widget class="QStackedWidget" name="information_stacked_widget">
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="view_mode_widget">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="name_value_label">
+         <property name="text">
+          <string>-</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="gender_value_label">
+         <property name="text">
+          <string>-</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="home_address_value_label">
+         <property name="text">
+          <string>-</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="email_address_value_label">
+         <property name="text">
+          <string>-</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="phone_number_value_label">
+         <property name="text">
+          <string>-</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="birth_date_value_label">
+         <property name="text">
+          <string>-</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="government_id_number_value_label">
+         <property name="text">
+          <string>-</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="edit_mode_widget">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QLineEdit" name="name_lineedit">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>32</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="gender_combobox">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>32</height>
+          </size>
+         </property>
+         <item>
+          <property name="text">
+           <string>Male</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Female</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Others</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Prefer not to say</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="home_address_lineedit">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>32</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="email_address_lineedit">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>32</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="phone_number_lineedit">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>32</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QDateEdit" name="birth_date_date_edit">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="displayFormat">
+          <string>MMMM d, yyyy</string>
+         </property>
+         <property name="calendarPopup">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="government_id_number_lineedit">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>32</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLabel" name="guest_id_value_label">
      <property name="text">
       <string>-</string>
      </property>

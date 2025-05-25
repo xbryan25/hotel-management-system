@@ -100,7 +100,7 @@ class ReservationPage(QWidget, ReservationPageUI):
                 background-color: #FFFFFF;
                 border: none;
                 outline: none;
-                padding-top: 5px;
+                padding-top: 10px;
             }
         """)
 
