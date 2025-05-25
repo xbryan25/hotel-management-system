@@ -1,11 +1,12 @@
 from PyQt6.QtWidgets import QDialog, QSpacerItem, QFrame, QHBoxLayout, QLabel, QCheckBox, QSizePolicy, QSpinBox
-from PyQt6.QtGui import QCursor, QFont
-from PyQt6.QtCore import pyqtSignal, QDateTime, Qt
+from PyQt6.QtGui import QCursor, QFont, QRegularExpressionValidator
+from PyQt6.QtCore import pyqtSignal, QDateTime, Qt, QRegularExpression
 
 from datetime import datetime
 
 from ui import NewReservationDialogUI
-from views import ConfirmationDialog, FeedbackDialog
+from views import ConfirmationDialog, FeedbackDialog, IssuesDialog
+from utils import InputValidators
 
 
 class NewReservationDialog(QDialog, NewReservationDialogUI):
@@ -28,6 +29,16 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
 
         self.load_fonts()
         self.set_external_stylesheet()
+
+        self.set_phone_number_lineedit_validator()
+
+    def set_phone_number_lineedit_validator(self):
+
+        regex = QRegularExpression("^[0-9]*$")
+        validator = QRegularExpressionValidator(regex)
+
+        self.phone_number_lineedit.setValidator(validator)
+        self.phone_number_lineedit.setMaxLength(11)
 
     def get_check_in_check_out_date_and_time(self):
         return {"check_in": self.check_in_date_time_edit.dateTime(),
@@ -190,7 +201,7 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         guest_inputs.update({"gender": self.gender_combobox.currentText()})
         guest_inputs.update({"birth_date": self.birth_date_dateedit.date().toPyDate()})
         guest_inputs.update({"home_address": self.home_address_lineedit.text()})
-        guest_inputs.update({"email_address": self.first_name_lineedit.text()})
+        guest_inputs.update({"email_address": self.email_address_lineedit.text()})
         guest_inputs.update({"government_id": self.government_id_number_lineedit.text()})
         guest_inputs.update({"phone_number": self.phone_number_lineedit.text()})
 
@@ -221,24 +232,32 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         return availed_services_inputs
 
     def validate_form_completion(self):
-        is_valid = True
 
-        values = [self.first_name_lineedit.text(),
-                  self.last_name_lineedit.text(),
-                  self.home_address_lineedit.text(),
-                  self.first_name_lineedit.text(),
-                  self.government_id_number_lineedit.text()]
+        guest_inputs = {"First name": self.first_name_lineedit.text(),
+                        "Last name": self.last_name_lineedit.text(),
+                        "Home address": self.home_address_lineedit.text(),
+                        "Email address": self.email_address_lineedit.text(),
+                        "Phone number": self.phone_number_lineedit.text(),
+                        "Government ID number": self.government_id_number_lineedit.text()}
 
-        for value in values:
-            if not value:
-                is_valid = False
-                break
+        issues = ""
 
-        if is_valid:
+        for guest_input in guest_inputs:
+
+            if guest_inputs[guest_input] and guest_input == "Email address" and not InputValidators.is_valid_email(guest_inputs[guest_input]):
+                issues += f"- {guest_input} is invalid.\n"
+
+            elif guest_inputs[guest_input] and guest_input == "Phone number" and not InputValidators.is_valid_phone_number(guest_inputs[guest_input]):
+                issues += f"- {guest_input} is invalid.\n        Format: 09XXXXXXXXX\n"
+
+            elif not guest_inputs[guest_input]:
+                issues += f"- {guest_input} is empty.\n"
+
+        if not issues:
             self.page_change("right_button")
         else:
-            self.warning_dialog = FeedbackDialog("At least one of the fields is blank. Please recheck.")
-            self.warning_dialog.exec()
+            self.issues_dialog = IssuesDialog("Issues found:", issues)
+            self.issues_dialog.exec()
 
     def confirm_reservation(self):
         header_message = "Are you sure you want to make this reservation?"
