@@ -61,6 +61,7 @@ QComboBox::down-arrow {
 }
 
 #billings_table_view_frame{
+    border: 1px solid #CCC;
     background-color: white;
     border-radius: 10px;
 }

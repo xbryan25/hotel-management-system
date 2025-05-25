@@ -79,8 +79,7 @@ QFrame#inner_buttons_and_sections_frame{
 
 #reservations_table_view_frame {
     border: 1px solid #CCC;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    border-radius: 10px;
     background-color: #FFFFFF;
 }
 
