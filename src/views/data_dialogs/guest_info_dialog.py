@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QDialog
-from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtCore import pyqtSignal, QDate
 from PyQt6.QtGui import QFont
 
 from datetime import date
@@ -24,26 +24,46 @@ class GuestInfoDialog(QDialog, GuestInfoDialogUI):
 
         self.information_mode = "view"
 
+    @staticmethod
+    def truncate_text(text, max_length=20):
+        if len(text) <= max_length:
+            return filename
+        return text[:max_length] + "..."
+
     def set_guest_info(self, guest_info):
         if self.information_mode == "edit":
-            self.guest_id_lineedit.setPlaceholderText(guest_info["guest_id"])
+            birth_date = guest_info["birth_date"]
+            q_date = QDate(birth_date.year, birth_date.month, birth_date.day)
+
             self.name_lineedit.setPlaceholderText(guest_info["name"])
-            self.sex_lineedit.setPlaceholderText(guest_info["sex"].capitalize())
+            self.gender_combobox.setCurrentText(guest_info["gender"])
             self.home_address_lineedit.setPlaceholderText(guest_info["home_address"])
             self.email_address_lineedit.setPlaceholderText(guest_info["email_address"])
             self.phone_number_lineedit.setPlaceholderText(guest_info["phone_number"])
-            self.birth_date_lineedit.setPlaceholderText(guest_info["birth_date"].strftime("%b %d, %Y"))
-            self.government_id_lineedit.setPlaceholderText(guest_info["government_id"])
+            self.birth_date_date_edit.setDate(q_date)
+            self.government_id_number_lineedit.setPlaceholderText(guest_info["government_id"])
 
         else:
             self.guest_id_value_label.setText(guest_info["guest_id"])
             self.name_value_label.setText(guest_info["name"])
-            self.sex_value_label.setText(guest_info["sex"])
+            self.gender_value_label.setText(guest_info["gender"])
             self.home_address_value_label.setText(guest_info["home_address"])
             self.email_address_value_label.setText(guest_info["email_address"])
             self.phone_number_value_label.setText(guest_info["phone_number"])
             self.birth_date_value_label.setText(guest_info["birth_date"].strftime("%b %d, %Y"))
-            self.government_id_value_label.setText(guest_info["government_id"])
+            self.government_id_number_value_label.setText(guest_info["government_id"])
+
+            self.name_value_label.setText(self.truncate_text(guest_info["name"]))
+            self.name_value_label.setToolTip(guest_info["name"])
+
+            self.home_address_value_label.setText(self.truncate_text(guest_info["home_address"]))
+            self.home_address_value_label.setToolTip(guest_info["home_address"])
+
+            self.email_address_value_label.setText(self.truncate_text(guest_info["email_address"]))
+            self.email_address_value_label.setToolTip(guest_info["email_address"])
+
+            self.government_id_number_value_label.setText(self.truncate_text(guest_info["government_id"]))
+            self.government_id_number_value_label.setToolTip(guest_info["government_id"])
 
         if isinstance(guest_info["last_visit_date"], date):
             self.last_visit_date_value_label.setText(guest_info["last_visit_date"].strftime("%b %d, %Y"))
@@ -86,27 +106,35 @@ class GuestInfoDialog(QDialog, GuestInfoDialogUI):
 
         self.guest_id_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
         self.name_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
-        self.sex_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
+        self.gender_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
         self.home_address_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
         self.email_address_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
         self.phone_number_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
         self.birth_date_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
-        self.government_id_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
+        self.government_id_number_label.setFont(QFont("Inter", 12, QFont.Weight.Bold))
         self.last_visit_date_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
         self.total_visit_count_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
         self.total_amount_due_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
         
         self.guest_id_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
-        self.name_value_label.setFont(QFont("Inter", 10, QFont.Weight.Normal))
-        self.sex_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.name_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.gender_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
         self.home_address_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
         self.email_address_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
         self.phone_number_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
         self.birth_date_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
-        self.government_id_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.government_id_number_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
         self.last_visit_date_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
         self.total_visit_count_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
         self.total_amount_due_value_label.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+
+        self.name_lineedit.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.gender_combobox.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.home_address_lineedit.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.email_address_lineedit.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.phone_number_lineedit.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.birth_date_date_edit.setFont(QFont("Inter", 11, QFont.Weight.Normal))
+        self.government_id_number_lineedit.setFont(QFont("Inter", 11, QFont.Weight.Normal))
 
         self.left_button.setFont(QFont("Inter", 10, QFont.Weight.Bold))
         self.right_button.setFont(QFont("Inter", 10, QFont.Weight.Bold))

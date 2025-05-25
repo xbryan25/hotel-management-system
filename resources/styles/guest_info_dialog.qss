@@ -33,3 +33,9 @@ QPushButton#left_button{
     background-color: #000000;
     color: white;
 }
+
+#name_lineedit, #home_address_lineedit, #email_address_lineedit,
+#phone_number_lineedit, #birth_date_date_edit, #government_id_number_lineedit{
+
+    color: #000000;
+}
