@@ -66,10 +66,9 @@ class ReservedRoomQueries:
         return result[0] if result else None
 
     def get_reservation_details(self, reservation_id):
-        # TODO: Convert to dictionary soon
 
         sql = f"""SELECT r.reservation_date, r.last_modified, r.check_in_date, r.check_out_date, r.payment_status, 
-                    r.total_reservation_cost, r.reservation_status, r.guest_id, r.room_id,
+                    r.total_reservation_cost, r.reservation_status, r.guest_count, r.guest_id, r.room_id,
                     CAST(r.total_reservation_cost - COALESCE(SUM(p.amount), 0) AS SIGNED) AS remaining_balance
                     FROM reservedrooms r
                     JOIN guests ON r.guest_id = guests.guest_id
@@ -261,8 +260,8 @@ class ReservedRoomQueries:
     def add_reserved_room(self, reserved_room_information):
         sql = """INSERT INTO reservedrooms
                 (reservation_id, reservation_date, last_modified, check_in_date, check_out_date, payment_status, 
-                total_reservation_cost, reservation_status, guest_id, room_id) VALUES
-                (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                total_reservation_cost, reservation_status, guest_count, guest_id, room_id) VALUES
+                (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
         latest_reservation_id = self.get_latest_reservation_id()
 
@@ -276,6 +275,7 @@ class ReservedRoomQueries:
                   reserved_room_information["payment_status"],
                   reserved_room_information["total_reservation_cost"],
                   reserved_room_information["reservation_status"],
+                  reserved_room_information["guest_count"],
                   reserved_room_information["guest_id"],
                   reserved_room_information["room_id"])
 
@@ -288,7 +288,7 @@ class ReservedRoomQueries:
             date_time_now = datetime.now()
 
         sql = """UPDATE reservedrooms SET last_modified=%s, check_in_date=%s, check_out_date=%s, 
-                    total_reservation_cost=%s, room_id=%s
+                    total_reservation_cost=%s, room_id=%s, guest_count=%s
                     WHERE reservation_id=%s;"""
 
         values = (date_time_now,
@@ -296,6 +296,7 @@ class ReservedRoomQueries:
                   reserved_room_information['check_out_date'],
                   reserved_room_information['total_reservation_cost'],
                   reserved_room_information['room_id'],
+                  reserved_room_information['guest_count'],
                   reservation_id)
 
         self.cursor.execute(sql, values)

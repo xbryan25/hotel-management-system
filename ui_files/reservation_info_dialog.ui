@@ -669,6 +669,9 @@
    </item>
    <item row="12" column="1">
     <widget class="QSpinBox" name="guest_count_spinbox">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="minimumSize">
       <size>
        <width>0</width>

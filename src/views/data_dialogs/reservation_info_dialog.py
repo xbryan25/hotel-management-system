@@ -20,6 +20,7 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
     room_type_changed = pyqtSignal(str)
     room_changed = pyqtSignal(str)
     date_time_changed = pyqtSignal(str)
+    guest_count_changed = pyqtSignal()
 
     def __init__(self, view_type):
         super().__init__()
@@ -28,12 +29,13 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
         self.dialog_state = 'not editable'
         self.view_type = view_type
 
-        # self.update_current_date_and_time()
-
         self.connect_signals_to_slots()
 
         self.load_fonts()
         self.set_external_stylesheet()
+
+    def set_guest_count_spinbox_max_value(self, max_value):
+        self.guest_count_spinbox.setMaximum(max_value)
 
     def load_proceed_button(self):
         self.left_button.setVisible(False)
@@ -48,6 +50,8 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
 
         self.room_type_combobox.setEnabled(state)
         self.room_number_combobox.setEnabled(state)
+
+        self.guest_count_spinbox.setEnabled(state)
 
         for service_frame in service_frames:
             service_frame.checkbox.setEnabled(state)
@@ -205,6 +209,8 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
             self.room_type_combobox.currentTextChanged.connect(self.room_type_changed.emit)
             self.room_number_combobox.currentTextChanged.connect(self.room_changed.emit)
 
+            self.guest_count_spinbox.valueChanged.connect(self.guest_count_changed.emit)
+
             self.change_button_signals()
 
         else:
@@ -250,6 +256,7 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
         reservation_inputs.update({"check_out_date": self.check_out_date_time_edit.dateTime().toPyDateTime()})
         reservation_inputs.update({"room_number": self.room_number_combobox.currentText()})
         reservation_inputs.update({"total_reservation_cost": self.total_reservation_cost_value_label.text()[1:]})
+        reservation_inputs.update({"guest_count": self.guest_count_spinbox.value()})
 
         return reservation_inputs
 
@@ -328,5 +335,8 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
 
         self.room_number_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
         self.room_number_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+
+        self.guest_count_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
+        self.guest_count_spinbox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
 
         self.availed_services_label.setFont(QFont("Inter", 15, QFont.Weight.Bold))
