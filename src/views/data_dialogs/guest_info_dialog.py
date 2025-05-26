@@ -52,15 +52,13 @@ class GuestInfoDialog(QDialog, GuestInfoDialogUI):
 
     def set_guest_info(self, guest_info):
         if self.information_mode == "edit":
-            birth_date = guest_info["birth_date"]
-            q_date = QDate(birth_date.year, birth_date.month, birth_date.day)
 
             self.name_lineedit.setPlaceholderText(guest_info["name"])
             self.gender_combobox.setCurrentText(guest_info["gender"])
             self.home_address_lineedit.setPlaceholderText(guest_info["home_address"])
             self.email_address_lineedit.setPlaceholderText(guest_info["email_address"])
             self.phone_number_lineedit.setPlaceholderText(guest_info["phone_number"])
-            self.birth_date_date_edit.setDate(q_date)
+            self.birth_date_date_edit.setDate(guest_info["birth_date"].strftime("%B %d, %Y"))
             self.government_id_number_lineedit.setPlaceholderText(guest_info["government_id"])
 
         else:
@@ -70,7 +68,7 @@ class GuestInfoDialog(QDialog, GuestInfoDialogUI):
             self.home_address_value_label.setText(guest_info["home_address"])
             self.email_address_value_label.setText(guest_info["email_address"])
             self.phone_number_value_label.setText(guest_info["phone_number"])
-            self.birth_date_value_label.setText(guest_info["birth_date"].strftime("%b %d, %Y"))
+            self.birth_date_value_label.setText(guest_info["birth_date"].strftime("%B %d, %Y"))
             self.government_id_number_value_label.setText(guest_info["government_id"])
 
             self.name_value_label.setText(self.truncate_text(guest_info["name"]))

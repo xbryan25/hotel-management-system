@@ -1,7 +1,9 @@
 from datetime import datetime
 
 from models import BookingModel
-from views.message_dialogs import ConfirmationDialog, FeedbackDialog
+
+from views import BookingInfoDialog, ConfirmationDialog, FeedbackDialog
+from controllers.booking_info_dialog_controller import BookingInfoDialogController
 
 
 class BookingsPageController:
@@ -24,6 +26,18 @@ class BookingsPageController:
     def set_page_number_lineedit_validator(self, total_pages):
         self.view.set_page_number_lineedit_validator(total_pages)
 
+    def open_booking_info_dialog(self, index):
+        selected_booking_id = index.sibling(index.row(), 0).data()
+
+        self.booking_info_dialog = BookingInfoDialog()
+        self.booking_info_dialog_controller = BookingInfoDialogController(self.booking_info_dialog,
+                                                                          self.db_driver,
+                                                                          selected_booking_id)
+
+        self.booking_info_dialog.exec()
+
+        # self.refresh_reservations_data()
+
     def connect_signals_to_slots(self):
         self.view.window_resized.connect(self.update_row_count)
 
@@ -31,7 +45,7 @@ class BookingsPageController:
         self.view.sort_type_combobox.currentTextChanged.connect(self.refresh_bookings_data)
         self.view.view_type_combobox.currentTextChanged.connect(self.refresh_bookings_data)
 
-        self.view.clicked_info_button.connect(lambda: print("clicked info button"))
+        self.view.clicked_info_button.connect(self.open_booking_info_dialog)
         self.view.clicked_check_out_button.connect(self.booking_check_out)
 
         self.view.search_text_changed.connect(self.update_prev_search_input)
