@@ -58,7 +58,7 @@ QFrame {
 }
 
 #search_lineedit{
-    background-color: #BDBDC1;
+    background-color: #FFFFFF;
     color: #000000;
     border: 1px solid #000000;
 
