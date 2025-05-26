@@ -196,8 +196,8 @@ class GuestInfoDialog(QDialog, GuestInfoDialogUI):
         self.birth_date_date_edit.setFont(QFont("Inter", 11, QFont.Weight.Normal))
         self.government_id_number_lineedit.setFont(QFont("Inter", 11, QFont.Weight.Normal))
 
-        self.left_button.setFont(QFont("Inter", 10, QFont.Weight.Bold))
-        self.right_button.setFont(QFont("Inter", 10, QFont.Weight.Bold))
+        self.left_button.setFont(QFont("Inter", 15, QFont.Weight.Bold))
+        self.right_button.setFont(QFont("Inter", 15, QFont.Weight.Bold))
 
     def set_external_stylesheet(self):
         with open("../resources/styles/guest_info_dialog.qss", "r") as file:
