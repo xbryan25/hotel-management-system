@@ -1,11 +1,12 @@
 from PyQt6.QtWidgets import QDialog
-from PyQt6.QtCore import pyqtSignal, QDate
-from PyQt6.QtGui import QFont
+from PyQt6.QtCore import pyqtSignal, QDate, QRegularExpression
+from PyQt6.QtGui import QFont, QRegularExpressionValidator
 
 from datetime import date
 
-from views import ConfirmationDialog
+from views import ConfirmationDialog, IssuesDialog
 from ui import GuestInfoDialogUI
+from utils import InputValidators
 
 
 class GuestInfoDialog(QDialog, GuestInfoDialogUI):
@@ -25,6 +26,23 @@ class GuestInfoDialog(QDialog, GuestInfoDialogUI):
         self.load_fonts()
 
         self.information_mode = "view"
+
+        self.set_phone_number_lineedit_validator()
+        self.set_lineedits_max_length()
+
+    def set_phone_number_lineedit_validator(self):
+
+        regex = QRegularExpression("^[0-9]*$")
+        validator = QRegularExpressionValidator(regex)
+
+        self.phone_number_lineedit.setValidator(validator)
+        self.phone_number_lineedit.setMaxLength(11)
+
+    def set_lineedits_max_length(self):
+        self.name_lineedit.setMaxLength(255)
+        self.home_address_lineedit.setMaxLength(255)
+        self.email_address_lineedit.setMaxLength(255)
+        self.government_id_number_lineedit.setMaxLength(255)
 
     @staticmethod
     def truncate_text(text, max_length=20):
@@ -75,6 +93,29 @@ class GuestInfoDialog(QDialog, GuestInfoDialogUI):
         self.total_visit_count_value_label.setText(str(guest_info["total_visit_count"]))
         self.total_amount_due_value_label.setText(guest_info["total_amount_due"])
 
+    def validate_form_completion(self):
+
+        guest_inputs = self.get_guest_inputs()
+
+        issues = ""
+
+        for guest_input in guest_inputs:
+
+            if guest_inputs[guest_input] and guest_input == "email_address" and not InputValidators.is_valid_email(guest_inputs[guest_input]):
+                issues += f"- Email address is invalid.\n"
+
+            elif guest_inputs[guest_input] and guest_input == "phone_number" and not InputValidators.is_valid_phone_number(guest_inputs[guest_input]):
+                issues += f"- Phone number is invalid.\n        Format: 09XXXXXXXXX\n"
+
+            elif not guest_inputs[guest_input]:
+                issues += f"- {guest_input} is empty.\n"
+
+        if not issues:
+            self.confirm_edit_guest_info()
+        else:
+            self.issues_dialog = IssuesDialog("Issues found:", issues)
+            self.issues_dialog.exec()
+
     def get_guest_inputs(self):
         guest_inputs = {}
 
@@ -104,7 +145,7 @@ class GuestInfoDialog(QDialog, GuestInfoDialogUI):
         self.right_button.setText("Save changes?")
 
         self.left_button.clicked.connect(self.reconnect_to_default_signals)
-        self.right_button.clicked.connect(self.confirm_edit_guest_info)
+        self.right_button.clicked.connect(self.validate_form_completion)
 
         self.information_stacked_widget.setCurrentWidget(self.edit_mode_widget)
         self.information_mode = "edit"
