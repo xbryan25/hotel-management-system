@@ -16,7 +16,7 @@ QPushButton#right_button{
     color: #D11A2A;
 }
 
-QPushButton#left_button{
+#left_button{
     border: 1px solid #000000;
     background-color: #FFFFFF;
     color: #000000;

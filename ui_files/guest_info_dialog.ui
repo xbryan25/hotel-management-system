@@ -47,7 +47,7 @@
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
         <property name="text">
-         <string>Edit Guest</string>
+         <string>Close Dialog</string>
         </property>
        </widget>
       </item>
@@ -63,7 +63,7 @@
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
         <property name="text">
-         <string>Delete Guest</string>
+         <string>Edit Guest</string>
         </property>
        </widget>
       </item>

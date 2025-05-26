@@ -27,7 +27,7 @@ class GuestInfoDialog(QDialog, GuestInfoDialogUI):
     @staticmethod
     def truncate_text(text, max_length=20):
         if len(text) <= max_length:
-            return filename
+            return text
         return text[:max_length] + "..."
 
     def set_guest_info(self, guest_info):
@@ -83,23 +83,15 @@ class GuestInfoDialog(QDialog, GuestInfoDialogUI):
 
     def confirm_edit_status(self):
         self.disconnect_signals()
-        self.left_button.setText("Proceed editing?")
-        self.right_button.setText("Cancel editing?")
+        self.left_button.setText("Cancel editing?")
+        self.right_button.setText("Save changes?")
 
-        self.left_button.clicked.connect(lambda: print("Edited guest"))
-        self.right_button.clicked.connect(self.reconnect_to_default_signals)
+        self.left_button.clicked.connect(self.reconnect_to_default_signals)
+        self.right_button.clicked.connect(lambda: print("Edited guest"))
 
         self.information_stacked_widget.setCurrentWidget(self.edit_mode_widget)
         self.information_mode = "edit"
         self.mode_changed.emit()
-
-    def confirm_delete_status(self):
-        self.disconnect_signals()
-        self.left_button.setText("Proceed deletion?")
-        self.right_button.setText("Cancel deletion?")
-
-        self.left_button.clicked.connect(lambda: print("Deleted guest"))
-        self.right_button.clicked.connect(self.reconnect_to_default_signals)
 
     def load_fonts(self):
         self.guest_details_label.setFont(QFont("Inter", 20, QFont.Weight.Bold))
@@ -145,8 +137,8 @@ class GuestInfoDialog(QDialog, GuestInfoDialogUI):
 
     def connect_default_signals_to_slots(self):
         # Add signal to call controller that mode is changed, to call set_guest_info_again
-        self.left_button.clicked.connect(self.confirm_edit_status)
-        self.right_button.clicked.connect(self.confirm_delete_status)
+        self.left_button.clicked.connect(self.close)
+        self.right_button.clicked.connect(self.confirm_edit_status)
 
     def disconnect_signals(self):
         try:
@@ -159,8 +151,8 @@ class GuestInfoDialog(QDialog, GuestInfoDialogUI):
         self.disconnect_signals()
         self.connect_default_signals_to_slots()
 
-        self.left_button.setText("Edit Guest")
-        self.right_button.setText("Delete Guest")
+        self.left_button.setText("Close Dialog")
+        self.right_button.setText("Edit Guest")
 
         self.information_stacked_widget.setCurrentWidget(self.view_mode_widget)
         self.information_mode = "view"

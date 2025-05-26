@@ -12,7 +12,6 @@ class GuestsPageController:
 
         self.current_guest_model = None
         self.guests_model = None
-        self.guest_info_dialog = GuestInfoDialog()
 
         self.connect_signals_to_slots()
 
@@ -69,9 +68,9 @@ class GuestsPageController:
         self.view.sort_by_combobox.currentTextChanged.connect(self.refresh_guests_data)
         self.view.sort_type_combobox.currentTextChanged.connect(self.refresh_guests_data)
 
-        self.view.clicked_info_button.connect(self.show_guest_info)
+        self.view.clicked_info_button.connect(self.open_guest_info_dialog)
 
-        self.guest_info_dialog.mode_changed.connect(self.switch_information_mode_guest_info)
+        # self.guest_info_dialog.mode_changed.connect(self.switch_information_mode_guest_info)
 
         self.view.search_text_changed.connect(self.update_prev_search_input)
         self.view.search_text_changed.connect(lambda _: self.refresh_guests_data())
@@ -138,7 +137,9 @@ class GuestsPageController:
         if self.guests_model.get_len_of_data() == 0:
             self.go_to_previous_page()
 
-    def show_guest_info(self, index):
+    def open_guest_info_dialog(self, index):
+        self.guest_info_dialog = GuestInfoDialog()
+
         # Get guest_id of guest from index
         guest_id = self.guests_model.get_guest_id(index.row())
         print(guest_id)
@@ -153,7 +154,7 @@ class GuestsPageController:
         self.guest_info_dialog.set_guest_info(self.current_guest_model.to_dict())
         self.guest_info_dialog.exec()
 
-    def switch_information_mode_guest_info(self):
-        self.guest_info_dialog.set_guest_info(self.current_guest_model.to_dict())
+    # def switch_information_mode_guest_info(self):
+    #     self.guest_info_dialog.set_guest_info(self.current_guest_model.to_dict())
         # self.guest_info_dialog.exec()
 
