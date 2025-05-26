@@ -109,7 +109,7 @@ class BookingPage(QWidget, BookingPageUI):
         bookings_table_view_header.setSectionResizeMode(6, QHeaderView.ResizeMode.Fixed)
 
     def set_table_views_button_delegate(self):
-        info_button_delegate_icon_path = "../resources/icons/booking_page/info_icon.svg"
+        info_button_delegate_icon_path = "../resources/icons/info_icon.svg"
         self.info_button_delegate = ButtonDelegate(icon_path=info_button_delegate_icon_path,
                                                    can_be_disabled=False,
                                                    parent=self.bookings_table_view)
@@ -117,7 +117,7 @@ class BookingPage(QWidget, BookingPageUI):
         self.info_button_delegate.clicked.connect(self.clicked_info_button.emit)
         self.bookings_table_view.setItemDelegateForColumn(5, self.info_button_delegate)
 
-        check_out_button_delegate_icon_path = "../resources/icons/booking_page/check_out_icon.svg"
+        check_out_button_delegate_icon_path = "../resources/icons/check_out_icon.svg"
         self.check_out_button_delegate = ButtonDelegate(icon_path=check_out_button_delegate_icon_path,
                                                         can_be_disabled=True,
                                                         parent=self.bookings_table_view)

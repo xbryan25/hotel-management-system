@@ -107,7 +107,7 @@ class ServicesPage(QWidget, ServicesPageUI):
 
     def set_table_views_button_delegate(self):
 
-        edit_button_delegate_icon_path = "../resources/icons/services_page/edit_icon.svg"
+        edit_button_delegate_icon_path = "../resources/icons/edit_icon.svg"
         self.edit_button_delegate = ButtonDelegate(icon_path=edit_button_delegate_icon_path,
                                                    can_be_disabled=False,
                                                    parent=self.services_table_view)
@@ -115,8 +115,8 @@ class ServicesPage(QWidget, ServicesPageUI):
         self.edit_button_delegate.clicked.connect(lambda index: self.clicked_edit_button.emit("edit_service", index))
         self.services_table_view.setItemDelegateForColumn(3, self.edit_button_delegate)
 
-        delete_button_delegate_icon_path = "../resources/icons/services_page/delete_icon.svg"
-        restore_button_delegate_icon_path = "../resources/icons/services_page/restore_icon.svg"
+        delete_button_delegate_icon_path = "../resources/icons/delete_icon.svg"
+        restore_button_delegate_icon_path = "../resources/icons/restore_icon.svg"
         self.change_active_status_button_delegate = ButtonDelegate(icon_path=delete_button_delegate_icon_path,
                                                                    can_be_disabled=False,
                                                                    parent=self.services_table_view,
@@ -163,7 +163,7 @@ class ServicesPage(QWidget, ServicesPageUI):
         return max_rows
 
     def set_icons(self):
-        self.add_service_button.setIcon(QIcon("../resources/icons/services_page/add_icon.svg"))
+        self.add_service_button.setIcon(QIcon("../resources/icons/add_icon.svg"))
         self.add_service_button.setIconSize(QSize(20, 20))
 
     def set_external_stylesheet(self):

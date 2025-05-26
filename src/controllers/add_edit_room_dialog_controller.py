@@ -30,7 +30,7 @@ class AddEditRoomDialogController:
             self.view.load_edit_room_view(self.room_number, room_details)
 
             filename = self.db_driver.room_queries.get_room_image(self.room_number)
-            self.image_file_path = "../resources/icons/rooms_page/room_images/" + filename
+            self.image_file_path = "../resources/icons/room_images/" + filename
 
             self.view.update_chosen_image_label(filename)
 
@@ -67,7 +67,7 @@ class AddEditRoomDialogController:
         room_detail_inputs = self.view.get_room_detail_inputs()
 
         # Create target directory if it doesn't exist
-        room_images_dir = "../resources/icons/rooms_page/room_images"
+        room_images_dir = "../resources/icons/room_images"
         target_dir = os.path.join(os.getcwd(), room_images_dir)
         os.makedirs(target_dir, exist_ok=True)
 

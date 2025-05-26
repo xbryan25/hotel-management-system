@@ -82,21 +82,21 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
         self.show_icons_and_text_button.clicked.connect(self.show_expanded_sidebar_frame)
 
     def add_icon_to_toggle_sidebar_button(self):
-        self.show_icons_only_button.setIcon(QIcon("../resources/icons/sidebar/expand_sidebar_icon.svg"))
-        self.show_icons_and_text_button.setIcon(QIcon("../resources/icons/sidebar/collapse_sidebar_icon.svg"))
+        self.show_icons_only_button.setIcon(QIcon("../resources/icons/expand_sidebar_icon.svg"))
+        self.show_icons_and_text_button.setIcon(QIcon("../resources/icons/collapse_sidebar_icon.svg"))
 
         self.show_icons_only_button.setIconSize(QSize(28, 28))
         self.show_icons_and_text_button.setIconSize(QSize(28, 28))
 
     def initialize_sidebar(self):
-        self.sidebar_list = [{"name": "Dashboard", "icon": "../resources/icons/sidebar/dashboard_icon.svg"},
-                             {"name": "Rooms", "icon": "../resources/icons/sidebar/rooms_icon.svg"},
-                             {"name": "Reservation", "icon": "../resources/icons/sidebar/reservation_icon.svg"},
-                             {"name": "Booking", "icon": "../resources/icons/sidebar/booking_icon.svg"},
-                             {"name": "Guests", "icon": "../resources/icons/sidebar/guests_icon.svg"},
-                             {"name": "Billing", "icon": "../resources/icons/sidebar/billing_icon.svg"},
-                             {"name": "Services", "icon": "../resources/icons/sidebar/services_icon.svg"},
-                             {"name": "Settings", "icon": "../resources/icons/sidebar/settings_icon.svg"}]
+        self.sidebar_list = [{"name": "Dashboard", "icon": "../resources/icons/dashboard_icon.svg"},
+                             {"name": "Rooms", "icon": "../resources/icons/rooms_icon.svg"},
+                             {"name": "Reservation", "icon": "../resources/icons/reservation_icon.svg"},
+                             {"name": "Booking", "icon": "../resources/icons/booking_icon.svg"},
+                             {"name": "Guests", "icon": "../resources/icons/guests_icon.svg"},
+                             {"name": "Billing", "icon": "../resources/icons/billing_icon.svg"},
+                             {"name": "Services", "icon": "../resources/icons/services_icon.svg"},
+                             {"name": "Settings", "icon": "../resources/icons/settings_icon.svg"}]
 
 
         self.expanded_buttons_list_widget.clear()
