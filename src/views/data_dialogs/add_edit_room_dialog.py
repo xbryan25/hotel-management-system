@@ -24,6 +24,13 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
 
         self.set_room_number_lineedit_validator()
 
+        self.set_room_type_value_combobox_max_length()
+
+        self.setWindowTitle("HotelEase | Add New Room")
+
+    def set_room_type_value_combobox_max_length(self):
+        self.room_type_value_combobox.lineEdit().setMaxLength(25)
+
     def load_edit_room_view(self, room_number, room_details):
         self.room_label.setText(f"Edit {room_number}")
         self.right_button.setText("Edit room")
@@ -32,6 +39,8 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
         self.room_capacity_spinbox.setValue(room_details[5])
         self.room_type_value_combobox.setCurrentText(room_details[2])
         self.room_number_lineedit.setText(room_number)
+
+        self.setWindowTitle(f"HotelEase | Edit room {room_number}")
 
     def update_chosen_image_label(self, filename):
         self.chosen_image_label.setText(self.truncate_filename_preserving_ext(filename))
@@ -89,7 +98,7 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
             subheader_message = None
 
             if false_count >= 2:
-                header_message = "At least one of the fields has a wrong input."
+                header_message = "At least one of the fields has an invalid input."
                 subheader_message = "Please recheck."
 
             elif not is_proper_room_number:
@@ -103,6 +112,7 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
             elif not has_room_type:
                 header_message = "Room type is blank."
                 subheader_message = "Please select or input a room type."
+
 
             self.warning_dialog = FeedbackDialog(header_message, subheader_message)
             self.warning_dialog.exec()

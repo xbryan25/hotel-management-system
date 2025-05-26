@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QFrame
-from PyQt6.QtGui import QIcon, QFontDatabase, QFont
-from PyQt6.QtCore import QSize
+from PyQt6.QtGui import QIcon, QFontDatabase, QFont, QFontMetrics
+from PyQt6.QtCore import QSize, Qt
 
 from ui.list_rooms_frame_ui import Ui_Frame as ListRoomsFrameUI
 
@@ -11,17 +11,24 @@ class ListRoomsFrame(QFrame, ListRoomsFrameUI):
 
         self.setupUi(self)
 
-        self.room_details = room_details
+        self.room_type = room_details["room_type"]
 
-        self.load_room_details()
+        # self.load_room_details()
 
         self.set_external_stylesheet()
 
         self.set_icons()
         self.load_fonts()
 
-    def load_room_details(self):
-        self.room_type_value_label.setText(self.room_details["room_type"])
+    def set_room_type_value_label(self, room_type):
+        self.room_type_value_label.setText(self.truncate_text(room_type))
+        self.room_type_value_label.setToolTip(room_type)
+
+    @staticmethod
+    def truncate_text(text, max_length=9):
+        if len(text) <= max_length:
+            return text
+        return text[:max_length] + "..."
 
     def set_external_stylesheet(self):
         with open("../resources/styles/list_rooms_frame.qss", "r") as file:

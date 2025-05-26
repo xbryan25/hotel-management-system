@@ -153,10 +153,16 @@ class RoomsPageController:
             self.current_page = 1
         elif int(page_number) < 1:
             self.current_page = 1
+
+            self.view.page_number_lineedit.blockSignals(True)
             self.view.page_number_lineedit.setText(str(self.current_page))
+            self.view.page_number_lineedit.blockSignals(False)
         elif int(page_number) > total_pages:
             self.current_page = total_pages
+
+            self.view.page_number_lineedit.blockSignals(True)
             self.view.page_number_lineedit.setText(str(self.current_page))
+            self.view.page_number_lineedit.blockSignals(False)
         else:
             self.current_page = int(page_number)
 
@@ -171,7 +177,9 @@ class RoomsPageController:
         if self.current_page + 1 <= self.total_pages(room_count):
             self.current_page += 1
 
+            self.view.page_number_lineedit.blockSignals(True)
             self.view.page_number_lineedit.setText(str(self.current_page))
+            self.view.page_number_lineedit.blockSignals(False)
 
             self.refresh_rooms_data()
             # print()
@@ -183,7 +191,9 @@ class RoomsPageController:
         if self.current_page > 1:
             self.current_page -= 1
 
+            self.view.page_number_lineedit.blockSignals(True)
             self.view.page_number_lineedit.setText(str(self.current_page))
+            self.view.page_number_lineedit.blockSignals(False)
 
             self.refresh_rooms_data()
 
@@ -197,6 +207,10 @@ class RoomsPageController:
     def change_view_mode(self, new_view_mode):
 
         self.current_page = 1
+
+        self.view.page_number_lineedit.blockSignals(True)
+        self.view.page_number_lineedit.setText(str(self.current_page))
+        self.view.page_number_lineedit.blockSignals(False)
 
         if self.view_mode == new_view_mode:
             return

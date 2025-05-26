@@ -13,15 +13,22 @@ class GridRoomsFrame(QFrame, GridRoomsFrameUI):
 
         self.room_details = room_details
 
-        self.load_room_details()
+        # self.load_room_details()
 
         self.set_external_stylesheet()
 
         self.set_icons()
         self.load_fonts()
 
-    def load_room_details(self):
-        self.room_num_and_title_label.setText(self.room_details["room_type"])
+    def set_room_num_and_title_label(self, room_num, room_type):
+        self.room_num_and_title_label.setText(f"{room_num} - {self.truncate_text(room_type)}")
+        self.room_num_and_title_label.setToolTip(room_type)
+
+    @staticmethod
+    def truncate_text(text, max_length=12):
+        if len(text) <= max_length:
+            return text
+        return text[:max_length] + "..."
 
     def set_external_stylesheet(self):
         with open("../resources/styles/grid_rooms_frame.qss", "r") as file:

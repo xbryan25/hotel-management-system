@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1094</width>
+    <width>883</width>
     <height>93</height>
    </rect>
   </property>
@@ -42,13 +42,13 @@
     <widget class="QFrame" name="room_image_and_room_no_frame">
      <property name="minimumSize">
       <size>
-       <width>200</width>
+       <width>210</width>
        <height>0</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>200</width>
+       <width>210</width>
        <height>16777215</height>
       </size>
      </property>
@@ -115,7 +115,7 @@
        <widget class="QLabel" name="room_num_label">
         <property name="minimumSize">
          <size>
-          <width>73</width>
+          <width>80</width>
           <height>0</height>
          </size>
         </property>

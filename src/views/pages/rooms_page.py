@@ -57,13 +57,13 @@ class RoomsPage(QWidget, RoomsPageUI):
         widget.setGraphicsEffect(shadow)
 
     def apply_shadow_to_frames(self):
-        self.apply_shadow(self.actions_frame) #include
 
-        #self.apply_shadow(self.page_buttons_frame)
-        #self.apply_shadow(self.page_number_frame)
-        #self.apply_shadow(self.search_bar_frame) #dont include
+
+        # self.apply_shadow(self.page_buttons_frame)
+        # self.apply_shadow(self.page_number_frame)
+        self.apply_shadow(self.search_bar_frame)
         self.apply_shadow(self.rooms_view_stacked_widget)
-
+        self.apply_shadow(self.actions_frame)
 
     def update_of_page_number_label(self, total_pages):
         total_pages = max(total_pages, 1)
@@ -168,7 +168,7 @@ class RoomsPage(QWidget, RoomsPageUI):
                     room_number = data_from_model[row][0]
 
                     list_rooms_frame.room_num_label.setText(room_number.replace("room-", "#"))
-                    list_rooms_frame.room_type_value_label.setText(data_from_model[row][1].capitalize())
+                    list_rooms_frame.set_room_type_value_label(data_from_model[row][1])
                     list_rooms_frame.rate_value_label.setText(f"P{data_from_model[row][2]}/day")
                     list_rooms_frame.status_value_label.setText(data_from_model[row][3].capitalize())
                     list_rooms_frame.capacity_value_label.setText(str(data_from_model[row][4]))
@@ -203,8 +203,8 @@ class RoomsPage(QWidget, RoomsPageUI):
 
     def make_grid_view_rooms_frame(self, amount_of_frames):
 
-        print("Elements in grid view grid layout b444: " + str(self.grid_view_grid_layout.count()))
-        print(f"amount of frames: {amount_of_frames}")
+        # print("Elements in grid view grid layout b444: " + str(self.grid_view_grid_layout.count()))
+        # print(f"amount of frames: {amount_of_frames}")
 
         current_max_rows, current_max_columns = self.get_current_rows_and_columns_in_grid_layout("grid_view")
 
@@ -393,7 +393,7 @@ class RoomsPage(QWidget, RoomsPageUI):
 
     def update_grid_view_frames_contents(self, data_from_model, open_add_edit_room_dialog_func, delete_room_func):
 
-        print("Elements in grid view grid layout CONTENTT: " + str(self.grid_view_grid_layout.count()))
+        # print("Elements in grid view grid layout CONTENTT: " + str(self.grid_view_grid_layout.count()))
 
         max_row, max_column = self.get_current_rows_and_columns_in_grid_layout("grid_view")
         counter = 0
@@ -412,8 +412,9 @@ class RoomsPage(QWidget, RoomsPageUI):
 
                         room_number = data_from_model[counter][0]
 
-                        grid_rooms_frame.room_num_and_title_label.setText(
-                            f"{room_number.replace("room-", "#")} - {data_from_model[counter][1].capitalize()}")
+                        grid_rooms_frame.set_room_num_and_title_label(room_number,
+                                                                            data_from_model[counter][1])
+
                         grid_rooms_frame.rate_value_label.setText(f"P{data_from_model[counter][2]}/day")
                         grid_rooms_frame.status_value_label.setText(data_from_model[counter][3].capitalize())
                         grid_rooms_frame.capacity_label.setText(str(data_from_model[counter][4]))
@@ -484,12 +485,12 @@ class RoomsPage(QWidget, RoomsPageUI):
 
         self.rooms_label.setFont(QFont("Inter", 20, QFont.Weight.Bold))
 
-        self.room_number_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
-        self.room_type_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
-        self.capacity_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
-        self.rate_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
-        self.status_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
-        self.action_label.setFont(QFont("Inter", 13, QFont.Weight.Normal))
+        self.room_number_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
+        self.room_type_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
+        self.capacity_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
+        self.rate_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
+        self.status_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
+        self.action_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
 
         self.search_lineedit.setFont(QFont("Inter", 16, QFont.Weight.Normal))
 

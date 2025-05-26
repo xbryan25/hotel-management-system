@@ -19,6 +19,7 @@ QComboBox::down-arrow {
 
 #left_button, #right_button{
     padding: 5px;
+    border-radius: 5px;
 }
 
 #left_button{
@@ -53,7 +54,12 @@ QComboBox::down-arrow {
 }
 
 #room_daily_rate_spinbox, #room_capacity_spinbox, #room_type_value_combobox, #room_number_lineedit, #left_button{
+    background-color: #d9d9d9;
     color: black;
+}
+
+#room_type_value_combobox QAbstractItemView {
+    color: #000000;
 }
 
 #browse_image_button{
