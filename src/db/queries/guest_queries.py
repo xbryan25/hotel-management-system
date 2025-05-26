@@ -1,6 +1,7 @@
 
 from datetime import date
 
+
 class GuestQueries:
     def __init__(self, db, cursor):
         self.db = db

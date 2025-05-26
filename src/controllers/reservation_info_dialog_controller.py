@@ -23,6 +23,9 @@ class ReservationInfoDialogController:
         if self.view_type != 'current':
             self.setup_past_view_mode()
 
+            self.past_room_details = self.db_driver.room_queries.get_room_details_from_room_id(
+                self.data_from_reservation['room_id'])
+
         self.original_room_number = self.db_driver.room_queries.get_room_number_from_room_id(
             self.data_from_reservation['room_id'])
 
@@ -407,6 +410,9 @@ class ReservationInfoDialogController:
     def set_models(self):
         all_rooms = self.db_driver.room_queries.get_all_rooms(enable_pagination=False)
 
+        if self.view_type == 'past' and not self.db_driver.room_queries.check_if_room_is_active(self.data_from_reservation['room_id']):
+            all_rooms.append(self.past_room_details)
+
         self.room_numbers_model = RoomsModel(all_rooms, model_type='nrd_room_numbers')
         self.room_types_model = RoomsModel(all_rooms, model_type='nrd_room_types')
 
@@ -414,6 +420,12 @@ class ReservationInfoDialogController:
 
         self.view.room_type_combobox.blockSignals(True)
         self.view.room_type_combobox.setModel(self.room_types_model)
+
+        if self.view_type == 'current':
+            self.view.room_type_combobox.setCurrentText(self.db_driver.room_queries.get_room_type(self.data_from_reservation['room_id']))
+        elif self.view_type == 'past':
+            self.view.room_type_combobox.setCurrentText(self.past_room_details[1])
+
         self.view.room_type_combobox.blockSignals(False)
 
         availed_services = self.db_driver.availed_service_queries.get_availed_services_from_avail_date(self.data_from_reservation['last_modified'])
