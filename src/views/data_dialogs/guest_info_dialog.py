@@ -91,7 +91,7 @@ class GuestInfoDialog(QDialog, GuestInfoDialogUI):
             self.last_visit_date_value_label.setText(guest_info["last_visit_date"])
 
         self.total_visit_count_value_label.setText(str(guest_info["total_visit_count"]))
-        self.total_amount_due_value_label.setText(guest_info["total_amount_due"])
+        self.total_amount_due_value_label.setText(str(guest_info["total_amount_due"]))
 
     def validate_form_completion(self):
 

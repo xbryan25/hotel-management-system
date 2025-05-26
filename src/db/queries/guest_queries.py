@@ -329,8 +329,23 @@ class GuestQueries:
 
         sql = f"""SELECT guests.guest_id, guests.name, guests.gender, guests.home_address, 
                         guests.email_address, guests.phone_number, guests.birth_date,
-                        guests.government_id, guests.last_visit_date, guests.visit_count
+                        guests.government_id, guests.last_visit_date, guests.visit_count,
+                        CAST(COALESCE(reservations.total_cost, 0) -  COALESCE(payments.total_paid, 0) AS SIGNED) AS remaining_balance
                         FROM guests
+                        
+                        LEFT JOIN (
+                            SELECT guest_id, SUM(total_reservation_cost) AS total_cost
+                            FROM reservedrooms
+                            GROUP BY guest_id
+                        ) AS reservations ON guests.guest_id = reservations.guest_id
+                        
+                        LEFT JOIN (
+                            SELECT guest_id, SUM(amount) AS total_paid
+                            FROM paidrooms
+                            GROUP BY guest_id
+                        ) AS payments ON guests.guest_id = payments.guest_id
+                        
+                        
                         WHERE guests.guest_id=%s;"""
 
         values = (guest_id,)
