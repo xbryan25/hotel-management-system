@@ -53,7 +53,7 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
         self.room_number_lineedit.setMaxLength(6)
 
     def confirm_room_addition(self, room_number):
-        header_message = "Are you sure you to add this room?"
+        header_message = "Are you sure you want to add this room?"
         subheader_message = "Double check all input fields before proceeding."
         self.confirmation_dialog = ConfirmationDialog(header_message, subheader_message)
 

@@ -63,5 +63,5 @@ class GuestInfoModel:
             government_id=data[7],
             last_visit_date=data[8],
             total_visit_count=data[9],
-            total_amount_due="no val"
+            total_amount_due=data[10]
         )

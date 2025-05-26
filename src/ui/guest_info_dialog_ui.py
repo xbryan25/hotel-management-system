@@ -171,8 +171,8 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.left_button.setText(_translate("Dialog", "Edit Guest"))
-        self.right_button.setText(_translate("Dialog", "Delete Guest"))
+        self.left_button.setText(_translate("Dialog", "Close Dialog"))
+        self.right_button.setText(_translate("Dialog", "Edit Guest"))
         self.guest_id_label.setText(_translate("Dialog", "Guest ID"))
         self.home_address_label.setText(_translate("Dialog", "Home Address"))
         self.email_address_label.setText(_translate("Dialog", "Email Address"))
