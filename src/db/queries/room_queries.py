@@ -5,8 +5,18 @@ class RoomQueries:
         self.db = db
         self.cursor = cursor
 
+    def check_if_room_is_active(self, room_id):
+        sql = "SELECT 1 FROM rooms WHERE rooms.room_id=%s AND rooms.is_active=%s LIMIT 1;"
+        values = (room_id, 1)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        return True if result else False
+
     def get_capacity_from_room_number(self, room_number):
-        sql = "SELECT rooms.capacity FROM rooms WHERE room_number=%s AND is_active=1;"
+        sql = "SELECT rooms.capacity FROM rooms WHERE room_number=%s;"
         values = (room_number,)
 
         self.cursor.execute(sql, values)
@@ -26,7 +36,7 @@ class RoomQueries:
         return result[0] if result else None
 
     def get_room_number_from_room_id(self, room_id):
-        sql = "SELECT rooms.room_number FROM rooms WHERE room_id=%s AND is_active=1;"
+        sql = "SELECT rooms.room_number FROM rooms WHERE room_id=%s;"
         values = (room_id,)
 
         self.cursor.execute(sql, values)
@@ -34,6 +44,20 @@ class RoomQueries:
         result = self.cursor.fetchone()
 
         return result[0] if result else None
+
+    def get_room_details_from_room_id(self, room_id):
+        sql = """SELECT rooms.room_number, rooms.room_type, rooms.daily_rate, rooms.availability_status, 
+                    rooms.capacity, rooms.image_file_name FROM rooms WHERE rooms.room_id=%s"""
+
+        values = (room_id,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        list_result = [item for item in result]
+
+        return list_result
 
     def get_room_details(self, room_number):
         sql = "SELECT * FROM rooms WHERE rooms.room_number=%s AND rooms.is_active=%s;"
