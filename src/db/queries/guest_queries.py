@@ -88,6 +88,7 @@ class GuestQueries:
                         LEFT JOIN (
                             SELECT guest_id, SUM(total_reservation_cost) AS total_cost
                             FROM reservedrooms
+                            WHERE reservation_status IN ('Pending', 'Confirmed')
                             GROUP BY guest_id
                         ) AS reservations ON guests.guest_id = reservations.guest_id
                         
@@ -140,6 +141,7 @@ class GuestQueries:
                         LEFT JOIN (
                             SELECT guest_id, SUM(total_reservation_cost) AS total_cost
                             FROM reservedrooms
+                            WHERE reservation_status IN ('Pending', 'Confirmed')
                             GROUP BY guest_id
                         ) AS reservations ON guests.guest_id = reservations.guest_id
                         

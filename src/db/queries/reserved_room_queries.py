@@ -105,9 +105,11 @@ class ReservedRoomQueries:
 
         view_type_dict = {"Reservations": "WHERE reservedrooms.reservation_status = 'Pending'",
                           "Past Reservations": "WHERE reservedrooms.reservation_status IN ('Confirmed', 'Cancelled', 'Expired')",
-                          "Billings": "WHERE reservedrooms.payment_status IN ('Not Paid', 'Partially Paid')",
-                          "Past Billings": "WHERE reservedrooms.payment_status = 'Fully Paid'",
-                          "All": ""}
+                          "Billings": """WHERE reservedrooms.payment_status IN ('Not Paid', 'Partially Paid') AND 
+                                        reservedrooms.reservation_status='Pending'""",
+                          "Past Billings": """WHERE reservedrooms.payment_status = 'Fully Paid' AND
+                                        reservedrooms.reservation_status NOT IN ('Cancelled', 'Expired')""",
+                          "All": "WHERE reservedrooms.reservation_status NOT IN ('Cancelled', 'Expired')"}
 
         if search_input and billing_view_mode:
             search_input_query = """ HAVING 
