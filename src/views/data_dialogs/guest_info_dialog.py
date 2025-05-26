@@ -4,12 +4,14 @@ from PyQt6.QtGui import QFont
 
 from datetime import date
 
+from views import ConfirmationDialog
 from ui import GuestInfoDialogUI
 
 
 class GuestInfoDialog(QDialog, GuestInfoDialogUI):
 
     mode_changed = pyqtSignal()
+    clicked_edit_button = pyqtSignal()
 
     def __init__(self):
 
@@ -73,25 +75,50 @@ class GuestInfoDialog(QDialog, GuestInfoDialogUI):
         self.total_visit_count_value_label.setText(str(guest_info["total_visit_count"]))
         self.total_amount_due_value_label.setText(guest_info["total_amount_due"])
 
-    # def change_information_mode(self):
-    #     if self.information_mode == "view":
-    #         self.information_mode = "edit"
-    #         self.information_stacked_widget.setCurrentWidget(self.edit_mode_widget)
-    #     elif self.information_mode == "edit":
-    #         self.information_mode = "view"
-    #         self.information_stacked_widget.setCurrentWidget(self.view_mode_widget)
+    def get_guest_inputs(self):
+        guest_inputs = {}
 
-    def confirm_edit_status(self):
+        guest_inputs.update({"name": self.name_lineedit.text() if self.name_lineedit.text() != ''
+                             else self.name_lineedit.placeholderText().strip()})
+
+        guest_inputs.update({"gender": self.gender_combobox.currentText()})
+        guest_inputs.update({"birth_date": self.birth_date_date_edit.date().toPyDate()})
+
+        guest_inputs.update({"home_address": self.home_address_lineedit.text() if self.home_address_lineedit.text() != ''
+                             else self.home_address_lineedit.placeholderText().strip()})
+
+        guest_inputs.update({"email_address": self.email_address_lineedit.text() if self.email_address_lineedit.text() != ''
+                             else self.email_address_lineedit.placeholderText().strip()})
+
+        guest_inputs.update({"government_id": self.government_id_number_lineedit.text() if self.government_id_number_lineedit.text() != ''
+                             else self.government_id_number_lineedit.placeholderText().strip()})
+
+        guest_inputs.update({"phone_number": self.phone_number_lineedit.text() if self.phone_number_lineedit.text() != ''
+                             else self.phone_number_lineedit.placeholderText().strip()})
+
+        return guest_inputs
+
+    def change_to_edit_status(self):
         self.disconnect_signals()
         self.left_button.setText("Cancel editing?")
         self.right_button.setText("Save changes?")
 
         self.left_button.clicked.connect(self.reconnect_to_default_signals)
-        self.right_button.clicked.connect(lambda: print("Edited guest"))
+        self.right_button.clicked.connect(self.confirm_edit_guest_info)
 
         self.information_stacked_widget.setCurrentWidget(self.edit_mode_widget)
         self.information_mode = "edit"
         self.mode_changed.emit()
+
+    def confirm_edit_guest_info(self):
+        header_message = "Are you sure you want to edit this guest?"
+        subheader_message = "Double check all input fields before proceeding."
+        self.confirmation_dialog = ConfirmationDialog(header_message, subheader_message)
+
+        self.confirmation_dialog.exec()
+
+        if self.confirmation_dialog.get_choice():
+            self.clicked_edit_button.emit()
 
     def load_fonts(self):
         self.guest_details_label.setFont(QFont("Inter", 20, QFont.Weight.Bold))
@@ -138,7 +165,7 @@ class GuestInfoDialog(QDialog, GuestInfoDialogUI):
     def connect_default_signals_to_slots(self):
         # Add signal to call controller that mode is changed, to call set_guest_info_again
         self.left_button.clicked.connect(self.close)
-        self.right_button.clicked.connect(self.confirm_edit_status)
+        self.right_button.clicked.connect(self.change_to_edit_status)
 
     def disconnect_signals(self):
         try:

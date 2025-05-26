@@ -403,34 +403,31 @@ class GuestQueries:
 
     def update_guest(self, old_guest_id, guest_information):
         sql = """UPDATE guests 
-                SET guest_id=%s, name=%s, gender=%s, home_address=%s, email_address=%s, phone_number=%s, 
-                birth_date=%s, government_id=%s, last_visit_date=%s, visit_count=%s WHERE 
+                SET name=%s, gender=%s, home_address=%s, email_address=%s, phone_number=%s, 
+                birth_date=%s, government_id=%s WHERE 
                 guest_id=%s"""
 
-        values = (guest_information[0],
-                  guest_information[1],
-                  guest_information[2],
-                  guest_information[3],
-                  guest_information[4],
-                  guest_information[5],
-                  guest_information[6],
-                  guest_information[7],
-                  guest_information[8],
-                  guest_information[9],
+        values = (guest_information['name'],
+                  guest_information['gender'],
+                  guest_information['home_address'],
+                  guest_information['email_address'],
+                  guest_information['phone_number'],
+                  guest_information['birth_date'],
+                  guest_information['government_id'],
                   old_guest_id)
 
         self.cursor.execute(sql, values)
         self.db.commit()
 
-    def delete_guest(self, identifier_type, identifier):
-
-        sql = ""
-        values = (identifier.strip(),)
-
-        if identifier_type == "guest_id":
-            sql = "DELETE FROM guests WHERE guest_id=%s"
-        elif identifier_type == "name":
-            sql = "DELETE FROM guests WHERE name=%s"
-
-        self.cursor.execute(sql, values)
-        self.db.commit()
+    # def delete_guest(self, identifier_type, identifier):
+    #
+    #     sql = ""
+    #     values = (identifier.strip(),)
+    #
+    #     if identifier_type == "guest_id":
+    #         sql = "DELETE FROM guests WHERE guest_id=%s"
+    #     elif identifier_type == "name":
+    #         sql = "DELETE FROM guests WHERE name=%s"
+    #
+    #     self.cursor.execute(sql, values)
+    #     self.db.commit()

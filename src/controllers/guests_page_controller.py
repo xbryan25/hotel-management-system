@@ -2,6 +2,7 @@ from PyQt6.QtCore import QTimer
 
 from models import GuestsModel, GuestInfoModel
 from views import GuestInfoDialog
+from controllers.guest_info_dialog_controller import GuestInfoDialogController
 
 
 class GuestsPageController:
@@ -138,21 +139,19 @@ class GuestsPageController:
             self.go_to_previous_page()
 
     def open_guest_info_dialog(self, index):
-        self.guest_info_dialog = GuestInfoDialog()
-
         # Get guest_id of guest from index
         guest_id = self.guests_model.get_guest_id(index.row())
         print(guest_id)
 
-        # Load data from db
-        # Put fetched data to model
-        # Put model data to view
+        self.guest_info_dialog = GuestInfoDialog()
+        self.guest_info_dialog_controller = GuestInfoDialogController(self.guest_info_dialog,
+                                                                      self.db_driver,
+                                                                      guest_id)
 
-        guest_data = self.db_driver.guest_queries.get_guest_details(guest_id)
-        self.current_guest_model = GuestInfoModel.from_list(guest_data)
 
-        self.guest_info_dialog.set_guest_info(self.current_guest_model.to_dict())
         self.guest_info_dialog.exec()
+
+        self.refresh_guests_data()
 
     # def switch_information_mode_guest_info(self):
     #     self.guest_info_dialog.set_guest_info(self.current_guest_model.to_dict())
