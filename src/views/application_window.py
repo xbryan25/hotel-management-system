@@ -1,4 +1,7 @@
-from PyQt6.QtGui import QIcon, QFont, QFontDatabase
+import ctypes
+import sys
+
+from PyQt6.QtGui import QIcon, QFont, QFontDatabase, QPixmap
 from PyQt6.QtWidgets import QMainWindow, QListWidgetItem
 from PyQt6.QtCore import Qt, QSize, QSignalBlocker
 
@@ -19,6 +22,10 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
 
         self.collapsed_sidebar_frame.setVisible(False)
 
+        self.setWindowTitle("HotelEase")
+        self.setWindowIcon(QIcon("../resources/icons/hms_db_icon"))
+        self.set_app_user_model_id()
+
         self.load_fonts()
         self.apply_fonts()
 
@@ -32,6 +39,12 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
 
         self.load_pages()
         self.setup_controllers()
+
+        self.title_label.setText("HotelEase")
+
+    def set_app_user_model_id(self):
+        if sys.platform == "win32":
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("HotelEase")
 
     def show_collapsed_sidebar_frame(self):
         self.collapsed_sidebar_frame.setVisible(True)
@@ -180,7 +193,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
         QFontDatabase.addApplicationFont("../resources/fonts/ABeeZee-Regular.ttf")
 
     def apply_fonts(self):
-        self.title_label.setFont(QFont("ABeeZee", 28, QFont.Weight.Light))
+        self.title_label.setFont(QFont("ABeeZee", 18, QFont.Weight.Light))
         self.expanded_buttons_list_widget.setFont(QFont("Inter", 14, QFont.Weight.Medium))
 
     def setup_controllers(self):
