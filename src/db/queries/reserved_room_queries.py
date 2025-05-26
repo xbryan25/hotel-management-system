@@ -109,7 +109,7 @@ class ReservedRoomQueries:
                                         reservedrooms.reservation_status='Pending'""",
                           "Past Billings": """WHERE reservedrooms.payment_status = 'Fully Paid' AND
                                         reservedrooms.reservation_status NOT IN ('Cancelled', 'Expired')""",
-                          "All": ""}
+                          "All": "WHERE reservedrooms.reservation_status NOT IN ('Cancelled', 'Expired')"}
 
         if search_input and billing_view_mode:
             search_input_query = """ HAVING 
