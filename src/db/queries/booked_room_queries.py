@@ -30,6 +30,19 @@ class BookedRoomQueries:
 
         return result[0] if result else None
 
+    def get_check_in_status_of_booking(self, booking_id):
+
+        sql = """SELECT bookedrooms.check_in_status FROM bookedrooms WHERE bookedrooms.booking_id=%s"""
+
+        values = (room_id,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        return result[0] if result else None
+
+
     def set_check_out_booking(self, booking_id):
         sql = "UPDATE bookedrooms SET check_in_status=%s, actual_check_out_date=%s WHERE booking_id=%s"
         values = ('Finished', datetime.now(), booking_id)

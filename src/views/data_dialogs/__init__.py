@@ -6,6 +6,7 @@ from .reservation_info_dialog import ReservationInfoDialog
 from .add_edit_room_dialog import AddEditRoomDialog
 from .add_edit_service_dialog import AddEditServiceDialog
 from .upcoming_reservations_dialog import UpcomingReservationsDialog
+from .booking_info_dialog import BookingInfoDialog
 
 __all__ = [
     "GuestInfoDialog",
@@ -14,5 +15,6 @@ __all__ = [
     "ReservationInfoDialog",
     "AddEditRoomDialog",
     "AddEditServiceDialog",
-    "UpcomingReservationsDialog"
+    "UpcomingReservationsDialog",
+    "BookingInfoDialog"
 ]
