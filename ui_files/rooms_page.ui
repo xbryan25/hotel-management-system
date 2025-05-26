@@ -561,7 +561,7 @@
          </property>
          <layout class="QGridLayout" name="list_view_grid_layout">
           <property name="verticalSpacing">
-           <number>3</number>
+           <number>6</number>
           </property>
          </layout>
         </widget>
