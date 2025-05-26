@@ -26,6 +26,8 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
 
         self.set_room_type_value_combobox_max_length()
 
+        self.setWindowTitle("HotelEase | Add New Room")
+
     def set_room_type_value_combobox_max_length(self):
         self.room_type_value_combobox.lineEdit().setMaxLength(25)
 
@@ -37,6 +39,8 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
         self.room_capacity_spinbox.setValue(room_details[5])
         self.room_type_value_combobox.setCurrentText(room_details[2])
         self.room_number_lineedit.setText(room_number)
+
+        self.setWindowTitle(f"HotelEase | Edit room {room_number}")
 
     def update_chosen_image_label(self, filename):
         self.chosen_image_label.setText(self.truncate_filename_preserving_ext(filename))

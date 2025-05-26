@@ -81,6 +81,7 @@ QFrame {
 }
 
 #list_view_button, #grid_view_button{
-    background-color: white;
+    background-color: #D9D9D9;
     border-radius: 4px;
+    border: 1px solid black;
 }

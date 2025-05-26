@@ -1,6 +1,3 @@
-import ctypes
-import sys
-
 from PyQt6.QtGui import QIcon, QFont, QFontDatabase, QPixmap
 from PyQt6.QtWidgets import QMainWindow, QListWidgetItem
 from PyQt6.QtCore import Qt, QSize, QSignalBlocker
@@ -23,8 +20,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
         self.collapsed_sidebar_frame.setVisible(False)
 
         self.setWindowTitle("HotelEase")
-        self.setWindowIcon(QIcon("../resources/icons/hms_db_icon"))
-        self.set_app_user_model_id()
 
         self.load_fonts()
         self.apply_fonts()
@@ -41,10 +36,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
         self.setup_controllers()
 
         self.title_label.setText("HotelEase")
-
-    def set_app_user_model_id(self):
-        if sys.platform == "win32":
-            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("HotelEase")
 
     def show_collapsed_sidebar_frame(self):
         self.collapsed_sidebar_frame.setVisible(True)
