@@ -3,6 +3,7 @@ from datetime import datetime
 from models import BookingModel
 
 from views import BookingInfoDialog, ConfirmationDialog, FeedbackDialog
+from controllers.booking_info_dialog_controller import BookingInfoDialogController
 
 
 class BookingsPageController:
@@ -28,18 +29,10 @@ class BookingsPageController:
     def open_booking_info_dialog(self, index):
         selected_booking_id = index.sibling(index.row(), 0).data()
 
-        selected_booking_status = self.db_driver.booked_room_queries.get_check_in_status_of_booking(selected_booking_id)
-
-        if selected_booking_status == 'In Progress':
-            view_type = 'current'
-        else:
-            view_type = 'past'
-
         self.booking_info_dialog = BookingInfoDialog()
-        # self.reservation_info_dialog_controller = ReservationInfoDialogController(self.reservation_info_dialog,
-        #                                                                           self.db_driver,
-        #                                                                           selected_reservation_id,
-        #                                                                           view_type=view_type)
+        self.booking_info_dialog_controller = BookingInfoDialogController(self.booking_info_dialog,
+                                                                          self.db_driver,
+                                                                          selected_booking_id)
 
         self.booking_info_dialog.exec()
 

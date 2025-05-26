@@ -1,0 +1,11 @@
+QDialog{
+    background-color: #f6f6f6;
+}
+
+#proceed_button{
+    padding: 5px;
+    border: 2px solid black;
+    border-radius: 5px;
+    color: #FFFFFF;
+    background-color: #194FCC;
+}

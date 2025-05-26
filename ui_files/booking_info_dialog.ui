@@ -180,7 +180,7 @@
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>30</height>
+       <height>35</height>
       </size>
      </property>
      <property name="text">
@@ -376,7 +376,7 @@
         <x>0</x>
         <y>0</y>
         <width>925</width>
-        <height>157</height>
+        <height>152</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="availed_services_scroll_area_grid_layout">

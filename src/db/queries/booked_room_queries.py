@@ -1,10 +1,35 @@
 from datetime import datetime
 
+from pymysql.cursors import DictCursor
+
 
 class BookedRoomQueries:
     def __init__(self, db, cursor):
         self.db = db
         self.cursor = cursor
+
+    def get_booking_details(self, booking_id):
+
+        sql = f"""SELECT b.check_in_status, b.check_in_date, b.check_out_date, b.actual_check_in_date,
+                    b.actual_check_out_date, rr.reservation_id, rr.total_reservation_cost,
+                    rr.guest_count, rr.last_modified, r.room_number, r.room_type, g.name, g.guest_id
+                    FROM bookedrooms b
+                    JOIN reservedrooms rr ON b.guest_id = rr.guest_id AND b.room_id = rr.room_id AND
+                        b.check_in_date = rr.check_in_date AND b.check_out_date = rr.check_out_date 
+                    JOIN rooms r ON b.room_id = r.room_id
+                    JOIN guests g ON b.guest_id = g.guest_id
+                    WHERE b.booking_id = %s"""
+
+        values = (booking_id,)
+
+        # Used a DictCursor here as there are many results
+        with self.db.cursor(DictCursor) as dict_cursor:
+            dict_cursor.execute(sql, values)
+
+            result = dict_cursor.fetchone()
+
+        return result if result else None
+
 
     def find_booking_by_guest_and_room(self, guest_id, room_id, check_in_date, check_out_date):
         sql = """SELECT * FROM bookedrooms WHERE bookedrooms.guest_id=%s AND bookedrooms.room_id=%s AND 
@@ -41,7 +66,6 @@ class BookedRoomQueries:
         result = self.cursor.fetchone()
 
         return result[0] if result else None
-
 
     def set_check_out_booking(self, booking_id):
         sql = "UPDATE bookedrooms SET check_in_status=%s, actual_check_out_date=%s WHERE booking_id=%s"

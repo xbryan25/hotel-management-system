@@ -9,12 +9,9 @@ from ui import BookingInfoDialogUI
 
 class BookingInfoDialog(QDialog, BookingInfoDialogUI):
 
-    def __init__(self, view_type):
+    def __init__(self):
         super().__init__()
         self.setupUi(self)
-
-        self.dialog_state = 'not editable'
-        self.view_type = view_type
 
         self.connect_signals_to_slots()
 
@@ -108,10 +105,11 @@ class BookingInfoDialog(QDialog, BookingInfoDialogUI):
                 layout.removeItem(item)
 
     def connect_signals_to_slots(self):
+
         self.proceed_button.clicked.connect(self.close)
 
     def set_external_stylesheet(self):
-        with open("../resources/styles/reservation_info_dialog.qss", "r") as file:
+        with open("../resources/styles/booking_info_dialog.qss", "r") as file:
             self.setStyleSheet(file.read())
 
     def load_fonts(self):
