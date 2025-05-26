@@ -8,6 +8,14 @@ class BookedRoomQueries:
         self.db = db
         self.cursor = cursor
 
+    def update_elapsed_bookings(self):
+        sql = """UPDATE bookedrooms SET check_in_status = %s, actual_check_out_date=check_out_date 
+                    WHERE check_out_date < NOW() AND check_in_status = %s;"""
+        values = ('Finished', 'In Progress')
+
+        self.cursor.execute(sql, values)
+        self.db.commit()
+
     def get_booking_details(self, booking_id):
 
         sql = f"""SELECT b.check_in_status, b.check_in_date, b.check_out_date, b.actual_check_in_date,

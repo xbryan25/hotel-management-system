@@ -41,6 +41,9 @@ class GuestsPageController:
 
     def set_models(self):
 
+        self.db_driver.reserved_room_queries.update_expired_reservations()
+        self.db_driver.booked_room_queries.update_elapsed_bookings()
+
         guests_data_from_db = self.db_driver.guest_queries.get_all_guests(max_guests_per_page=self.max_guests_per_page,
                                                                           current_page_number=self.current_page_number,
                                                                           show_type=self.prev_show_type,
