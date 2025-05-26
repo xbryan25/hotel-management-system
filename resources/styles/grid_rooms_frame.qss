@@ -6,7 +6,7 @@ QPushButton:pressed {
 
 #capacity_icon_label{
 
-    background-image: url(../resources/icons/custom_widgets/capacity_icon.svg);
+    background-image: url(../resources/icons/capacity_icon.svg);
     background-repeat: no-repeat;
     background-position: center;
 }

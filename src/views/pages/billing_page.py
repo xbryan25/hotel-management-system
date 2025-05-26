@@ -105,7 +105,7 @@ class BillingPage(QWidget, BillingPageUI):
         billings_table_view_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
 
     def set_table_views_button_delegate(self):
-        payment_button_delegate_icon_path = "../resources/icons/billing_page/payment_icon.svg"
+        payment_button_delegate_icon_path = "../resources/icons/payment_icon.svg"
         self.payment_button_delegate = ButtonDelegate(icon_path=payment_button_delegate_icon_path,
                                                       can_be_disabled=True,
                                                       parent=self.billings_table_view)

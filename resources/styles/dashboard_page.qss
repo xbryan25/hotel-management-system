@@ -78,7 +78,7 @@ QComboBox::drop-down {
 }
 
 QComboBox::down-arrow {
-    image: url(../resources/icons/dashboard_page/arrow_down_icon.svg);
+    image: url(../resources/icons/arrow_down_icon.svg);
     width: 15px;
     height: 15px;
 }
@@ -89,7 +89,7 @@ QComboBox::down-arrow {
     border: none;
     border-radius: 10px;
 
-    background-image: url(../resources/icons/dashboard_page/check_in_icon.svg);
+    background-image: url(../resources/icons/check_in_dashboard_icon.svg);
     background-repeat: no-repeat;
     background-position: top left;
     background-origin: content;
@@ -103,7 +103,7 @@ QComboBox::down-arrow {
     border: none;
     border-radius: 10px;
 
-    background-image: url(../resources/icons/dashboard_page/check_out_icon.svg);
+    background-image: url(../resources/icons/check_out_dashboard_icon.svg);
     background-repeat: no-repeat;
     background-position: top left;
     background-origin: content;
@@ -117,7 +117,7 @@ QComboBox::down-arrow {
     border: none;
     border-radius: 10px;
 
-    background-image: url(../resources/icons/dashboard_page/available_rooms_icon.svg);
+    background-image: url(../resources/icons/available_rooms_icon.svg);
     background-repeat: no-repeat;
     background-position: top left;
     background-origin: content;
@@ -131,7 +131,7 @@ QComboBox::down-arrow {
     border: none;
     border-radius: 10px;
 
-    background-image: url(../resources/icons/dashboard_page/reserved_rooms_icon.svg);
+    background-image: url(../resources/icons/reserved_rooms_icon.svg);
     background-repeat: no-repeat;
     background-position: top left;
     background-origin: content;
@@ -145,7 +145,7 @@ QComboBox::down-arrow {
     border: none;
     border-radius: 10px;
 
-    background-image: url(../resources/icons/dashboard_page/booked_rooms_icon.svg);
+    background-image: url(../resources/icons/booked_rooms_icon.svg);
     background-repeat: no-repeat;
     background-position: top left;
     background-origin: content;
@@ -245,7 +245,7 @@ QComboBox::down-arrow {
 
     color: #000000;
 
-    background-image: url(../resources/icons/dashboard_page/search_icon_small.svg);
+    background-image: url(../resources/icons/search_icon_small.svg);
     background-repeat: no-repeat;
     background-position: left center;
     background-origin: border;
@@ -259,7 +259,7 @@ QLineEdit#reservation_list_frame_search_lineedit::placeholder{
 }
 
 #reservation_list_frame_add_reservation_button{
-    background-image: url(../resources/icons/dashboard_page/add_icon.svg);
+    background-image: url(../resources/icons/add_icon.svg);
     background-repeat: no-repeat;
     background-position: left center;
     background-origin: border;
@@ -269,7 +269,7 @@ QLineEdit#reservation_list_frame_search_lineedit::placeholder{
 
     background-color: #FFFFFF;
     color: #000000;
-    background-image: url(../resources/icons/dashboard_page/search_icon_big.svg);
+    background-image: url(../resources/icons/search_icon_big.svg);
     background-repeat: no-repeat;
     background-position: left center;
     background-origin: border;

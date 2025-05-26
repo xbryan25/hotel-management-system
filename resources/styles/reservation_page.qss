@@ -12,7 +12,7 @@ QComboBox::drop-down {
 }
 
 QComboBox::down-arrow {
-    image: url(../resources/icons/rooms_page/arrow_down_icon.svg);
+    image: url(../resources/icons/arrow_down_icon.svg);
     width: 15px;
     height: 15px;
 }
@@ -40,7 +40,7 @@ QFrame#inner_buttons_and_sections_frame{
     border-radius: 20px;
     padding-left: 48px;
 
-    background-image: url(../resources/icons/rooms_page/search_icon_big.svg);
+    background-image: url(../resources/icons/search_icon_big.svg);
     background-repeat: no-repeat;
     background-position: left center;
     background-origin: border;

@@ -13,7 +13,7 @@ QComboBox::drop-down {
 }
 
 QComboBox::down-arrow {
-    image: url(../resources/icons/add_payment_dialog/arrow_down_icon.svg);
+    image: url(../resources/icons/arrow_down_icon.svg);
     width: 15px;
     height: 15px;
 }

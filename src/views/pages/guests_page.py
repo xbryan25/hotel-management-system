@@ -109,7 +109,7 @@ class GuestsPage(QWidget, GuestsPageUI):
         guest_table_view_header.setSectionResizeMode(6, QHeaderView.ResizeMode.Fixed)
 
     def set_table_views_button_delegate(self):
-        button_delegate_icon_path = "../resources/icons/guests_page/info_icon.svg"
+        button_delegate_icon_path = "../resources/icons/info_icon.svg"
 
         self.button_delegate = ButtonDelegate(icon_path=button_delegate_icon_path,
                                               can_be_disabled=False,

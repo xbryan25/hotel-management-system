@@ -173,7 +173,7 @@ class RoomsPage(QWidget, RoomsPageUI):
                     list_rooms_frame.status_value_label.setText(data_from_model[row][3].capitalize())
                     list_rooms_frame.capacity_value_label.setText(str(data_from_model[row][4]))
 
-                    relative_file_path = "../resources/icons/rooms_page/room_images/" + data_from_model[row][5]
+                    relative_file_path = "../resources/icons/room_images/" + data_from_model[row][5]
 
                     if relative_file_path in self.image_cache:
                         pixmap = self.image_cache[relative_file_path]
@@ -421,7 +421,7 @@ class RoomsPage(QWidget, RoomsPageUI):
                         grid_rooms_frame.delete_button.clicked.connect(
                             lambda _, rn=room_number: delete_room_func(rn))
 
-                        relative_file_path = "../resources/icons/rooms_page/room_images/" + \
+                        relative_file_path = "../resources/icons/room_images/" + \
                                              data_from_model[counter][5]
 
                         if relative_file_path in self.image_cache:
@@ -471,13 +471,13 @@ class RoomsPage(QWidget, RoomsPageUI):
             self.setStyleSheet(file.read())
 
     def set_icons(self):
-        self.grid_view_button.setIcon(QIcon("../resources/icons/rooms_page/grid_view_icon.svg"))
+        self.grid_view_button.setIcon(QIcon("../resources/icons/grid_view_icon.svg"))
         self.grid_view_button.setIconSize(QSize(25, 25))
 
-        self.list_view_button.setIcon(QIcon("../resources/icons/rooms_page/list_view_icon.svg"))
+        self.list_view_button.setIcon(QIcon("../resources/icons/list_view_icon.svg"))
         self.list_view_button.setIconSize(QSize(25, 25))
 
-        self.add_room_button.setIcon(QIcon("../resources/icons/rooms_page/add_icon.svg"))
+        self.add_room_button.setIcon(QIcon("../resources/icons/add_icon.svg"))
         self.add_room_button.setIconSize(QSize(20, 20))
 
     def load_fonts(self):
