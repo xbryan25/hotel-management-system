@@ -34,6 +34,9 @@ class RoomsPageController:
     def set_models(self, max_room_per_page=5, current_page_number=1,
                    sort_by="room_number", sort_type="ASC", search_input=None):
 
+        self.db_driver.reserved_room_queries.update_expired_reservations()
+        self.db_driver.booked_room_queries.update_elapsed_bookings()
+
         rooms_data = self.db_driver.room_queries.get_all_rooms(enable_pagination=True,
                                                                max_room_per_page=max_room_per_page,
                                                                current_page_number=current_page_number,

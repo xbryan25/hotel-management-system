@@ -54,6 +54,10 @@ class DashboardController:
         self.load_data_in_labels()
 
     def set_models(self):
+        self.db_driver.reserved_room_queries.update_expired_reservations()
+        self.db_driver.booked_room_queries.update_elapsed_bookings()
+
+
         recent_check_in_initial_data = self.db_driver.booked_room_queries.get_all_booked_room_today("check_in")
         recent_check_out_initial_data = self.db_driver.booked_room_queries.get_all_booked_room_today("check_out")
         reservations_initial_data = self.db_driver.reserved_room_queries.get_all_reservations(enable_pagination=True,
@@ -99,6 +103,7 @@ class DashboardController:
         self.rooms_model.update_data(rooms_initial_data)
 
     def refresh_reservations_view(self, max_rows):
+
         reservations_data = self.db_driver.reserved_room_queries.get_all_reservations(enable_pagination=True,
                                                                                       max_reservations_per_page=int(max_rows),
                                                                                       view_type="Reservations",

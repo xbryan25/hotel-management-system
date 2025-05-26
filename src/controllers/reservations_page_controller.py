@@ -205,6 +205,10 @@ class ReservationsPageController:
             self.go_to_previous_page()
 
     def set_models(self):
+        # Update stale reservations
+        self.db_driver.reserved_room_queries.update_expired_reservations()
+        self.db_driver.booked_room_queries.update_elapsed_bookings()
+
         reservations_data_from_db = self.db_driver.reserved_room_queries.get_all_reservations(enable_pagination=True,
                                                                                               max_reservations_per_page=self.max_reservations_per_page,
                                                                                               current_page_number=self.current_page_number,

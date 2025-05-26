@@ -146,6 +146,9 @@ class BookingsPageController:
             self.go_to_previous_page()
 
     def set_models(self):
+        self.db_driver.reserved_room_queries.update_expired_reservations()
+        self.db_driver.booked_room_queries.update_elapsed_bookings()
+
         bookings_data_from_db = self.db_driver.booked_room_queries.get_all_bookings(max_bookings_per_page=self.max_bookings_per_page,
                                                                                     current_page_number=self.current_page_number,
                                                                                     view_type=self.prev_view_type,
