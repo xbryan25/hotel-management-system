@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_Frame(object):
     def setupUi(self, Frame):
         Frame.setObjectName("Frame")
-        Frame.resize(1094, 93)
+        Frame.resize(883, 93)
         Frame.setMinimumSize(QtCore.QSize(0, 80))
         Frame.setLineWidth(0)
         self.gridLayout = QtWidgets.QGridLayout(Frame)
@@ -20,8 +20,8 @@ class Ui_Frame(object):
         self.gridLayout.setSpacing(0)
         self.gridLayout.setObjectName("gridLayout")
         self.room_image_and_room_no_frame = QtWidgets.QFrame(parent=Frame)
-        self.room_image_and_room_no_frame.setMinimumSize(QtCore.QSize(200, 0))
-        self.room_image_and_room_no_frame.setMaximumSize(QtCore.QSize(200, 16777215))
+        self.room_image_and_room_no_frame.setMinimumSize(QtCore.QSize(210, 0))
+        self.room_image_and_room_no_frame.setMaximumSize(QtCore.QSize(210, 16777215))
         self.room_image_and_room_no_frame.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
         self.room_image_and_room_no_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Plain)
         self.room_image_and_room_no_frame.setLineWidth(0)
@@ -42,7 +42,7 @@ class Ui_Frame(object):
         self.room_image_label.setObjectName("room_image_label")
         self.gridLayout_12.addWidget(self.room_image_label, 0, 1, 1, 1)
         self.room_num_label = QtWidgets.QLabel(parent=self.room_image_and_room_no_frame)
-        self.room_num_label.setMinimumSize(QtCore.QSize(73, 0))
+        self.room_num_label.setMinimumSize(QtCore.QSize(80, 0))
         self.room_num_label.setLineWidth(0)
         self.room_num_label.setObjectName("room_num_label")
         self.gridLayout_12.addWidget(self.room_num_label, 0, 2, 1, 1)

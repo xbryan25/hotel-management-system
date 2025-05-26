@@ -168,7 +168,7 @@ class RoomsPage(QWidget, RoomsPageUI):
                     room_number = data_from_model[row][0]
 
                     list_rooms_frame.room_num_label.setText(room_number.replace("room-", "#"))
-                    list_rooms_frame.room_type_value_label.setText(data_from_model[row][1].capitalize())
+                    list_rooms_frame.set_room_type_value_label(data_from_model[row][1])
                     list_rooms_frame.rate_value_label.setText(f"P{data_from_model[row][2]}/day")
                     list_rooms_frame.status_value_label.setText(data_from_model[row][3].capitalize())
                     list_rooms_frame.capacity_value_label.setText(str(data_from_model[row][4]))
@@ -412,8 +412,9 @@ class RoomsPage(QWidget, RoomsPageUI):
 
                         room_number = data_from_model[counter][0]
 
-                        grid_rooms_frame.room_num_and_title_label.setText(
-                            f"{room_number.replace("room-", "#")} - {data_from_model[counter][1].capitalize()}")
+                        grid_rooms_frame.set_room_num_and_title_label(room_number,
+                                                                            data_from_model[counter][1])
+
                         grid_rooms_frame.rate_value_label.setText(f"P{data_from_model[counter][2]}/day")
                         grid_rooms_frame.status_value_label.setText(data_from_model[counter][3].capitalize())
                         grid_rooms_frame.capacity_label.setText(str(data_from_model[counter][4]))
