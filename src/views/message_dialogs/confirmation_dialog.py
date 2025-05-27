@@ -18,6 +18,8 @@ class ConfirmationDialog(QDialog, ConfirmationDialogUI):
         self.load_fonts()
         self.set_external_stylesheet()
 
+        self.setWindowTitle("HotelEase")
+
     def set_messages(self, header_message, subheader_message, left_button_text, right_button_text):
         self.header_message_label.setText(header_message)
 

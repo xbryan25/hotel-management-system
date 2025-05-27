@@ -20,6 +20,8 @@ class AddPaymentDialog(QDialog, AddPaymentDialogUI):
         self.load_fonts()
         self.set_external_stylesheet()
 
+        self.setWindowTitle("HotelEase | Add Payment")
+
     def set_remaining_balance_value(self, remaining_balance):
         self.remaining_balance_value_label.setText(f"₱{remaining_balance}")
 

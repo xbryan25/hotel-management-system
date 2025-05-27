@@ -35,6 +35,8 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
         self.load_fonts()
         self.set_external_stylesheet()
 
+        self.setWindowTitle("HotelEase | Reservation Information")
+
     def set_guest_count_spinbox_max_value(self, max_value):
         self.guest_count_spinbox.setMaximum(max_value)
 

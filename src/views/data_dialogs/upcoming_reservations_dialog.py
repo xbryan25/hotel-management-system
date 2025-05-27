@@ -19,6 +19,8 @@ class UpcomingReservationsDialog(QDialog, UpcomingReservationsDialogUI):
         self.set_external_stylesheet()
         self.load_fonts()
 
+        self.setWindowTitle("HotelEase | Upcoming Reservations")
+
     def setup_reservations_label(self, room_number):
         self.reservations_label.setText(f"Reservations of {room_number}")
 

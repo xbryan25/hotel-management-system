@@ -18,6 +18,8 @@ class BookingInfoDialog(QDialog, BookingInfoDialogUI):
         self.load_fonts()
         self.set_external_stylesheet()
 
+        self.setWindowTitle("HotelEase | Booking Information")
+
     def create_service_frame(self, service, edit_state=False, service_type='not availed'):
         # TODO: Make into another file, I guess?
 

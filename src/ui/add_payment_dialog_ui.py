@@ -24,7 +24,7 @@ class Ui_Dialog(object):
         self.gridLayout_3 = QtWidgets.QGridLayout(self.outer_frame)
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.contents_frame = QtWidgets.QFrame(parent=self.outer_frame)
-        self.contents_frame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.contents_frame.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
         self.contents_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.contents_frame.setObjectName("contents_frame")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.contents_frame)

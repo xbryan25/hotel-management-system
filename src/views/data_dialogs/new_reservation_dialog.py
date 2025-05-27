@@ -34,6 +34,8 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         self.set_phone_number_lineedit_validator()
         self.set_lineedits_max_length()
 
+        self.setWindowTitle("HotelEase | Create New Reservation")
+
     def set_guest_count_spinbox_max_value(self, max_value):
         self.guest_count_spinbox.setMaximum(max_value)
 

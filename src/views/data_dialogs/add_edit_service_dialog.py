@@ -22,6 +22,8 @@ class AddEditServiceDialog(QDialog, AddEditServiceDialogUI):
 
         self.dialog_type = 'add_service'
 
+        self.setWindowTitle("HotelEase | Add New Service")
+
     def load_edit_service_view(self, service_id, service_details):
         self.service_label.setText(f"Edit {service_id}")
         self.right_button.setText("Edit Service")
@@ -30,6 +32,8 @@ class AddEditServiceDialog(QDialog, AddEditServiceDialogUI):
         self.rate_spinbox.setValue(service_details[2])
 
         self.dialog_type = 'edit_service'
+
+        self.setWindowTitle(f"HotelEase | Edit {service_id}")
 
     def validate_form_completion(self):
 
