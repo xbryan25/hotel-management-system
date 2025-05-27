@@ -255,14 +255,13 @@ class ReservationInfoDialogController:
                 new_total = int(reservation_inputs['total_reservation_cost'])
                 amount_already_paid = self.data_from_reservation['total_reservation_cost'] - self.data_from_reservation['remaining_balance']
 
-                if amount_already_paid > 0 and amount_already_paid != self.data_from_reservation['total_reservation_cost']:
+                if 0 < amount_already_paid < new_total:
                     self.db_driver.reserved_room_queries.set_payment_status(self.selected_reservation_id, 'Partially Paid')
                 elif amount_already_paid == 0:
                     self.db_driver.reserved_room_queries.set_payment_status(self.selected_reservation_id,
                                                                             'Not Paid')
-
                 # For refund
-                if new_total < amount_already_paid:
+                elif amount_already_paid > new_total:
                     amount_to_refund = amount_already_paid - new_total
 
                     self.feedback_dialog = FeedbackDialog("Total amount paid is greater than new total.",
@@ -277,17 +276,20 @@ class ReservationInfoDialogController:
 
                     self.db_driver.reserved_room_queries.set_payment_status(self.selected_reservation_id, 'Fully Paid')
 
-                if self.original_room_number != reservation_inputs["room_number"]:
-
-                    # TODO: Cancel reservation
-                    pass
+                elif new_total == amount_already_paid:
+                    self.db_driver.reserved_room_queries.set_payment_status(self.selected_reservation_id, 'Fully Paid')
 
 
-                    # # Set old room number to 'available'
-                    # self.set_room_number_to_available()
-                    #
-                    # # Set new room number to be 'reserved'
-                    # self.db_driver.room_queries.set_room_status(reservation_inputs["room_number"], "reserved")
+                # if self.original_room_number != reservation_inputs["room_number"]:
+                #     # TODO: Cancel reservation
+                #     pass
+                #
+                #
+                #     # # Set old room number to 'available'
+                #     # self.set_room_number_to_available()
+                #     #
+                #     # # Set new room number to be 'reserved'
+                #     # self.db_driver.room_queries.set_room_status(reservation_inputs["room_number"], "reserved")
 
                 self.feedback_dialog = FeedbackDialog("Reservation edited successfully.", connected_view=self.view)
                 self.feedback_dialog.exec()
