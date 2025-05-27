@@ -234,6 +234,8 @@ class RoomsPageController:
 
     def refresh_rooms_data(self):
 
+        # self.update_frame_count()
+
         self.db_driver.room_queries.refresh_all_room_status()
 
         self.prev_sort_by = self.view.sort_by_combobox.currentText().replace("Sort by ", "").lower().replace(" ", "_")
