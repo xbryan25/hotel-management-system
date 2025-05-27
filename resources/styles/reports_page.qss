@@ -5,7 +5,31 @@ QFrame#most_availed_services_chart_frame, QFrame#top_paying_guests_chart_frame{
     border-radius: 10px;
 }
 
-#revenue_chart_label{
-    border: 1px solid black;
-    border-radius: 10px;
+QComboBox{
+    background-color: #D9D9D9;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    color: black;
+
+    padding-left: 10px;
+}
+
+#revenue_chart_combobox:hover, #reservation_status_chart_combobox:hover,
+#most_availed_services_chart_combobox:hover, #top_paying_guests_chart_combobox:hover{
+    background-color: #b5b3b3;
+}
+
+QComboBox::drop-down {
+    background: transparent;
+    border: none;
+    width: 20px;
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    margin: 2px 4px 2px 0;
+}
+
+QComboBox::down-arrow {
+    image: url(../resources/icons/arrow_down_icon.svg);
+    width: 15px;
+    height: 15px;
 }

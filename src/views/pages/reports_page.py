@@ -61,6 +61,18 @@ class ReportsPage(QWidget, ReportsPageUI):
     def load_fonts(self):
         self.reports_label.setFont(QFont("Inter", 20, QFont.Weight.Bold))
 
+        self.revenue_chart_text_label.setFont(QFont("Inter", 16, QFont.Weight.Bold))
+        self.revenue_chart_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+
+        self.reservation_status_chart_text_label.setFont(QFont("Inter", 16, QFont.Weight.Bold))
+        self.reservation_status_chart_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+
+        self.most_availed_services_chart_text_label.setFont(QFont("Inter", 16, QFont.Weight.Bold))
+        self.most_availed_services_chart_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+
+        self.top_paying_guests_chart_text_label.setFont(QFont("Inter", 16, QFont.Weight.Bold))
+        self.top_paying_guests_chart_combobox.setFont(QFont("Inter", 12, QFont.Weight.Normal))
+
     def resizeEvent(self, event):
 
         super().resizeEvent(event)
