@@ -7,10 +7,10 @@ from .billing_page_ui import Ui_Widget as BillingPageUI
 from .booking_page_ui import Ui_Widget as BookingPageUI
 from .dashboard_page_ui import Ui_Widget as DashboardPageUI
 from .guests_page_ui import Ui_Widget as GuestsPageUI
+from .reports_page_ui import Ui_Widget as ReportsPageUI
 from .reservation_page_ui import Ui_Widget as ReservationPageUI
 from .rooms_page_ui import Ui_Widget as RoomsPageUI
 from .services_page_ui import Ui_Widget as ServicesPageUI
-from .settings_page_ui import Ui_Widget as SettingsPageUI
 
 # Dialogs
 from .new_reservation_dialog_ui import Ui_Dialog as NewReservationDialogUI

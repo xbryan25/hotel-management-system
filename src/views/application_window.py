@@ -100,7 +100,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
                              {"name": "Guests", "icon": "../resources/icons/guests_icon.svg"},
                              {"name": "Billing", "icon": "../resources/icons/billing_icon.svg"},
                              {"name": "Services", "icon": "../resources/icons/services_icon.svg"},
-                             {"name": "Settings", "icon": "../resources/icons/settings_icon.svg"}]
+                             {"name": "Reports", "icon": "../resources/icons/bar_chart_icon.svg"}]
 
 
         self.expanded_buttons_list_widget.clear()
@@ -153,7 +153,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
         self.reservation_page = ReservationPage()
         self.rooms_page = RoomsPage()
         self.services_page = ServicesPage()
-        self.settings_page = SettingsPage()
+        self.reports_page = ReportsPage()
 
         # Loaded according to index of sidebar
         self.stacked_widget.addWidget(self.dashboard_page)
@@ -163,7 +163,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
         self.stacked_widget.addWidget(self.guests_page)
         self.stacked_widget.addWidget(self.billing_page)
         self.stacked_widget.addWidget(self.services_page)
-        self.stacked_widget.addWidget(self.settings_page)
+        self.stacked_widget.addWidget(self.reports_page)
 
         self.stacked_widget.setCurrentWidget(self.dashboard_page)
 
@@ -195,6 +195,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
         self.reservations_page_controller = ReservationsPageController(self.reservation_page, self.db_driver)
         self.bookings_page_controller = BookingsPageController(self.booking_page, self.db_driver)
         self.billings_page_controller = BillingsPageController(self.billing_page, self.db_driver)
+        self.reports_page_controller = ReportsPageController(self.reports_page, self.db_driver)
 
     def closeEvent(self, event):
         self.db_driver.close_connection()
