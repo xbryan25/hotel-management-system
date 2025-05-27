@@ -36,6 +36,7 @@ class RoomsPageController:
 
         self.db_driver.reserved_room_queries.update_expired_reservations()
         self.db_driver.booked_room_queries.update_elapsed_bookings()
+        self.db_driver.availed_service_queries.refresh_availed_services()
 
         rooms_data = self.db_driver.room_queries.get_all_rooms(enable_pagination=True,
                                                                max_room_per_page=max_room_per_page,

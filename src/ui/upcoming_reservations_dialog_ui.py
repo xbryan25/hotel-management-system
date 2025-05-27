@@ -12,9 +12,9 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(400, 400)
-        Dialog.setMinimumSize(QtCore.QSize(400, 400))
-        Dialog.setMaximumSize(QtCore.QSize(400, 400))
+        Dialog.resize(425, 400)
+        Dialog.setMinimumSize(QtCore.QSize(425, 400))
+        Dialog.setMaximumSize(QtCore.QSize(425, 400))
         self.gridLayout = QtWidgets.QGridLayout(Dialog)
         self.gridLayout.setObjectName("gridLayout")
         self.reservations_label = QtWidgets.QLabel(parent=Dialog)
@@ -27,7 +27,7 @@ class Ui_Dialog(object):
         self.reservation_dates_scroll_area.setWidgetResizable(True)
         self.reservation_dates_scroll_area.setObjectName("reservation_dates_scroll_area")
         self.reservation_dates_scroll_area_contents = QtWidgets.QWidget()
-        self.reservation_dates_scroll_area_contents.setGeometry(QtCore.QRect(0, 0, 382, 336))
+        self.reservation_dates_scroll_area_contents.setGeometry(QtCore.QRect(0, 0, 407, 336))
         self.reservation_dates_scroll_area_contents.setObjectName("reservation_dates_scroll_area_contents")
         self.reservation_dates_scroll_area_grid_layout = QtWidgets.QGridLayout(self.reservation_dates_scroll_area_contents)
         self.reservation_dates_scroll_area_grid_layout.setObjectName("reservation_dates_scroll_area_grid_layout")

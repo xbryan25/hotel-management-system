@@ -127,6 +127,7 @@ class BillingsPageController:
 
         self.db_driver.reserved_room_queries.update_expired_reservations()
         self.db_driver.booked_room_queries.update_elapsed_bookings()
+        self.db_driver.availed_service_queries.refresh_availed_services()
 
         billings_data_from_db = self.db_driver.reserved_room_queries.get_all_reservations(enable_pagination=True,
                                                                                           max_reservations_per_page=self.max_billings_per_page,

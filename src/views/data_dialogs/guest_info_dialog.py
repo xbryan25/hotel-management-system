@@ -30,6 +30,8 @@ class GuestInfoDialog(QDialog, GuestInfoDialogUI):
         self.set_phone_number_lineedit_validator()
         self.set_lineedits_max_length()
 
+        self.setWindowTitle("HotelEase | Guest Information")
+
     def set_phone_number_lineedit_validator(self):
 
         regex = QRegularExpression("^[0-9]*$")

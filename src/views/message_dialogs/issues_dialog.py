@@ -18,6 +18,8 @@ class IssuesDialog(QDialog, IssuesDialogUI):
         self.load_fonts()
         self.set_external_stylesheet()
 
+        self.setWindowTitle("HotelEase")
+
     def set_messages(self, header_message, issues_message, proceed_button_text):
         self.header_message_label.setText(header_message)
 

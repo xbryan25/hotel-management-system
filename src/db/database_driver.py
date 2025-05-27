@@ -24,6 +24,7 @@ class DatabaseDriver:
         )
 
         self.cursor = self.db.cursor()
+        self.cursor.execute("SET SQL_SAFE_UPDATES = 0;")
 
         self.init_db = InitializeDatabase(self.cursor)
 
@@ -36,6 +37,7 @@ class DatabaseDriver:
         self.service_queries = ServiceQueries(self.db, self.cursor)
 
     def close_connection(self):
+        self.cursor.execute("SET SQL_SAFE_UPDATES = 1;")
         self.db.close()
 
     @staticmethod

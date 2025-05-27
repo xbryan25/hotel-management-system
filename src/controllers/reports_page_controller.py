@@ -13,6 +13,8 @@ class ReportsPageController:
         self.view = page_widget
         self.db_driver = db_driver
 
+        self.db_driver.availed_service_queries.refresh_availed_services()
+
         self.connect_signals_to_slots()
 
         self.revenue_canvas = None
@@ -30,6 +32,7 @@ class ReportsPageController:
         self.prev_revenue_chart_choice = None
 
         self.load_all_charts()
+
 
     def connect_signals_to_slots(self):
         self.view.revenue_chart_combobox_changed.connect(self.update_revenue_chart)

@@ -6,6 +6,38 @@ class AvailedServiceQueries:
         self.db = db
         self.cursor = cursor
 
+    def refresh_availed_services(self):
+        # self.cursor.execute("SET SQL_SAFE_UPDATES = 0;")
+
+        sql_r = """UPDATE availedservices
+                    JOIN reservedrooms ON availedservices.avail_date = reservedrooms.last_modified
+                    SET availedservices.avail_status = %s
+                    WHERE availedservices.avail_status = %s
+                        AND reservedrooms.reservation_status IN ('Cancelled', 'Expired');
+                """
+
+        values_r = ('Cancelled', 'Active')
+
+        self.cursor.execute(sql_r, values_r)
+
+        sql_b = """UPDATE availedservices
+                    JOIN reservedrooms ON availedservices.avail_date = reservedrooms.last_modified 
+                        AND reservedrooms.reservation_status = %s
+                    JOIN bookedrooms ON
+                        reservedrooms.check_in_date = bookedrooms.check_in_date AND reservedrooms.check_out_date = bookedrooms.check_out_date AND
+                        reservedrooms.guest_id = bookedrooms.guest_id AND reservedrooms.room_id = bookedrooms.room_id
+                    SET availedservices.avail_status = %s
+                    WHERE availedservices.avail_status=%s AND bookedrooms.check_in_status=%s;
+                """
+
+        values_b = ('Confirmed', 'Completed', 'Active', 'Finished')
+
+        self.cursor.execute(sql_b, values_b)
+
+        # self.cursor.execute("SET SQL_SAFE_UPDATES = 1;")
+
+        self.db.commit()
+
     def get_count_of_most_availed_services(self, view_type='Today'):
 
         sql = """SELECT services.service_name, COUNT(*) AS cnt FROM availedservices
