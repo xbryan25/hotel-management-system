@@ -38,6 +38,16 @@ class GuestQueries:
         self.cursor.execute(sql, values)
         self.db.commit()
 
+    def check_if_government_id_exists(self, government_id):
+        sql = "SELECT 1 FROM guests WHERE guests.government_id=%s LIMIT 1;"
+        values = (government_id,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        return result[0] if result else None
+
     def get_latest_guest_id(self):
 
         self.cursor.execute("""SELECT guest_id FROM guests

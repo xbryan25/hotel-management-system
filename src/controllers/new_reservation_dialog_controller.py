@@ -141,21 +141,28 @@ class NewReservationDialogController:
 
     def make_reservation(self):
         guest_inputs = self.view.get_guest_inputs()
-        reservation_inputs = self.view.get_reservation_inputs()
-        availed_services_inputs = self.view.get_availed_services_inputs(self.service_frames)
 
-        self.db_driver.guest_queries.add_guest(guest_inputs)
+        if self.db_driver.guest_queries.check_if_government_id_exists(guest_inputs['government_id']):
+            self.fail_dialog = FeedbackDialog("Government ID number already exists.",
+                                              "Go back and edit Government ID number.")
+            self.fail_dialog.exec()
 
-        guest_id = self.db_driver.guest_queries.get_guest_id_from_name(guest_inputs["name"])
-        room_id = self.db_driver.room_queries.get_room_id_from_room_number(reservation_inputs["room_number"])
+        else:
+            reservation_inputs = self.view.get_reservation_inputs()
+            availed_services_inputs = self.view.get_availed_services_inputs(self.service_frames)
 
-        reservation_inputs.update({"guest_id": guest_id})
-        reservation_inputs.update({"room_id": room_id})
+            self.db_driver.guest_queries.add_guest(guest_inputs)
 
-        self.db_driver.reserved_room_queries.add_reserved_room(reservation_inputs)
-        self.db_driver.availed_service_queries.add_availed_services(availed_services_inputs, guest_id)
+            guest_id = self.db_driver.guest_queries.get_guest_id_from_name(guest_inputs["name"])
+            room_id = self.db_driver.room_queries.get_room_id_from_room_number(reservation_inputs["room_number"])
 
-        # self.db_driver.room_queries.set_room_status(room_number, 'reserved')
+            reservation_inputs.update({"guest_id": guest_id})
+            reservation_inputs.update({"room_id": room_id})
 
-        self.success_dialog = FeedbackDialog("Reservation added successfully.", connected_view=self.view)
-        self.success_dialog.exec()
+            self.db_driver.reserved_room_queries.add_reserved_room(reservation_inputs)
+            self.db_driver.availed_service_queries.add_availed_services(availed_services_inputs, guest_id)
+
+            # self.db_driver.room_queries.set_room_status(room_number, 'reserved')
+
+            self.success_dialog = FeedbackDialog("Reservation added successfully.", connected_view=self.view)
+            self.success_dialog.exec()
