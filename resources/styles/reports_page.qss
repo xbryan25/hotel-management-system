@@ -1,0 +1,6 @@
+QFrame#revenue_chart_frame, QFrame#reservation_status_chart_frame,
+QFrame#most_availed_services_chart_frame, QFrame#top_paying_guests_chart_frame{
+    background-color: white;
+    border: 1px solid #CCC;
+    border-radius: 10px;
+}

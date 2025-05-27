@@ -153,7 +153,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
         self.reservation_page = ReservationPage()
         self.rooms_page = RoomsPage()
         self.services_page = ServicesPage()
-        self.settings_page = SettingsPage()
+        self.reports_page = ReportsPage()
 
         # Loaded according to index of sidebar
         self.stacked_widget.addWidget(self.dashboard_page)
@@ -163,7 +163,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
         self.stacked_widget.addWidget(self.guests_page)
         self.stacked_widget.addWidget(self.billing_page)
         self.stacked_widget.addWidget(self.services_page)
-        self.stacked_widget.addWidget(self.settings_page)
+        self.stacked_widget.addWidget(self.reports_page)
 
         self.stacked_widget.setCurrentWidget(self.dashboard_page)
 
