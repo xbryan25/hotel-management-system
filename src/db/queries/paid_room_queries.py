@@ -5,6 +5,34 @@ class PaidRoomQueries:
         self.db = db
         self.cursor = cursor
 
+    def get_count_of_revenue(self, view_type='Past 7 Days'):
+
+        if view_type == 'Past 7 Days':
+            sql = """SELECT DATE(transaction_date) AS payment_day, SUM(amount) AS total_amount FROM paidrooms
+                        WHERE transaction_date >= CURDATE() - INTERVAL 6 DAY
+                        GROUP BY DATE(transaction_date)
+                        ORDER BY payment_day ASC;"""
+
+        elif view_type == 'Past 4 Weeks':
+            sql = """SELECT YEARWEEK(transaction_date, 1) AS year_week, SUM(amount) AS total_amount 
+                        FROM paidrooms
+                        WHERE transaction_date >= CURDATE() - INTERVAL 4 WEEK
+                        GROUP BY year_week
+                        ORDER BY year_week ASC;"""
+
+        else:
+            sql = """SELECT DATE_FORMAT(transaction_date, '%Y-%m') AS transaction_month, SUM(amount) AS total_amount
+                        FROM paidrooms
+                        WHERE transaction_date >= CURDATE() - INTERVAL 6 MONTH 
+                        GROUP BY transaction_month
+                        ORDER BY transaction_month;"""
+
+        self.cursor.execute(sql)
+        result = self.cursor.fetchall()
+
+        return result
+
+
     def get_latest_payment_id(self):
 
         self.cursor.execute("""SELECT payment_id FROM paidrooms

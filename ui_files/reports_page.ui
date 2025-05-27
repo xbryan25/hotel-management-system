@@ -101,22 +101,22 @@
           <widget class="QComboBox" name="most_availed_services_chart_combobox">
            <item>
             <property name="text">
-             <string>Daily</string>
+             <string>Today</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Weekly</string>
+             <string>This Week</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Monthly</string>
+             <string>This Month</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Yearly</string>
+             <string>This Year</string>
             </property>
            </item>
            <item>
@@ -182,22 +182,22 @@
           <widget class="QComboBox" name="top_paying_guests_chart_combobox">
            <item>
             <property name="text">
-             <string>Daily</string>
+             <string>Today</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Weekly</string>
+             <string>This Week</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Monthly</string>
+             <string>This Month</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Yearly</string>
+             <string>This Year</string>
             </property>
            </item>
            <item>
@@ -272,7 +272,7 @@
            </item>
            <item>
             <property name="text">
-             <string>Past 6 months</string>
+             <string>Past 6 Months</string>
             </property>
            </item>
           </widget>
@@ -340,22 +340,22 @@
           <widget class="QComboBox" name="reservation_status_chart_combobox">
            <item>
             <property name="text">
-             <string>Daily</string>
+             <string>Today</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Weekly</string>
+             <string>This Week</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Monthly</string>
+             <string>This Month</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Yearly</string>
+             <string>This Year</string>
             </property>
            </item>
            <item>

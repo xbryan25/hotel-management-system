@@ -8,6 +8,30 @@ class ReservedRoomQueries:
         self.db = db
         self.cursor = cursor
 
+    def get_count_of_reservation_status(self, view_type='Today'):
+        if view_type == 'Today':
+            sql = """SELECT reservation_status, COUNT(*) FROM hms_db.reservedrooms 
+                        WHERE DATE(reservation_date) = CURDATE() GROUP BY reservation_status;"""
+        elif view_type == 'This Week':
+            sql = """SELECT reservation_status, COUNT(*) FROM hms_db.reservedrooms 
+                        WHERE  YEARWEEK(reservation_date, 1) = YEARWEEK(CURDATE(), 1) GROUP BY reservation_status;"""
+        elif view_type == 'This Month':
+            sql = """SELECT reservation_status, COUNT(*) FROM hms_db.reservedrooms 
+                        WHERE MONTH(reservation_date) = MONTH(CURDATE())
+                            AND YEAR(reservation_date) = YEAR(CURDATE())
+                        GROUP BY reservation_status;"""
+        elif view_type == 'This Year':
+            sql = """SELECT reservation_status, COUNT(*) FROM hms_db.reservedrooms
+                        WHERE YEAR(reservation_date) = YEAR(CURDATE())
+                    GROUP BY reservation_status;"""
+        else:
+            sql = """SELECT reservation_status, COUNT(*) FROM hms_db.reservedrooms GROUP BY reservation_status;"""
+
+        self.cursor.execute(sql)
+        result = self.cursor.fetchall()
+
+        return result
+
     def update_expired_reservations(self):
         sql = """UPDATE reservedrooms
                 SET reservation_status = %s

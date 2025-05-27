@@ -100,7 +100,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
                              {"name": "Guests", "icon": "../resources/icons/guests_icon.svg"},
                              {"name": "Billing", "icon": "../resources/icons/billing_icon.svg"},
                              {"name": "Services", "icon": "../resources/icons/services_icon.svg"},
-                             {"name": "Settings", "icon": "../resources/icons/settings_icon.svg"}]
+                             {"name": "Reports", "icon": "../resources/icons/bar_chart_icon.svg"}]
 
 
         self.expanded_buttons_list_widget.clear()

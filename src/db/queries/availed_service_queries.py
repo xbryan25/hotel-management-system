@@ -6,6 +6,33 @@ class AvailedServiceQueries:
         self.db = db
         self.cursor = cursor
 
+    def get_count_of_most_availed_services(self, view_type='Today'):
+
+        sql = """SELECT services.service_name, COUNT(*) AS cnt FROM availedservices
+                    JOIN services ON availedservices.service_id=services.service_id
+                    """
+
+        if view_type == 'Today':
+            sql += """WHERE DATE(availedservices.avail_date) = CURDATE() """
+
+        elif view_type == 'This Week':
+            sql += """WHERE YEARWEEK(availedservices.avail_date, 1) = YEARWEEK(CURDATE(), 1) """
+
+        elif view_type == 'This Month':
+            sql += """WHERE MONTH(availedservices.avail_date) = MONTH(CURDATE())
+                        AND YEAR(availedservices.avail_date) = YEAR(CURDATE()) """
+
+        elif view_type == 'This Year':
+            sql += """WHERE YEAR(availedservices.avail_date) = YEAR(CURDATE()) """
+
+        sql += """AND avail_status='Active' AND services.is_active=1 
+                    GROUP BY services.service_name ORDER BY cnt DESC LIMIT 5;"""
+
+        self.cursor.execute(sql)
+        result = self.cursor.fetchall()
+
+        return result
+
     def get_availed_services_from_avail_date(self, avail_date):
         sql = f"""SELECT services.service_id, services.service_name, availedservices.quantity, services.rate, 
                     availedservices.avail_id

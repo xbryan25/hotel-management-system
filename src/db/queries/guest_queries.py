@@ -7,6 +7,30 @@ class GuestQueries:
         self.db = db
         self.cursor = cursor
 
+    def get_top_paying_guests(self, view_type):
+
+        sql = """SELECT guests.name, SUM(paidrooms.amount) as total FROM guests JOIN paidrooms ON guests.guest_id = paidrooms.guest_id """
+
+        if view_type == 'Today':
+            sql += """WHERE DATE(paidrooms.transaction_date) = CURDATE() """
+
+        elif view_type == 'This Week':
+            sql += """WHERE YEARWEEK(paidrooms.transaction_date, 1) = YEARWEEK(CURDATE(), 1) """
+
+        elif view_type == 'This Month':
+            sql += """WHERE MONTH(paidrooms.transaction_date) = MONTH(CURDATE())
+                                AND YEAR(paidrooms.transaction_date) = YEAR(CURDATE()) """
+
+        elif view_type == 'This Year':
+            sql += """WHERE YEAR(paidrooms.transaction_date) = YEAR(CURDATE()) """
+
+        sql += """GROUP BY guests.name ORDER BY total DESC LIMIT 5;"""
+
+        self.cursor.execute(sql)
+        result = self.cursor.fetchall()
+
+        return result
+
     def update_guest_visit_count_and_last_visit_date(self, guest_id):
         sql = "UPDATE guests SET last_visit_date=%s, visit_count=visit_count+1 WHERE guest_id=%s"
         values = (date.today(), guest_id)
