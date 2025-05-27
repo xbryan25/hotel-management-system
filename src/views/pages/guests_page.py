@@ -43,7 +43,8 @@ class GuestsPage(QWidget, GuestsPageUI):
 
     def apply_shadow_to_frames(self):
         self.apply_shadow(self.guest_table_view_frame)
-        self.apply_shadow(self.actions_frame)
+        self.apply_shadow(self.search_bar_frame)
+        # self.apply_shadow(self.actions_frame)
 
     def update_of_page_number_label(self, total_pages):
         total_pages = max(total_pages, 1)

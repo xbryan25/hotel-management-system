@@ -48,6 +48,10 @@ QComboBox::down-arrow {
 
 }
 
+#view_type_combobox:hover, #sort_by_combobox:hover, #sort_type_combobox:hover {
+    background-color: #b5b3b3;
+}
+
 #previous_page_button, #next_page_button{
     background-color: #D9D9D9;
     color: black;
@@ -75,12 +79,20 @@ QComboBox::down-arrow {
 #add_service_button{
     background-color: #194FCC;
     color: white;
-    border: none;
+    border: 1px solid black;
     border-radius: 5px;
     padding-left: 20px;
     padding-right: 20px;
 }
 
+#add_service_button:hover{
+    background-color: #1440a6;
+}
+
 #page_number_lineedit{
     color: #000000;
+}
+
+#previous_page_button:hover, #next_page_button:hover{
+    background-color: #b5b3b3;
 }
