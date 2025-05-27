@@ -17,6 +17,61 @@ QComboBox::down-arrow {
     height: 15px;
 }
 
+QSpinBox {
+    border: 1px solid black;
+    background-color: #d9d9d9;
+    color: black;
+    border-radius: 5px;
+}
+
+QSpinBox::up-button {
+    subcontrol-origin: border;
+    subcontrol-position: top right;
+    width: 16px;
+    height: 12px;
+    background-color: #e0e0e0;
+    border: 1px solid #000000;
+    border-top-right-radius: 5px;
+}
+
+QSpinBox::up-button:hover {
+    background-color: #c0c0c0;
+}
+
+QSpinBox::up-button:pressed {
+    background-color: #adadad;
+}
+
+QSpinBox::down-button {
+    subcontrol-origin: border;
+    subcontrol-position: bottom right;
+    width: 16px;
+    height: 12px;
+    background-color: #e0e0e0;
+    border: 1px solid #000000;
+    border-bottom-right-radius: 5px;
+}
+
+QSpinBox::down-button:hover {
+    background-color: #c0c0c0;
+}
+
+QSpinBox::down-button:pressed {
+    background-color: #adadad;
+}
+
+QSpinBox::up-arrow {
+    image: url(../resources/icons/arrow_up_icon.svg);
+    width: 16px;
+    height: 16px;
+}
+
+QSpinBox::down-arrow {
+    image: url(../resources/icons/arrow_down_icon.svg);
+    width: 16px;
+    height: 16px;
+}
+
 #left_button, #right_button{
     padding: 5px;
     border-radius: 5px;
@@ -25,23 +80,29 @@ QComboBox::down-arrow {
 #left_button{
     border: 2px solid black;
     background-color: #d9d9d9;
-    color: black;
+    color: #000000;
 }
 
 #left_button::hover{
-    background-color: black;
-    color: #d9d9d9;
+    background-color: #c0c0c0;
+}
+
+#left_button::pressed{
+    background-color: #adadad;
 }
 
 #right_button{
-    border: 2px solid #194FCC;
-    background-color: white;
-    color: #194FCC;
+    border: 2px solid #000000;
+    background-color: #194FCC;
+    color: #FFFFFF;
 }
 
 #right_button::hover{
-    background-color: #194FCC;
-    color: white;
+    background-color: #1440a6;
+}
+
+#right_button::pressed{
+    background-color: #133991;
 }
 
 #room_type_value_combobox{
@@ -49,11 +110,14 @@ QComboBox::down-arrow {
     background-color: #D9D9D9;
     border: 1px solid #000000;
     border-radius: 5px;
+    color: black;
 
     padding-left: 10px;
 }
 
-#room_daily_rate_spinbox, #room_capacity_spinbox, #room_type_value_combobox, #room_number_lineedit, #left_button{
+#room_number_lineedit{
+    border: 1px solid black;
+    border-radius: 5px;
     background-color: #d9d9d9;
     color: black;
 }
@@ -63,13 +127,16 @@ QComboBox::down-arrow {
 }
 
 #browse_image_button{
-    border: 1.5px solid #000000;
+    border: 1px solid #000000;
     border-radius: 5px;
-    background-color: #D9D9D9;
-    color: #000000;
+    background-color: #194FCC;
+    color: #FFFFFF;
 }
 
 #browse_image_button::hover{
-    background-color: #000000;
-    color: #D9D9D9;
+    background-color: #1440a6
+}
+
+#browse_image_button::pressed{
+    background-color: #133991;
 }

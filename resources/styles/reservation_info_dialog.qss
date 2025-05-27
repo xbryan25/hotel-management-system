@@ -2,41 +2,162 @@ QDialog{
     background-color: #f6f6f6;
 }
 
-QComboBox QAbstractItemView {
-    color: black;
+QComboBox::drop-down {
+    background: transparent;
+    border: none;
+    width: 20px;
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    margin: 2px 4px 2px 0;
 }
 
+QComboBox::down-arrow {
+    image: url(../resources/icons/arrow_down_icon.svg);
+    width: 15px;
+    height: 15px;
+}
+
+/* ------------------Spinbox----------------- */
+
 QSpinBox {
+    border: 1px solid black;
+    background-color: #d9d9d9;
+    color: black;
+    border-radius: 5px;
+}
+
+QSpinBox:disabled {
+    background-color: #c0c0c0;
+}
+
+QSpinBox::up-button {
+    border-top-right-radius: 5px;
+    subcontrol-position: top right;
+}
+
+QSpinBox::down-button {
+    border-bottom-right-radius: 5px;
+    subcontrol-position: bottom right;
+}
+
+QSpinBox::up-button, QSpinBox::down-button{
+    subcontrol-origin: border;
+    width: 16px;
+    height: 12px;
+    background-color: #e0e0e0;
+    border: 1px solid #000000;
+}
+
+QSpinBox::up-button:hover, QSpinBox::down-button:hover {
+    background-color: #c0c0c0;
+}
+
+QSpinBox::up-button:pressed, QSpinBox::down-button:pressed  {
+    background-color: #adadad;
+}
+
+QSpinBox::up-button:disabled, QSpinBox::down-button:disabled  {
+    background-color: #c0c0c0;
+}
+
+QSpinBox::up-arrow {
+    image: url(../resources/icons/arrow_up_icon.svg);
+    width: 16px;
+    height: 16px;
+}
+
+QSpinBox::down-arrow {
+    image: url(../resources/icons/arrow_down_icon.svg);
+    width: 16px;
+    height: 16px;
+}
+
+/* ----------------------------------- */
+
+/* --------------QDateEdit ----------------*/
+
+QDateTimeEdit {
+    border: 1px solid black;
+    background-color: #d9d9d9;
+    color: black;
+    border-radius: 5px;
+}
+
+QDateTimeEdit::drop-down {
+    subcontrol-origin: border;
+    subcontrol-position: top right;
+    width: 25px;
+    height: 28px;
+    border: 1px solid black;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+QDateTimeEdit::drop-down:hover {
+    background-color: #c0c0c0;
+}
+
+QDateTimeEdit::drop-down:pressed {
+    background-color: #adadad;
+}
+
+QDateTimeEdit::down-arrow {
+    image: url(../resources/icons/arrow_down_icon.svg);
+    width: 16px;
+    height: 16px;
+}
+
+/* ----------------------------------- */
+
+#left_button, #right_button{
+    padding: 5px;
+    border-radius: 5px;
+}
+
+#left_button{
+    border: 2px solid black;
     background-color: #d9d9d9;
     color: #000000;
 }
 
-QSpinBox:disabled {
-    background-color: #f0f0f0;
-    color: #888888;
+#left_button::hover{
+    background-color: #c0c0c0;
 }
 
-#left_button, #right_button{
-    padding: 5px;
-    border: 2px solid black;
-    border-radius: 5px;
-    color: #FFFFFF;
-}
-
-#left_button{
-    background-color: #C23D47;
+#left_button::pressed{
+    background-color: #adadad;
 }
 
 #right_button{
+    border: 2px solid #000000;
     background-color: #194FCC;
+    color: #FFFFFF;
 }
 
-#right_button:disabled {
-    background-color: #5182F5;
+#right_button::hover{
+    background-color: #1440a6;
 }
 
-#check_in_date_time_edit, #check_out_date_time_edit{
-    color: #000000;
+#right_button::pressed{
+    background-color: #133991;
+}
+
+#room_reservations_button:pressed,
+#room_reservations_button:checked,
+#room_reservations_button:focus {
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+#room_type_combobox, #room_number_combobox{
+
+    background-color: #D9D9D9;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    color: black;
+
+    padding-left: 10px;
 }
 
 /* ---------------------Calendar Widget ---------------------*/

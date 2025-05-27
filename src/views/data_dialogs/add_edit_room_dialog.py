@@ -55,7 +55,7 @@ class AddEditRoomDialog(QDialog, AddEditRoomDialogUI):
 
     def set_room_number_lineedit_validator(self):
 
-        regex = QRegularExpression("^[a-zA-Z0-9]*$")
+        regex = QRegularExpression("^[A-Z0-9]*$")
         validator = QRegularExpressionValidator(regex)
 
         self.room_number_lineedit.setValidator(validator)

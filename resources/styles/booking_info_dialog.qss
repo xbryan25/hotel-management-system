@@ -2,10 +2,75 @@ QDialog{
     background-color: #f6f6f6;
 }
 
+/* ------------------Spinbox----------------- */
+
+QSpinBox {
+    border: 1px solid black;
+    background-color: #d9d9d9;
+    color: black;
+    border-radius: 5px;
+}
+
+QSpinBox:disabled {
+    background-color: #c0c0c0;
+}
+
+QSpinBox::up-button {
+    border-top-right-radius: 5px;
+    subcontrol-position: top right;
+}
+
+QSpinBox::down-button {
+    border-bottom-right-radius: 5px;
+    subcontrol-position: bottom right;
+}
+
+QSpinBox::up-button, QSpinBox::down-button{
+    subcontrol-origin: border;
+    width: 16px;
+    height: 12px;
+    background-color: #e0e0e0;
+    border: 1px solid #000000;
+}
+
+QSpinBox::up-button:hover, QSpinBox::down-button:hover {
+    background-color: #c0c0c0;
+}
+
+QSpinBox::up-button:pressed, QSpinBox::down-button:pressed  {
+    background-color: #adadad;
+}
+
+QSpinBox::up-button:disabled, QSpinBox::down-button:disabled  {
+    background-color: #c0c0c0;
+}
+
+QSpinBox::up-arrow {
+    image: url(../resources/icons/arrow_up_icon.svg);
+    width: 16px;
+    height: 16px;
+}
+
+QSpinBox::down-arrow {
+    image: url(../resources/icons/arrow_down_icon.svg);
+    width: 16px;
+    height: 16px;
+}
+
+/* ----------------------------------- */
+
 #proceed_button{
     padding: 5px;
-    border: 2px solid black;
+    border: 2px solid #000000;
     border-radius: 5px;
     color: #FFFFFF;
     background-color: #194FCC;
+}
+
+#proceed_button::hover{
+    background-color: #1440a6;
+}
+
+#proceed_button::pressed{
+    background-color: #133991;
 }

@@ -4,9 +4,17 @@ QDialog{
 
 #proceed_button{
     padding: 5px;
-    border: 2px solid black;
+    border: 2px solid #000000;
     border-radius: 5px;
+    color: #FFFFFF;
     background-color: #194FCC;
-    color: white;
+}
+
+#proceed_button::hover{
+    background-color: #1440a6;
+}
+
+#proceed_button::pressed{
+    background-color: #133991;
 }
 
