@@ -24,7 +24,8 @@ class BookingInfoDialog(QDialog, BookingInfoDialogUI):
         frame = QFrame(parent=self.availed_services_scroll_area_widget_contents)
         frame.setFrameShape(QFrame.Shape.StyledPanel)
         frame.setFrameShadow(QFrame.Shadow.Raised)
-        frame.setObjectName(f"{service[1].replace(" ", "_")}_frame")
+        frame_object_name = f"{service[1].replace(" ", "_")}_frame"
+        frame.setObjectName(frame_object_name)
 
         h_layout = QHBoxLayout(frame)
         h_layout.setObjectName(f"{service[1].replace(" ", "_")}_h_layout")
@@ -56,8 +57,6 @@ class BookingInfoDialog(QDialog, BookingInfoDialogUI):
                                          QSizePolicy.Policy.Minimum)
         h_layout.addItem(h_spacer)
 
-        checkbox.checkStateChanged.connect(lambda _, f=frame: self.enable_spinbox(f))
-
         frame.service_id = service[0]
         frame.service_name = service[1]
         frame.checkbox = checkbox
@@ -76,22 +75,16 @@ class BookingInfoDialog(QDialog, BookingInfoDialogUI):
             checkbox.setCheckState(Qt.CheckState.Checked)
             checkbox.blockSignals(False)
 
+            frame.setStyleSheet(f"#{frame_object_name}{{background-color: #c0c0c0; border: 1px solid #d9d9d9;}}")
+
         elif service_type == 'not availed':
             frame.service_rate = service[2]
             frame.is_spinbox_enabled = False
             frame.avail_id = None
 
+            frame.setStyleSheet(f"#{frame_object_name}{{background-color: transparent; border: 1px solid #d9d9d9;}}")
+
         return frame
-
-    def enable_spinbox(self, frame):
-        if frame.spinbox.isEnabled():
-            frame.spinbox.setEnabled(False)
-            frame.is_spinbox_enabled = False
-        else:
-            frame.spinbox.setEnabled(True)
-            frame.is_spinbox_enabled = True
-
-        self.spinbox_enabled.emit()
 
     def clear_availed_services_layout(self):
         layout = self.availed_services_scroll_area_grid_layout

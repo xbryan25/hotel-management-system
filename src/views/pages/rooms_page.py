@@ -63,7 +63,7 @@ class RoomsPage(QWidget, RoomsPageUI):
         # self.apply_shadow(self.page_number_frame)
         self.apply_shadow(self.search_bar_frame)
         self.apply_shadow(self.rooms_view_stacked_widget)
-        self.apply_shadow(self.actions_frame)
+        # self.apply_shadow(self.actions_frame)
 
     def update_of_page_number_label(self, total_pages):
         total_pages = max(total_pages, 1)

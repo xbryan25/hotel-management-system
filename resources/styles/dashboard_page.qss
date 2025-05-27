@@ -36,31 +36,9 @@ QFrame{
     background-color: #FFFFFF;
 }
 
-QTableWidget {
-    border: none;
-}
 
 QPushButton, QLineEdit{
     border-radius: 5px;
-}
-
-QCalendarWidget QAbstractItemView{
-    background-color: #f0f0f0;
-    selection-background-color: #194FCC;
-    selection-color: white;
-    color: black;
-}
-
-QCalendarWidget QWidget#calendar_widget{
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-}
-
-QCalendarWidget QToolButton{
-    background-color: transparent;
-    color: black;
-    font-weight: bold;
-    border: none;
 }
 
 QComboBox{
@@ -82,7 +60,6 @@ QComboBox::down-arrow {
     width: 15px;
     height: 15px;
 }
-
 
 #today_check_in_frame{
     background-color: #A3E4D7;
@@ -199,16 +176,11 @@ QComboBox::down-arrow {
     color: #000000;
 }
 
-#reservation_list_frame, #rooms_frame, #quick_action_frame{
+#reservation_list_frame, #rooms_frame{
     background-color: #FFFFFF;
     border-radius: 10px;
 }
 
-#quick_action_frame_label, #quick_action_frame_room_num_label, #quick_action_frame_guest_name_label{
-    color: #000000;
-}
-
-#quick_action_frame_confirm_button,
 #reservation_list_frame_add_reservation_button{
 
     background-color: #194FCC;
@@ -216,53 +188,13 @@ QComboBox::down-arrow {
 
 }
 
-#quick_action_frame_check_in_button, #quick_action_frame_check_out_button{
-    background-color: #D9D9D9;
-    color: black;
-}
-
-#quick_action_frame_check_in_button::checked, #quick_action_frame_check_out_button::checked {
-    background-color: #194FCC;
-    color: #FFFFFF;
-}
-
-#quick_action_frame_confirm_button{
-    background-color: #194FCC;
-    color: #FFFFFF;
-}
-
-#reservation_list_frame_search_lineedit{
-    background-color: #D9D9D9;
-}
-
-#rooms_frame_status_combobox, #reservation_list_frame_status_combobox, #reservations_combobox{
+#rooms_frame_status_combobox, #reservations_combobox{
     background-color: #d9d9d9;
     color: #000000;
 }
 
-#reservation_list_frame_search_lineedit{
-    border: none;
-
-    color: #000000;
-
-    background-image: url(../resources/icons/search_icon_small.svg);
-    background-repeat: no-repeat;
-    background-position: left center;
-    background-origin: border;
-
-    padding-left: 28px;
-
-}
-
-QLineEdit#reservation_list_frame_search_lineedit::placeholder{
-    color: #000000;
-}
-
-#reservation_list_frame_add_reservation_button{
-    background-image: url(../resources/icons/add_icon.svg);
-    background-repeat: no-repeat;
-    background-position: left center;
-    background-origin: border;
+#rooms_frame_status_combobox:hover, #reservations_combobox:hover {
+    background-color: #b5b3b3;
 }
 
 #search_bar_frame_search_lineedit{
@@ -277,18 +209,3 @@ QLineEdit#reservation_list_frame_search_lineedit::placeholder{
     padding-left: 48px;
 
 }
-
-#quick_action_frame_cancel_button{
-
-    background-color: #FFFFFF;
-    color: #000000;
-    border: 1px solid #000000;
-}
-
-#quick_action_frame_room_num_lineedit,
-#quick_action_frame_guest_name_lineedit{
-    background-color: #FFFFFF;
-    border: 1px solid #000000;
-}
-
-

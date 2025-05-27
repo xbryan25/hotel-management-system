@@ -53,12 +53,15 @@ class GuestInfoDialog(QDialog, GuestInfoDialogUI):
     def set_guest_info(self, guest_info):
         if self.information_mode == "edit":
 
+            py_date = guest_info["birth_date"]
+            qdate = QDate(py_date.year, py_date.month, py_date.day)
+
             self.name_lineedit.setPlaceholderText(guest_info["name"])
             self.gender_combobox.setCurrentText(guest_info["gender"])
             self.home_address_lineedit.setPlaceholderText(guest_info["home_address"])
             self.email_address_lineedit.setPlaceholderText(guest_info["email_address"])
             self.phone_number_lineedit.setPlaceholderText(guest_info["phone_number"])
-            self.birth_date_date_edit.setDate(guest_info["birth_date"].strftime("%B %d, %Y"))
+            self.birth_date_date_edit.setDate(qdate)
             self.government_id_number_lineedit.setPlaceholderText(guest_info["government_id"])
 
         else:

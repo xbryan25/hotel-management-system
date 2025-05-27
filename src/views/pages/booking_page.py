@@ -42,8 +42,9 @@ class BookingPage(QWidget, BookingPageUI):
         widget.setGraphicsEffect(shadow)
 
     def apply_shadow_to_frames(self):
-        pass
-        self.apply_shadow(self.actions_frame)
+
+        # self.apply_shadow(self.actions_frame)
+        self.apply_shadow(self.search_bar_frame)
         self.apply_shadow(self.bookings_table_view_frame)
 
     def update_of_page_number_label(self, total_pages):

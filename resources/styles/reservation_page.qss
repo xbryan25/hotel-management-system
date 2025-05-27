@@ -57,11 +57,19 @@ QFrame#inner_buttons_and_sections_frame{
     padding-left: 10px;
 }
 
+#view_type_combobox:hover, #sort_by_combobox:hover, #sort_type_combobox:hover {
+    background-color: #b5b3b3;
+}
+
 #add_reservation_button{
     background-color: #194FCC;
     color: white;
-    border: none;
+    border: 1px solid black;
     border-radius: 5px;
+}
+
+#add_reservation_button:hover{
+    background-color: #1440a6;
 }
 
 #reservations_table_view{
@@ -94,4 +102,8 @@ QFrame#inner_buttons_and_sections_frame{
 
     border: 1px solid black;
     border-radius: 5px;
+}
+
+#previous_page_button:hover, #next_page_button:hover{
+    background-color: #b5b3b3;
 }

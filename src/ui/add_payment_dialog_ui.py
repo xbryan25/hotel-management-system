@@ -51,6 +51,7 @@ class Ui_Dialog(object):
         spacerItem = QtWidgets.QSpacerItem(40, 30, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
         self.gridLayout_2.addItem(spacerItem, 3, 0, 1, 2)
         self.amount_spinbox = QtWidgets.QSpinBox(parent=self.contents_frame)
+        self.amount_spinbox.setMinimum(1)
         self.amount_spinbox.setMaximum(999999999)
         self.amount_spinbox.setObjectName("amount_spinbox")
         self.gridLayout_2.addWidget(self.amount_spinbox, 6, 1, 1, 1)

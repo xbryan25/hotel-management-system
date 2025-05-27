@@ -141,6 +141,7 @@ class Ui_Widget(object):
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.bookings_table_view = QtWidgets.QTableView(parent=self.bookings_table_view_frame)
         self.bookings_table_view.setShowGrid(False)
+        self.bookings_table_view.setCornerButtonEnabled(True)
         self.bookings_table_view.setObjectName("bookings_table_view")
         self.bookings_table_view.horizontalHeader().setMinimumSectionSize(15)
         self.bookings_table_view.verticalHeader().setVisible(False)

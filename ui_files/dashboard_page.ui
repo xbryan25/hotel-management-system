@@ -525,12 +525,12 @@
            </item>
            <item>
             <property name="text">
-             <string>Booked</string>
+             <string>Reserved</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Reserved</string>
+             <string>Occupied</string>
             </property>
            </item>
            <item>

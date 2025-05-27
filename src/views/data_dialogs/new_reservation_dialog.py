@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QDialog, QSpacerItem, QFrame, QHBoxLayout, QLabel, QCheckBox, QSizePolicy, QSpinBox
-from PyQt6.QtGui import QCursor, QFont, QRegularExpressionValidator
-from PyQt6.QtCore import pyqtSignal, QDateTime, Qt, QRegularExpression
+from PyQt6.QtGui import QCursor, QFont, QRegularExpressionValidator, QIcon
+from PyQt6.QtCore import pyqtSignal, QDateTime, Qt, QRegularExpression, QSize
 
 from datetime import datetime
 
@@ -29,6 +29,7 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
 
         self.load_fonts()
         self.set_external_stylesheet()
+        self.set_icons()
 
         self.set_phone_number_lineedit_validator()
         self.set_lineedits_max_length()
@@ -98,7 +99,9 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         frame = QFrame(parent=self.services_scroll_area_contents)
         frame.setFrameShape(QFrame.Shape.StyledPanel)
         frame.setFrameShadow(QFrame.Shadow.Raised)
-        frame.setObjectName(f"{service[1].replace(" ", "_")}_frame")
+        frame_object_name = f"{service[1].replace(" ", "_")}_frame"
+        frame.setObjectName(frame_object_name)
+        frame.setStyleSheet(f"#{frame_object_name}{{background-color: transparent; border: 1px solid #d9d9d9;}}")
 
         h_layout = QHBoxLayout(frame)
         h_layout.setObjectName(f"{service[1].replace(" ", "_")}_h_layout")
@@ -159,12 +162,16 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         return frame
 
     def enable_spinbox(self, frame):
+        frame_object_name = frame.objectName()
+
         if frame.spinbox.isEnabled():
             frame.spinbox.setEnabled(False)
             frame.is_spinbox_enabled = False
+            frame.setStyleSheet(f"#{frame_object_name}{{background-color: transparent; border: 1px solid #d9d9d9;}}")
         else:
             frame.spinbox.setEnabled(True)
             frame.is_spinbox_enabled = True
+            frame.setStyleSheet(f"#{frame_object_name}{{background-color: #c0c0c0; border: 1px solid #d9d9d9;}}")
 
         self.spinbox_enabled.emit()
 
@@ -296,9 +303,11 @@ class NewReservationDialog(QDialog, NewReservationDialogUI):
         else:
             self.right_button.setText("Reserve")
 
-        print(f"current page: {self.current_page}")
-
         self.contents_stacked_widget.setCurrentIndex(self.current_page - 1)
+
+    def set_icons(self):
+        self.room_reservations_button.setIcon(QIcon("../resources/icons/info_icon.svg"))
+        self.room_reservations_button.setIconSize(QSize(30, 30))
 
     def set_external_stylesheet(self):
         with open("../resources/styles/new_reservation_dialog.qss", "r") as file:

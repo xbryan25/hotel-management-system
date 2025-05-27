@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QDialog, QSpacerItem, QFrame, QHBoxLayout, QLabel, QCheckBox, QSizePolicy, QSpinBox, QPushButton
-from PyQt6.QtGui import QCursor, QFont
+from PyQt6.QtGui import QCursor, QFont, QIcon
 from PyQt6.QtCore import pyqtSignal, QDateTime, Qt, QSize
 
 from datetime import datetime
@@ -31,6 +31,7 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
 
         self.connect_signals_to_slots()
 
+        self.set_icons()
         self.load_fonts()
         self.set_external_stylesheet()
 
@@ -43,6 +44,9 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
     def hide_remaining_balance(self):
         self.remaining_balance_label.setVisible(False)
         self.remaining_balance_value_label.setVisible(False)
+
+    def hide_room_reservations_button(self):
+        self.room_reservations_button.setVisible(False)
 
     def enable_all_editable_fields(self, service_frames, state):
         self.check_in_date_time_edit.setEnabled(state)
@@ -108,12 +112,12 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
         self.total_reservation_cost_value_label.setText(f"₱{int(total_reservation_cost)}")
 
     def create_service_frame(self, service, edit_state=False, service_type='not availed'):
-        # TODO: Make into another file, I guess?
 
         frame = QFrame(parent=self.availed_services_scroll_area_widget_contents)
         frame.setFrameShape(QFrame.Shape.StyledPanel)
         frame.setFrameShadow(QFrame.Shadow.Raised)
-        frame.setObjectName(f"{service[1].replace(" ", "_")}_frame")
+        frame_object_name = f"{service[1].replace(" ", "_")}_frame"
+        frame.setObjectName(frame_object_name)
 
         h_layout = QHBoxLayout(frame)
         h_layout.setObjectName(f"{service[1].replace(" ", "_")}_h_layout")
@@ -165,22 +169,31 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
             checkbox.setCheckState(Qt.CheckState.Checked)
             checkbox.blockSignals(False)
 
+            frame.setStyleSheet(f"#{frame_object_name}{{background-color: #c0c0c0; border: 1px solid #d9d9d9;}}")
+
         elif service_type == 'not availed':
             frame.service_rate = service[2]
             frame.is_spinbox_enabled = False
             frame.avail_id = None
 
+            frame.setStyleSheet(f"#{frame_object_name}{{background-color: transparent; border: 1px solid #d9d9d9;}}")
+
         return frame
 
-    def enable_spinbox(self, frame):
+    def enable_spinbox(self, frame, enable_type='change_checkbox_state'):
+        frame_object_name = frame.objectName()
+
         if frame.spinbox.isEnabled():
             frame.spinbox.setEnabled(False)
             frame.is_spinbox_enabled = False
+            frame.setStyleSheet(f"#{frame_object_name}{{background-color: transparent; border: 1px solid #d9d9d9;}}")
         else:
             frame.spinbox.setEnabled(True)
             frame.is_spinbox_enabled = True
+            frame.setStyleSheet(f"#{frame_object_name}{{background-color: #c0c0c0; border: 1px solid #d9d9d9;}}")
 
-        self.spinbox_enabled.emit()
+        if enable_type == 'change_checkbox_state':
+            self.spinbox_enabled.emit()
 
     def clear_availed_services_layout(self):
         layout = self.availed_services_scroll_area_grid_layout
@@ -291,6 +304,10 @@ class ReservationInfoDialog(QDialog, ReservationInfoDialogUI):
     def remove_button_signals(self):
         self.left_button.disconnect()
         self.right_button.disconnect()
+
+    def set_icons(self):
+        self.room_reservations_button.setIcon(QIcon("../resources/icons/info_icon.svg"))
+        self.room_reservations_button.setIconSize(QSize(25,25))
 
     def set_external_stylesheet(self):
         with open("../resources/styles/reservation_info_dialog.qss", "r") as file:

@@ -304,6 +304,7 @@ class ReservationInfoDialogController:
 
         self.view.load_proceed_button()
         self.view.hide_remaining_balance()
+        self.view.hide_room_reservations_button()
         # self.view.load_booking_details()
 
     def update_total_reservation_cost(self, current_room=None):
