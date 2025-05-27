@@ -53,6 +53,13 @@ class GuestsModel(QAbstractTableModel):
 
             return value
 
+        if role == Qt.ItemDataRole.ToolTipRole:
+
+            if index.column() == 1:
+                return self._data[index.row()][1]
+            elif index.column() == 6:
+                return "View guest details?"
+
         if role == Qt.ItemDataRole.TextAlignmentRole:
             return Qt.AlignmentFlag.AlignCenter
 

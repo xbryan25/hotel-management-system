@@ -535,11 +535,6 @@
            </item>
            <item>
             <property name="text">
-             <string>Maintenance</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
              <string>Available</string>
             </property>
            </item>

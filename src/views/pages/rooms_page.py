@@ -520,3 +520,6 @@ class RoomsPage(QWidget, RoomsPageUI):
             self.previous_width = current_width
             self.previous_height = current_height
 
+    def showEvent(self, event):
+        super().showEvent(event)
+        self.window_resized.emit()

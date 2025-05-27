@@ -186,10 +186,10 @@ class BookedRoomQueries:
         if check_type not in ["check_in", "check_out"]:
             raise ValueError(f"Invalid check_type: {check_type}. Must be 'check_in' or 'check_out'.")
 
-        sql = f"""SELECT bookedrooms.booking_id, guests.name, bookedrooms.room_id,  bookedrooms.{check_type}_date
+        sql = f"""SELECT bookedrooms.booking_id, guests.name, bookedrooms.room_id,  bookedrooms.actual_{check_type}_date
                 FROM bookedrooms 
                 JOIN guests ON bookedrooms.guest_id = guests.guest_id
-                WHERE bookedrooms.{check_type}_date = CURDATE();"""
+                WHERE DATE(bookedrooms.actual_{check_type}_date) = CURDATE();"""
 
         self.cursor.execute(sql)
 
@@ -207,7 +207,7 @@ class BookedRoomQueries:
         sql = f"""SELECT COUNT(*)
                 FROM bookedrooms 
                 JOIN guests ON bookedrooms.guest_id = guests.guest_id
-                WHERE bookedrooms.{check_type}_date = CURDATE();"""
+                WHERE DATE(bookedrooms.actual_{check_type}_date) = CURDATE();"""
 
         self.cursor.execute(sql)
 

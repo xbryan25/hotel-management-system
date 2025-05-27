@@ -54,9 +54,9 @@ class BookingModel(QAbstractTableModel):
             return Qt.AlignmentFlag.AlignCenter
 
         if role == Qt.ItemDataRole.ToolTipRole:
-            if index.column() == 6:
+            if index.column() == 5:
                 return "View booking details?"
-            elif index.column() == 7:
+            elif index.column() == 6:
                 return "Check out?"
 
         if role == self.BUTTON_ENABLED_ROLE and index.column() == 6:
