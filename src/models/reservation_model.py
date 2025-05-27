@@ -77,7 +77,12 @@ class ReservationModel(QAbstractTableModel):
             return Qt.AlignmentFlag.AlignCenter
 
         if role == Qt.ItemDataRole.ToolTipRole:
-            if index.column() == 6:
+
+            if index.column() == 1 and self.view_mode == "dashboard_view":
+                return self._data[index.row()][1]
+            elif index.column() == 3 and self.view_mode == "dashboard_view":
+                return self._data[index.row()][3]
+            elif index.column() == 6:
                 return "View reservation details?"
             elif index.column() == 7:
                 return "Check in?"

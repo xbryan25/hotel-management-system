@@ -71,7 +71,7 @@ class DashboardPage(QWidget, DashboardPageUI):
         """)
 
         recent_check_in_frame_table_view_header.resizeSection(0, 85)
-        recent_check_in_frame_table_view_header.resizeSection(2, 75)
+        recent_check_in_frame_table_view_header.resizeSection(2, 95)
         recent_check_in_frame_table_view_header.resizeSection(3, 65)
 
         recent_check_in_frame_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
@@ -90,7 +90,7 @@ class DashboardPage(QWidget, DashboardPageUI):
         """)
 
         recent_check_out_frame_table_view_header.resizeSection(0, 85)
-        recent_check_out_frame_table_view_header.resizeSection(2, 75)
+        recent_check_out_frame_table_view_header.resizeSection(2, 95)
         recent_check_out_frame_table_view_header.resizeSection(3, 65)
 
         recent_check_out_frame_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
