@@ -195,6 +195,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowUI):
         self.reservations_page_controller = ReservationsPageController(self.reservation_page, self.db_driver)
         self.bookings_page_controller = BookingsPageController(self.booking_page, self.db_driver)
         self.billings_page_controller = BillingsPageController(self.billing_page, self.db_driver)
+        self.reports_page_controller = ReportsPageController(self.reports_page, self.db_driver)
 
     def closeEvent(self, event):
         self.db_driver.close_connection()

@@ -6,6 +6,7 @@ from .services_page_controller import ServicesPageController
 from .reservations_page_controller import ReservationsPageController
 from .bookings_page_controller import BookingsPageController
 from .billings_page_controller import BillingsPageController
+from .reports_page_controller import ReportsPageController
 
 __all__ = [
     "DashboardController",
@@ -15,4 +16,5 @@ __all__ = [
     "ReservationsPageController",
     "BookingsPageController",
     "BillingsPageController",
+    "ReportsPageController"
 ]

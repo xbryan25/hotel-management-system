@@ -23,7 +23,35 @@
    <property name="spacing">
     <number>12</number>
    </property>
-   <item row="2" column="0">
+   <item row="0" column="0" colspan="2">
+    <widget class="QFrame" name="reports_frame">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>60</height>
+      </size>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="reports_label">
+        <property name="text">
+         <string>Reports</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="3" column="0">
     <widget class="QFrame" name="most_availed_services_chart_frame">
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
@@ -31,21 +59,27 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
+     <layout class="QVBoxLayout" name="most_availed_services_chart_v_layout">
       <property name="leftMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <property name="topMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <property name="rightMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <property name="bottomMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <item>
        <widget class="QFrame" name="most_availed_services_chart_controls">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
         </property>
@@ -57,7 +91,7 @@
           <number>0</number>
          </property>
          <item row="0" column="0">
-          <widget class="QLabel" name="most_availed_services_chart_label">
+          <widget class="QLabel" name="most_availed_services_chart_text_label">
            <property name="text">
             <string>Most Availed Services</string>
            </property>
@@ -98,7 +132,7 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="1">
+   <item row="3" column="1">
     <widget class="QFrame" name="top_paying_guests_chart_frame">
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
@@ -106,21 +140,27 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_4">
+     <layout class="QVBoxLayout" name="top_paying_guests_chart_v_layout">
       <property name="leftMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <property name="topMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <property name="rightMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <property name="bottomMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <item>
        <widget class="QFrame" name="top_paying_guests_chart_controls">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
         </property>
@@ -132,7 +172,7 @@
           <number>0</number>
          </property>
          <item row="0" column="0">
-          <widget class="QLabel" name="top_paying_guests_chart_label">
+          <widget class="QLabel" name="top_paying_guests_chart_text_label">
            <property name="text">
             <string>Top Paying Guests</string>
            </property>
@@ -181,25 +221,31 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
+     <layout class="QVBoxLayout" name="revenue_chart_v_layout">
       <property name="leftMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <property name="topMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <property name="rightMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <property name="bottomMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <item>
        <widget class="QFrame" name="revenue_chart_controls">
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>30</height>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>50</height>
          </size>
         </property>
         <property name="frameShape">
@@ -212,13 +258,6 @@
          <property name="leftMargin">
           <number>0</number>
          </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="revenue_chart_label">
-           <property name="text">
-            <string>Revenue</string>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="1">
           <widget class="QComboBox" name="revenue_chart_combobox">
            <item>
@@ -238,35 +277,14 @@
            </item>
           </widget>
          </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="revenue_chart_text_label">
+           <property name="text">
+            <string>Revenue</string>
+           </property>
+          </widget>
+         </item>
         </layout>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="2">
-    <widget class="QFrame" name="reports_frame">
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>60</height>
-      </size>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <property name="leftMargin">
-       <number>0</number>
-      </property>
-      <item>
-       <widget class="QLabel" name="reports_label">
-        <property name="text">
-         <string>Reports</string>
-        </property>
        </widget>
       </item>
      </layout>
@@ -280,25 +298,25 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <layout class="QVBoxLayout" name="reservation_status_chart_v_layout">
       <property name="leftMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <property name="topMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <property name="rightMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <property name="bottomMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <item>
        <widget class="QFrame" name="reservation_status_chart_controls">
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>30</height>
+          <height>40</height>
          </size>
         </property>
         <property name="frameShape">
@@ -312,7 +330,7 @@
           <number>0</number>
          </property>
          <item row="0" column="0">
-          <widget class="QLabel" name="reservation_status_chart_label">
+          <widget class="QLabel" name="reservation_status_chart_text_label">
            <property name="text">
             <string>Reservation Status Distribution</string>
            </property>
