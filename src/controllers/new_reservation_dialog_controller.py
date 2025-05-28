@@ -142,7 +142,7 @@ class NewReservationDialogController:
     def make_reservation(self):
         guest_inputs = self.view.get_guest_inputs()
 
-        if self.db_driver.guest_queries.check_if_government_id_exists(guest_inputs['government_id']):
+        if self.db_driver.guest_queries.check_if_government_id_exists(guest_inputs['government_id']) and not self.db_driver.guest_queries.check_if_name_exists(guest_inputs["name"]):
             self.fail_dialog = FeedbackDialog("Government ID number already exists.",
                                               "Go back and edit Government ID number.")
             self.fail_dialog.exec()

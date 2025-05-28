@@ -67,7 +67,7 @@ class BookedRoomQueries:
 
         sql = """SELECT bookedrooms.check_in_status FROM bookedrooms WHERE bookedrooms.booking_id=%s"""
 
-        values = (room_id,)
+        values = (booking_id,)
 
         self.cursor.execute(sql, values)
 

@@ -56,7 +56,7 @@ class GuestQueries:
 
         result = self.cursor.fetchone()
 
-        return result[0] if result else None
+        return True if result else False
 
     def get_latest_guest_id(self):
 
