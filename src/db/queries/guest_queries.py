@@ -48,6 +48,16 @@ class GuestQueries:
 
         return result[0] if result else None
 
+    def check_if_name_exists(self, name):
+        sql = "SELECT 1 FROM guests WHERE guests.name=%s LIMIT 1;"
+        values = (name,)
+
+        self.cursor.execute(sql, values)
+
+        result = self.cursor.fetchone()
+
+        return result[0] if result else None
+
     def get_latest_guest_id(self):
 
         self.cursor.execute("""SELECT guest_id FROM guests
