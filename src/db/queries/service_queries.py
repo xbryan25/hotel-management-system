@@ -76,14 +76,14 @@ class ServiceQueries:
                           "Inactive Services": "WHERE services.is_active = 0",
                           "All": ""}
 
-        if search_input and view_type_dict in ('Active Services', 'Inactive Services'):
+        if search_input and view_type in ('Active Services', 'Inactive Services'):
             search_input_query = """ AND 
                                 (services.service_name LIKE %s OR 
                                 services.rate LIKE %s)"""
 
             search_input = f"%{search_input}%"
             values = (search_input, search_input)
-        elif search_input and view_type_dict == "All":
+        elif search_input and view_type == "All":
             search_input_query = """ WHERE
                                     (services.service_name LIKE %s OR 
                                     services.rate LIKE %s)"""
