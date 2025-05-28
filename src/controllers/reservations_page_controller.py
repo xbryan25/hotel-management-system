@@ -176,7 +176,9 @@ class ReservationsPageController:
         if self.current_page_number + 1 <= self.total_pages(reservation_count):
             self.current_page_number += 1
 
-            self.view.page_number_lineedit.setText(str(self.current_page))
+            self.view.page_number_lineedit.blockSignals(True)
+            self.view.page_number_lineedit.setText(str(self.current_page_number))
+            self.view.page_number_lineedit.blockSignals(False)
 
             self.refresh_reservations_data()
 
@@ -184,7 +186,9 @@ class ReservationsPageController:
         if self.current_page_number > 1:
             self.current_page_number -= 1
 
-            self.view.page_number_lineedit.setText(str(self.current_page))
+            self.view.page_number_lineedit.blockSignals(True)
+            self.view.page_number_lineedit.setText(str(self.current_page_number))
+            self.view.page_number_lineedit.blockSignals(False)
 
             self.refresh_reservations_data()
 

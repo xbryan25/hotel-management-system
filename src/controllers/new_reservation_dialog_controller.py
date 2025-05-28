@@ -151,13 +151,15 @@ class NewReservationDialogController:
             reservation_inputs = self.view.get_reservation_inputs()
             availed_services_inputs = self.view.get_availed_services_inputs(self.service_frames)
 
-            guest_id = self.db_driver.guest_queries.get_guest_id_from_name(guest_inputs["name"])
-
             if self.db_driver.guest_queries.check_if_name_exists(guest_inputs["name"]):
-                self.db_driver.guest_queries.update_guest(guest_id, guest_inputs)
+                guest_id = self.db_driver.guest_queries.get_guest_id_from_name(guest_inputs["name"])
+                if guest_id:
+                    self.db_driver.guest_queries.update_guest(guest_id, guest_inputs)
             else:
                 self.db_driver.guest_queries.add_guest(guest_inputs)
 
+
+            guest_id = self.db_driver.guest_queries.get_guest_id_from_name(guest_inputs["name"])
             room_id = self.db_driver.room_queries.get_room_id_from_room_number(reservation_inputs["room_number"])
 
             reservation_inputs.update({"guest_id": guest_id})

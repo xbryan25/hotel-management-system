@@ -110,7 +110,7 @@ class RoomsPageController:
                 subheader_message = f"It has an upcoming reservation."
             elif num_of_bookings == 0 and num_of_reservations > 1:
                 subheader_message = f"It has upcoming reservations."
-            elif num_of_bookings == 1 and num_of_reservation == 1:
+            elif num_of_bookings == 1 and num_of_reservations == 1:
                 subheader_message = f"It currently has a booking and an upcoming reservation."
             else:
                 subheader_message = f"It currently has a booking and upcoming reservations."

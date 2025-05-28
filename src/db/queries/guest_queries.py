@@ -430,7 +430,7 @@ class GuestQueries:
 
         result = self.cursor.fetchone()
 
-        return result[0]
+        return result[0] if result else None
 
     def add_guest(self, guest_information):
 

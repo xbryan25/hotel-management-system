@@ -123,7 +123,9 @@ class ServicesPageController:
         if self.current_page + 1 <= self.total_pages(service_count):
             self.current_page += 1
 
+            self.view.page_number_lineedit.blockSignals(True)
             self.view.page_number_lineedit.setText(str(self.current_page))
+            self.view.page_number_lineedit.blockSignals(False)
 
             self.refresh_services_data()
 
@@ -131,7 +133,9 @@ class ServicesPageController:
         if self.current_page > 1:
             self.current_page -= 1
 
+            self.view.page_number_lineedit.blockSignals(True)
             self.view.page_number_lineedit.setText(str(self.current_page))
+            self.view.page_number_lineedit.blockSignals(False)
 
             self.refresh_services_data()
 

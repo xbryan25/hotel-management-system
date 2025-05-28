@@ -114,7 +114,9 @@ class GuestsPageController:
         if self.current_page_number + 1 <= self.total_pages(guest_count):
             self.current_page_number += 1
 
-            self.view.page_number_lineedit.setText(str(self.current_page))
+            self.view.page_number_lineedit.blockSignals(True)
+            self.view.page_number_lineedit.setText(str(self.current_page_number))
+            self.view.page_number_lineedit.blockSignals(False)
 
             self.refresh_guests_data()
 
@@ -122,8 +124,9 @@ class GuestsPageController:
         if self.current_page_number > 1:
             self.current_page_number -= 1
 
-            self.view.page_number_lineedit.setText(str(self.current_page))
-
+            self.view.page_number_lineedit.blockSignals(True)
+            self.view.page_number_lineedit.setText(str(self.current_page_number))
+            self.view.page_number_lineedit.blockSignals(False)
             self.refresh_guests_data()
 
     def total_pages(self, guest_count):
