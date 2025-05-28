@@ -101,15 +101,21 @@ class ReservationsPageController:
         total_pages = max(reservation_count, 1)
 
         if not page_number:
-            self.current_page = 1
+            self.current_page_number = 1
         elif int(page_number) < 1:
-            self.current_page = 1
-            self.view.page_number_lineedit.setText(str(self.current_page))
+            self.current_page_number = 1
+
+            self.view.page_number_lineedit.blockSignals(True)
+            self.view.page_number_lineedit.setText(str(self.current_page_number))
+            self.view.page_number_lineedit.blockSignals(False)
         elif int(page_number) > total_pages:
-            self.current_page = total_pages
-            self.view.page_number_lineedit.setText(str(self.current_page))
+            self.current_page_number = total_pages
+
+            self.view.page_number_lineedit.blockSignals(True)
+            self.view.page_number_lineedit.setText(str(self.current_page_number))
+            self.view.page_number_lineedit.blockSignals(False)
         else:
-            self.current_page = int(page_number)
+            self.current_page_number = int(page_number)
 
         self.refresh_reservations_data()
 

@@ -14,7 +14,7 @@ class BillingsPageController:
 
         self.billings_model = None
 
-        self.prev_view_type = None
+        self.prev_show_type = None
         self.prev_sort_by = None
         self.prev_sort_type = None
         self.prev_search_input = None
@@ -56,20 +56,27 @@ class BillingsPageController:
 
     def change_page_number_lineedit(self, page_number):
 
-        guest_count = self.db_driver.guest_queries.get_guest_count(show_type=self.prev_show_type,
-                                                                   search_input=self.prev_search_input)
-        total_pages = max(self.total_pages(guest_count), 1)
+        billings_count = self.db_driver.reserved_room_queries.get_reservation_count(view_type=self.prev_view_type,
+                                                                                    search_input=self.prev_search_input,
+                                                                                    billing_view_mode=True)
+        total_pages = max(self.total_pages(billings_count), 1)
 
         if not page_number:
-            self.current_page = 1
+            self.current_page_number = 1
         elif int(page_number) < 1:
-            self.current_page = 1
-            self.view.page_number_lineedit.setText(str(self.current_page))
+            self.current_page_number = 1
+
+            self.view.page_number_lineedit.blockSignals(True)
+            self.view.page_number_lineedit.setText(str(self.current_page_number))
+            self.view.page_number_lineedit.blockSignals(False)
         elif int(page_number) > total_pages:
-            self.current_page = total_pages
-            self.view.page_number_lineedit.setText(str(self.current_page))
+            self.current_page_number = total_pages
+
+            self.view.page_number_lineedit.blockSignals(True)
+            self.view.page_number_lineedit.setText(str(self.current_page_number))
+            self.view.page_number_lineedit.blockSignals(False)
         else:
-            self.current_page = int(page_number)
+            self.current_page_number = int(page_number)
 
         self.refresh_billings_data()
 
