@@ -229,11 +229,11 @@ class ReservedRoomQueries:
 
         if search_input and billing_view_mode:
             search_input_query = """ HAVING 
-                        reservedrooms.reservation_id LIKE %s OR 
-                        guests.name LIKE %s OR 
-                        rooms.room_number LIKE %s OR 
-                        reservedrooms.total_reservation_cost LIKE %s 
-                        CAST(reservedrooms.total_reservation_cost - COALESCE(SUM(paidrooms.amount), 0) AS CHAR) AS remaining_balance,
+                        reservation_id LIKE %s OR 
+                        name LIKE %s OR 
+                        room_number LIKE %s OR 
+                        CAST(total_reservation_cost AS CHAR) LIKE %s OR
+                        remaining_balance LIKE %s
             """
 
             search_input = f"%{search_input}%"
@@ -257,13 +257,21 @@ class ReservedRoomQueries:
 
         if billing_view_mode:
             sql = f"""SELECT COUNT(*) FROM (
-                            SELECT reservedrooms.reservation_id
+                            SELECT reservedrooms.reservation_id AS reservation_id,
+                            guests.name AS name,
+                            rooms.room_number AS room_number,
+                            reservedrooms.total_reservation_cost AS total_reservation_cost,
+                            CAST(
+                                reservedrooms.total_reservation_cost - 
+                                COALESCE(SUM(paidrooms.amount), 0) AS CHAR
+                            ) AS remaining_balance
                             FROM reservedrooms 
                             JOIN guests ON reservedrooms.guest_id = guests.guest_id
                             LEFT JOIN paidrooms ON reservedrooms.room_id = paidrooms.room_id
                                 AND paidrooms.transaction_date BETWEEN reservedrooms.reservation_date AND reservedrooms.check_in_date
+                            JOIN rooms ON reservedrooms.room_id = rooms.room_id
                             {view_type_dict[view_type]} 
-                            GROUP BY reservedrooms.reservation_id
+                            GROUP BY reservation_id
                             {search_input_query}
                         ) AS sub"""
         else:
